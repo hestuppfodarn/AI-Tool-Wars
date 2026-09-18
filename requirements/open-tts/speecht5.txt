@@ -1,0 +1,8 @@
+# SpeechT5 through transformers. CPU torch from the PyTorch index (PyPI's linux wheel drags in ~3 GB of CUDA libs).
+--extra-index-url https://download.pytorch.org/whl/cpu
+-r base.txt
+torch==2.14.0
+transformers==5.17.0
+sentencepiece>=0.2
+datasets>=3.0
+num2words>=0.5.13

@@ -1,0 +1,5 @@
+# KittenTTS nano, run directly on onnxruntime (the official wheel is GitHub-only and pulls spaCy).
+-r base.txt
+onnxruntime>=1.20
+phonemizer==3.4.0
+espeakng-loader>=0.2.4

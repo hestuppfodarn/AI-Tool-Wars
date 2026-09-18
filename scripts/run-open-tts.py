@@ -39,9 +39,10 @@ ADAPTERS_DIR = ROOT / "scripts" / "open_tts_adapters"
 CATEGORY = "voice"
 
 # Module level (not under __main__) so the spawned worker gets the same path and
-# adapters can `from _common import ...`.
+# adapters can `from _common import ...`. Appended, not prepended: adapter files
+# are named after their libraries (piper.py, chatterbox.py) and must not shadow them.
 if str(ADAPTERS_DIR) not in sys.path:
-    sys.path.insert(0, str(ADAPTERS_DIR))
+    sys.path.append(str(ADAPTERS_DIR))
 from _common import pick_voice, set_torch_threads  # noqa: E402
 
 # --- helpers ------------------------------------------------------------------
@@ -190,7 +191,7 @@ class Worker:
         t0 = time.perf_counter()
         if not self.conn.poll(self.load_timeout_s):
             self.kill()
-            raise TimeoutError(f"model load exceeded {self.load_timeout_s:.0f}s")
+            raise TimeoutError(f"model load exceeded {self.load_timeout_s:g}s (TTS_LOAD_TIMEOUT_S)")
         kind, payload = self.conn.recv()
         if kind == "import_error":
             self.kill()
@@ -209,7 +210,7 @@ class Worker:
         self.conn.send(job)
         if not self.conn.poll(timeout_s):
             self.kill()
-            raise TimeoutError(f"synthesis exceeded {timeout_s:.0f}s (TTS_TIMEOUT_S); worker killed")
+            raise TimeoutError(f"synthesis exceeded {timeout_s:g}s (TTS_TIMEOUT_S); worker killed")
         kind, payload = self.conn.recv()
         if kind == "ok":
             return payload
@@ -300,23 +301,24 @@ def main(argv=None) -> int:
             if prev and prev.get("status") == "success" and not args.force:
                 skipped += 1
                 continue
-            sys.stdout.write(f"{p['id']} {p['title']:<34} ")
-            sys.stdout.flush()
             run_at = iso_now()
             text = p["text"]
             try:
                 if not worker.alive():
+                    print(f"loading {slug} model (first prompt or after a timeout) ...")
                     try:
                         worker.start()
                     except ImportError as e:
-                        print(f"FAIL {str(e)[:120]}")
                         print(f"\nadapter '{slug}' cannot import its library: {e}\n"
                               f"install it with: pip install -r requirements/open-tts/{slug}.txt", file=sys.stderr)
                         return 3
+                    except Exception:
+                        sys.stdout.write(f"{p['id']} {p['title']:<34} ")
+                        raise
                     consecutive_load_failures = 0
-                    print(f"[model loaded in {worker.load_ms} ms: {worker.info.get('model_version')}]")
-                    sys.stdout.write(f"{p['id']} {p['title']:<34} ")
-                    sys.stdout.flush()
+                    print(f"model loaded in {worker.load_ms} ms: {worker.info.get('model_version')}")
+                sys.stdout.write(f"{p['id']} {p['title']:<34} ")
+                sys.stdout.flush()
                 if not worker.info.get("style_tags"):
                     text = strip_stage_directions(text)
                 job = {"text": text, "language": p["language"], "instructions": p.get("instructions"),

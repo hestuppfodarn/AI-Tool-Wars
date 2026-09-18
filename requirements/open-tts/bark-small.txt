@@ -1,0 +1,6 @@
+# Bark small through transformers' BarkModel.
+--extra-index-url https://download.pytorch.org/whl/cpu
+-r base.txt
+torch==2.14.0
+transformers==5.17.0
+scipy>=1.11

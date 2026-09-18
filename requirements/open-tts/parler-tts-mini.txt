@@ -1,0 +1,10 @@
+# Parler-TTS Mini v1. parler-tts 0.2.3 hard-pins transformers==4.46.1, so it cannot share a venv
+# with the transformers-5 adapters (speecht5, bark-small, chatterbox, f5-tts).
+--extra-index-url https://download.pytorch.org/whl/cpu
+-r base.txt
+torch==2.14.0
+torchaudio==2.11.0
+transformers==4.46.1
+parler-tts==0.2.3
+sentencepiece>=0.2
+protobuf>=4

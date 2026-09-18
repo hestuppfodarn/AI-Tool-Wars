@@ -1,0 +1,5 @@
+# Shared by every open-weight adapter (scripts/run-open-tts.py itself only needs these).
+# Install ONE model file per virtualenv: requirements/open-tts/<slug>.txt; each includes this.
+numpy>=1.26
+soundfile>=0.12
+huggingface_hub>=0.25

@@ -1,0 +1,10 @@
+# F5-TTS. The package declares gradio, wandb, bitsandbytes, datasets, accelerate and torchcodec as hard
+# requirements and imports wandb/accelerate/datasets at `f5_tts.api` import time, so they cannot be skipped.
+# torchaudio>=2.9 needs torchcodec + system ffmpeg to read the reference clip.
+--extra-index-url https://download.pytorch.org/whl/cpu
+-r base.txt
+torch==2.14.0
+torchaudio==2.11.0
+torchcodec==0.16.0
+transformers==5.17.0
+f5-tts==1.1.22

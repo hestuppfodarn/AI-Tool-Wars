@@ -1,0 +1,11 @@
+# MeloTTS is not on PyPI (the `melotts` PyPI name is unrelated); install from GitHub at a pinned commit.
+# Its setup pins transformers==4.27.4, librosa==0.9.1, gruut 2.2.3 etc.; numpy must stay <2 for that stack.
+--extra-index-url https://download.pytorch.org/whl/cpu
+-r base.txt
+numpy<2
+torch==2.14.0
+torchaudio==2.11.0
+git+https://github.com/myshell-ai/MeloTTS.git@209145371cff8fc3bd60d7be902ea69cbdb7965a
+# Japanese: MeCab + the bundled dictionary (already in MeloTTS's own requirements, repeated for clarity)
+mecab-python3
+unidic-lite

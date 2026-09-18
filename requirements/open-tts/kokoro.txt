@@ -1,0 +1,12 @@
+# Kokoro-82M via kokoro-onnx (ONNX Runtime, CPU). Weights come from GitHub releases, not Hugging Face.
+-r base.txt
+kokoro-onnx==0.6.1
+# Japanese G2P for Kokoro: misaki's pyopenjtalk path. Listed explicitly instead of misaki[ja]
+# because that extra pulls `unidic`, which needs a separate 500 MB dictionary download;
+# unidic-lite ships its dictionary in the wheel and fugashi picks it up automatically.
+misaki==0.9.4
+pyopenjtalk>=0.4.1
+fugashi>=1.3
+unidic-lite>=1.0.8
+jaconv
+mojimoji

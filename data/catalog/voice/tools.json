@@ -79,5 +79,326 @@
       },
       "audio_encoding": "MP3"
     }
+  },
+  {
+    "slug": "kokoro",
+    "name": "Kokoro-82M",
+    "vendor": "hexgrad",
+    "website": "https://huggingface.co/hexgrad/Kokoro-82M",
+    "description": "82M-parameter open-weight TTS with 50+ preset voices across nine languages; runs many times faster than real time on a CPU through ONNX Runtime.",
+    "adapter": "open:kokoro",
+    "model_hint": "Kokoro-82M v1.0 (ONNX)",
+    "license": "Apache-2.0",
+    "open_weights": true,
+    "cpu_minutes_estimate": 3,
+    "languages": [
+      "en",
+      "es",
+      "fr",
+      "hi",
+      "it",
+      "pt",
+      "ja",
+      "zh"
+    ],
+    "run": {
+      "model_id": "hexgrad/Kokoro-82M",
+      "model_file": "kokoro-v1.0.onnx",
+      "voices_file": "voices-v1.0.bin",
+      "voice_by_language": {
+        "default": "af_heart",
+        "en-GB": "bf_emma",
+        "es": "ef_dora",
+        "fr": "ff_siwis",
+        "ja": "jf_alpha"
+      },
+      "speed": 1.0,
+      "japanese_g2p": "misaki"
+    }
+  },
+  {
+    "slug": "piper",
+    "name": "Piper",
+    "vendor": "Rhasspy (Michael Hansen)",
+    "website": "https://github.com/rhasspy/piper",
+    "description": "Fast VITS-based neural TTS built for the Raspberry Pi, with community voices in 30+ languages; the engine behind Home Assistant's local speech.",
+    "adapter": "open:piper",
+    "model_hint": "piper-tts 1.x, medium-quality voices",
+    "license": "MIT",
+    "open_weights": true,
+    "cpu_minutes_estimate": 2,
+    "languages": [
+      "en",
+      "sv",
+      "es",
+      "de",
+      "fr"
+    ],
+    "run": {
+      "model_id": "rhasspy/piper-voices",
+      "voice_by_language": {
+        "default": "en_US-lessac-medium",
+        "en-GB": "en_GB-alan-medium",
+        "sv": "sv_SE-nst-medium",
+        "es": "es_ES-davefx-medium",
+        "de": "de_DE-thorsten-medium",
+        "fr": "fr_FR-siwis-medium"
+      },
+      "length_scale": 1.0
+    }
+  },
+  {
+    "slug": "kittentts",
+    "name": "KittenTTS Nano",
+    "vendor": "KittenML",
+    "website": "https://github.com/KittenML/KittenTTS",
+    "description": "A 15M-parameter, 25 MB English TTS model with eight expressive preset voices, designed to run on any CPU without a GPU.",
+    "adapter": "open:kittentts",
+    "model_hint": "kitten-tts-nano-0.1",
+    "license": "Apache-2.0",
+    "open_weights": true,
+    "cpu_minutes_estimate": 2,
+    "languages": [
+      "en"
+    ],
+    "run": {
+      "model_id": "KittenML/kitten-tts-nano-0.1",
+      "voice_by_language": {
+        "default": "expr-voice-5-m"
+      },
+      "speed": 1.0
+    }
+  },
+  {
+    "slug": "speecht5",
+    "name": "SpeechT5 TTS",
+    "vendor": "Microsoft",
+    "website": "https://huggingface.co/microsoft/speecht5_tts",
+    "description": "Microsoft's unified speech-text transformer fine-tuned for English TTS, voiced through a HiFi-GAN vocoder and a CMU ARCTIC speaker embedding.",
+    "adapter": "open:speecht5",
+    "model_hint": "microsoft/speecht5_tts + speecht5_hifigan",
+    "license": "MIT",
+    "open_weights": true,
+    "cpu_minutes_estimate": 6,
+    "languages": [
+      "en"
+    ],
+    "run": {
+      "model_id": "microsoft/speecht5_tts",
+      "vocoder_id": "microsoft/speecht5_hifigan",
+      "speaker_dataset": "Matthijs/cmu-arctic-xvectors",
+      "voice_by_language": {
+        "default": "7306"
+      },
+      "normalize_numbers": true
+    }
+  },
+  {
+    "slug": "melotts",
+    "name": "MeloTTS",
+    "vendor": "MyShell.ai",
+    "website": "https://github.com/myshell-ai/MeloTTS",
+    "description": "Multilingual VITS-family TTS from MyShell with English (US, British, Indian, Australian), Spanish, French, Chinese, Japanese and Korean models; real-time on CPU.",
+    "adapter": "open:melotts",
+    "model_hint": "MeloTTS-English / -Spanish / -French / -Japanese",
+    "license": "MIT",
+    "open_weights": true,
+    "cpu_minutes_estimate": 10,
+    "languages": [
+      "en",
+      "es",
+      "fr",
+      "zh",
+      "ja",
+      "ko"
+    ],
+    "run": {
+      "model_id": "myshell-ai/MeloTTS",
+      "voice_by_language": {
+        "default": "EN-US",
+        "en-GB": "EN-BR",
+        "es": "ES",
+        "fr": "FR",
+        "ja": "JP"
+      },
+      "speed": 1.0
+    }
+  },
+  {
+    "slug": "xtts-v2",
+    "name": "XTTS-v2",
+    "vendor": "Coqui",
+    "website": "https://huggingface.co/coqui/XTTS-v2",
+    "description": "Coqui's 17-language voice-cloning TTS, now maintained by Idiap as coqui-tts; used here with a built-in studio speaker. Non-commercial licence (CPML).",
+    "adapter": "open:xtts-v2",
+    "model_hint": "xtts_v2 (v2.0.3)",
+    "license": "LicenseRef-CPML",
+    "open_weights": true,
+    "cpu_minutes_estimate": 30,
+    "languages": [
+      "en",
+      "es",
+      "fr",
+      "de",
+      "it",
+      "pt",
+      "pl",
+      "tr",
+      "ru",
+      "nl",
+      "cs",
+      "ar",
+      "zh",
+      "ja",
+      "hu",
+      "ko",
+      "hi"
+    ],
+    "run": {
+      "model_id": "tts_models/multilingual/multi-dataset/xtts_v2",
+      "voice_by_language": {
+        "default": "Ana Florence"
+      },
+      "unsupported_language": "error",
+      "split_sentences": true
+    }
+  },
+  {
+    "slug": "parler-tts-mini",
+    "name": "Parler-TTS Mini",
+    "vendor": "Hugging Face",
+    "website": "https://github.com/huggingface/parler-tts",
+    "description": "880M-parameter English TTS steered by a natural-language description of the speaker and delivery; the only open model here that consumes the prompt's style instructions directly.",
+    "adapter": "open:parler-tts-mini",
+    "model_hint": "parler-tts/parler-tts-mini-v1",
+    "license": "Apache-2.0",
+    "open_weights": true,
+    "cpu_minutes_estimate": 60,
+    "languages": [
+      "en"
+    ],
+    "run": {
+      "model_id": "parler-tts/parler-tts-mini-v1",
+      "voice_by_language": {
+        "default": "Jon"
+      },
+      "voice_description": "{voice}'s voice is clear and natural, with a very close recording that almost has no background noise.",
+      "use_instructions": true,
+      "seed": 0
+    }
+  },
+  {
+    "slug": "bark-small",
+    "name": "Bark (small)",
+    "vendor": "Suno",
+    "website": "https://huggingface.co/suno/bark-small",
+    "description": "Suno's generative audio transformer, small variant, with multilingual speaker presets; produces expressive speech but is slow on CPU and caps each generation at about 13 seconds.",
+    "adapter": "open:bark-small",
+    "model_hint": "suno/bark-small",
+    "license": "MIT",
+    "open_weights": true,
+    "cpu_minutes_estimate": 45,
+    "languages": [
+      "en",
+      "de",
+      "es",
+      "fr",
+      "hi",
+      "it",
+      "ja",
+      "ko",
+      "pl",
+      "pt",
+      "ru",
+      "tr",
+      "zh"
+    ],
+    "run": {
+      "model_id": "suno/bark-small",
+      "voice_by_language": {
+        "default": "v2/en_speaker_6",
+        "de": "v2/de_speaker_3",
+        "es": "v2/es_speaker_3",
+        "fr": "v2/fr_speaker_3",
+        "ja": "v2/ja_speaker_3"
+      },
+      "chunk_chars": 220,
+      "seed": 0
+    }
+  },
+  {
+    "slug": "f5-tts",
+    "name": "F5-TTS",
+    "vendor": "SWivid",
+    "website": "https://github.com/SWivid/F5-TTS",
+    "description": "Flow-matching diffusion transformer TTS (v1 Base) that clones a short reference clip; English and Chinese training data. Weights are CC-BY-NC-4.0.",
+    "adapter": "open:f5-tts",
+    "model_hint": "F5TTS_v1_Base",
+    "license": "CC-BY-NC-4.0",
+    "open_weights": true,
+    "cpu_minutes_estimate": 45,
+    "languages": [
+      "en",
+      "zh"
+    ],
+    "run": {
+      "model_id": "F5TTS_v1_Base",
+      "voice_by_language": {
+        "default": "basic_ref_en"
+      },
+      "ref_text": "Some call me nature, others call me mother nature.",
+      "nfe_step": 16,
+      "cfg_strength": 2.0,
+      "seed": 0
+    }
+  },
+  {
+    "slug": "chatterbox",
+    "name": "Chatterbox Multilingual",
+    "vendor": "Resemble AI",
+    "website": "https://github.com/resemble-ai/chatterbox",
+    "description": "Resemble AI's 500M-parameter Llama-backbone TTS with emotion exaggeration control and 23 languages including Swedish; heavy on CPU.",
+    "adapter": "open:chatterbox",
+    "model_hint": "ResembleAI/chatterbox (multilingual)",
+    "license": "MIT",
+    "open_weights": true,
+    "cpu_minutes_estimate": 60,
+    "languages": [
+      "ar",
+      "da",
+      "de",
+      "el",
+      "en",
+      "es",
+      "fi",
+      "fr",
+      "he",
+      "hi",
+      "it",
+      "ja",
+      "ko",
+      "ms",
+      "nl",
+      "no",
+      "pl",
+      "pt",
+      "ru",
+      "sv",
+      "sw",
+      "tr",
+      "zh"
+    ],
+    "run": {
+      "model_id": "ResembleAI/chatterbox",
+      "variant": "multilingual",
+      "voice_by_language": {
+        "default": "builtin"
+      },
+      "unsupported_language": "error",
+      "exaggeration": 0.5,
+      "cfg_weight": 0.5,
+      "temperature": 0.8,
+      "seed": 0
+    }
   }
 ]
