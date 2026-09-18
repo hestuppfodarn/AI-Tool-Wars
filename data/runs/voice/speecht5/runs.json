@@ -1,0 +1,20 @@
+[
+  {
+    "prompt_id": "voice-001",
+    "run_at": "2026-09-18T03:15:38.494Z",
+    "status": "error",
+    "error": "RuntimeError: Dataset scripts are no longer supported, but found cmu-arctic-xvectors.py",
+    "model": "microsoft/speecht5_tts",
+    "endpoint": "local",
+    "device": "cpu"
+  },
+  {
+    "prompt_id": "voice-002",
+    "run_at": "2026-09-18T03:16:02.405Z",
+    "status": "error",
+    "error": "RuntimeError: Dataset scripts are no longer supported, but found cmu-arctic-xvectors.py",
+    "model": "microsoft/speecht5_tts",
+    "endpoint": "local",
+    "device": "cpu"
+  }
+]

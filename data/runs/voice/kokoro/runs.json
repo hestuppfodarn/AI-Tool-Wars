@@ -1,0 +1,98 @@
+[
+  {
+    "prompt_id": "voice-001",
+    "run_at": "2026-09-18T03:17:19.570Z",
+    "status": "success",
+    "audio": "voice-001.ogg",
+    "bytes": 420908,
+    "ttft_ms": 4327,
+    "latency_ms": 4327,
+    "voice": "af_heart",
+    "model": "hexgrad/Kokoro-82M",
+    "endpoint": "local",
+    "streaming": false,
+    "device": "cpu",
+    "model_version": "kokoro-onnx 0.6.1 / kokoro-v1.0.onnx (thewh1teagle/kokoro-onnx model-files-v1.0)",
+    "sample_rate": 24000,
+    "scores": {
+      "accuracy": 10,
+      "naturalness": 7.5,
+      "adherence": null
+    },
+    "transcript": "Meet Ledger, the invoicing tool that gets you paid in days, not weeks. Send an invoice, track it, and let automatic reminders do the chasing.",
+    "asr_model": "faster-whisper-small-int8",
+    "wer": 0,
+    "mos": {
+      "backend": "dnsmos",
+      "ovrl": 3.542,
+      "sig": 3.717,
+      "bak": 4.228,
+      "p808": 4.26
+    },
+    "scored_at": "2026-09-18T03:18:25.960Z"
+  },
+  {
+    "prompt_id": "voice-002",
+    "run_at": "2026-09-18T03:17:30.171Z",
+    "status": "success",
+    "audio": "voice-002.ogg",
+    "bytes": 430124,
+    "ttft_ms": 4341,
+    "latency_ms": 4341,
+    "voice": "af_heart",
+    "model": "hexgrad/Kokoro-82M",
+    "endpoint": "local",
+    "streaming": false,
+    "device": "cpu",
+    "model_version": "kokoro-onnx 0.6.1 / kokoro-v1.0.onnx (thewh1teagle/kokoro-onnx model-files-v1.0)",
+    "sample_rate": 24000,
+    "scores": {
+      "accuracy": 9.3,
+      "naturalness": 7.4,
+      "adherence": null
+    },
+    "transcript": "Thank you for calling Northgate Dental. For appointments, press 1. For billing, press 2. For all other inquiries, press 3 or stay on the line.",
+    "asr_model": "faster-whisper-small-int8",
+    "wer": 0.04,
+    "mos": {
+      "backend": "dnsmos",
+      "ovrl": 3.494,
+      "sig": 3.685,
+      "bak": 4.225,
+      "p808": 4.428
+    },
+    "scored_at": "2026-09-18T03:18:30.270Z"
+  },
+  {
+    "prompt_id": "voice-003",
+    "run_at": "2026-09-18T03:17:34.516Z",
+    "status": "success",
+    "audio": "voice-003.ogg",
+    "bytes": 636972,
+    "ttft_ms": 6361,
+    "latency_ms": 6361,
+    "voice": "af_heart",
+    "model": "hexgrad/Kokoro-82M",
+    "endpoint": "local",
+    "streaming": false,
+    "device": "cpu",
+    "model_version": "kokoro-onnx 0.6.1 / kokoro-v1.0.onnx (thewh1teagle/kokoro-onnx model-files-v1.0)",
+    "sample_rate": 24000,
+    "scores": {
+      "accuracy": 8.3,
+      "naturalness": 7.3,
+      "adherence": null
+    },
+    "transcript": "You can reach our support team at 0800-555-0199. That's 0800-555-0199, Monday to Friday, 9 to 5.",
+    "asr_model": "faster-whisper-small-int8",
+    "wer": 0.095,
+    "mos": {
+      "backend": "dnsmos",
+      "ovrl": 3.466,
+      "sig": 3.671,
+      "bak": 4.199,
+      "p808": 4.115
+    },
+    "scored_at": "2026-09-18T03:18:33.906Z"
+  }
+]

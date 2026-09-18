@@ -1,0 +1,98 @@
+[
+  {
+    "prompt_id": "voice-001",
+    "run_at": "2026-09-18T03:15:08.371Z",
+    "status": "success",
+    "audio": "voice-001.ogg",
+    "bytes": 615644,
+    "ttft_ms": 5479,
+    "latency_ms": 5479,
+    "voice": "expr-voice-5-m",
+    "model": "KittenML/kitten-tts-nano-0.1",
+    "endpoint": "local",
+    "streaming": false,
+    "device": "cpu",
+    "model_version": "KittenML/kitten-tts-nano-0.1 via onnxruntime 1.30.0",
+    "sample_rate": 24000,
+    "scores": {
+      "accuracy": 9.3,
+      "naturalness": 7.4,
+      "adherence": null
+    },
+    "transcript": "Neat ledger, the invoicing tool that gets you paid in days, not weeks. Send an invoice, track it, and let automatic reminders do the chasing.",
+    "asr_model": "faster-whisper-small-int8",
+    "wer": 0.04,
+    "mos": {
+      "backend": "dnsmos",
+      "ovrl": 3.472,
+      "sig": 3.661,
+      "bak": 4.235,
+      "p808": 3.747
+    },
+    "scored_at": "2026-09-18T03:16:11.658Z"
+  },
+  {
+    "prompt_id": "voice-002",
+    "run_at": "2026-09-18T03:15:17.328Z",
+    "status": "success",
+    "audio": "voice-002.ogg",
+    "bytes": 638444,
+    "ttft_ms": 5719,
+    "latency_ms": 5719,
+    "voice": "expr-voice-5-m",
+    "model": "KittenML/kitten-tts-nano-0.1",
+    "endpoint": "local",
+    "streaming": false,
+    "device": "cpu",
+    "model_version": "KittenML/kitten-tts-nano-0.1 via onnxruntime 1.30.0",
+    "sample_rate": 24000,
+    "scores": {
+      "accuracy": 9.3,
+      "naturalness": 7.3,
+      "adherence": null
+    },
+    "transcript": "Thank you for calling Northgate Dental. For appointments, press 1, for billing, press 2, for all other inquiries, press 3, or stay on the line.",
+    "asr_model": "faster-whisper-small-int8",
+    "wer": 0.04,
+    "mos": {
+      "backend": "dnsmos",
+      "ovrl": 3.463,
+      "sig": 3.654,
+      "bak": 4.23,
+      "p808": 3.801
+    },
+    "scored_at": "2026-09-18T03:16:16.628Z"
+  },
+  {
+    "prompt_id": "voice-003",
+    "run_at": "2026-09-18T03:15:23.052Z",
+    "status": "success",
+    "audio": "voice-003.ogg",
+    "bytes": 661244,
+    "ttft_ms": 5983,
+    "latency_ms": 5983,
+    "voice": "expr-voice-5-m",
+    "model": "KittenML/kitten-tts-nano-0.1",
+    "endpoint": "local",
+    "streaming": false,
+    "device": "cpu",
+    "model_version": "KittenML/kitten-tts-nano-0.1 via onnxruntime 1.30.0",
+    "sample_rate": 24000,
+    "scores": {
+      "accuracy": 6.6,
+      "naturalness": 7.2,
+      "adherence": null
+    },
+    "transcript": "You can reach our support team at 0800-555-0199. This 0800-555-0199, Monday to Friday, 9 to 5.",
+    "asr_model": "faster-whisper-small-int8",
+    "wer": 0.19,
+    "mos": {
+      "backend": "dnsmos",
+      "ovrl": 3.413,
+      "sig": 3.607,
+      "bak": 4.194,
+      "p808": 3.525
+    },
+    "scored_at": "2026-09-18T03:16:21.633Z"
+  }
+]

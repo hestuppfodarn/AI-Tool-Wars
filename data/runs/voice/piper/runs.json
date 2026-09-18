@@ -1,0 +1,98 @@
+[
+  {
+    "prompt_id": "voice-001",
+    "run_at": "2026-09-18T03:15:18.749Z",
+    "status": "success",
+    "audio": "voice-001.ogg",
+    "bytes": 379436,
+    "ttft_ms": 399,
+    "latency_ms": 804,
+    "voice": "en_US-lessac-medium",
+    "model": "rhasspy/piper-voices",
+    "endpoint": "local",
+    "streaming": true,
+    "device": "cpu",
+    "model_version": "piper-tts 1.8.0 / en_US-lessac-medium",
+    "sample_rate": 22050,
+    "scores": {
+      "accuracy": 9.3,
+      "naturalness": 7.5,
+      "adherence": null
+    },
+    "transcript": "Meek Ledger, the invoicing tool that gets you paid in days, not weeks. Send an invoice, track it, and let automatic reminders do the chasing.",
+    "asr_model": "faster-whisper-small-int8",
+    "wer": 0.04,
+    "mos": {
+      "backend": "dnsmos",
+      "ovrl": 3.522,
+      "sig": 3.69,
+      "bak": 4.238,
+      "p808": 4.056
+    },
+    "scored_at": "2026-09-18T03:16:27.020Z"
+  },
+  {
+    "prompt_id": "voice-002",
+    "run_at": "2026-09-18T03:15:33.999Z",
+    "status": "success",
+    "audio": "voice-002.ogg",
+    "bytes": 357420,
+    "ttft_ms": 175,
+    "latency_ms": 783,
+    "voice": "en_US-lessac-medium",
+    "model": "rhasspy/piper-voices",
+    "endpoint": "local",
+    "streaming": true,
+    "device": "cpu",
+    "model_version": "piper-tts 1.8.0 / en_US-lessac-medium",
+    "sample_rate": 22050,
+    "scores": {
+      "accuracy": 9.3,
+      "naturalness": 7,
+      "adherence": null
+    },
+    "transcript": "Thank you for calling Northgate Dental, for appointments, press 1, for billing, press 2, for all other inquiries, press 3, or stay on the line.",
+    "asr_model": "faster-whisper-small-int8",
+    "wer": 0.04,
+    "mos": {
+      "backend": "dnsmos",
+      "ovrl": 3.341,
+      "sig": 3.584,
+      "bak": 4.141,
+      "p808": 4.262
+    },
+    "scored_at": "2026-09-18T03:16:34.980Z"
+  },
+  {
+    "prompt_id": "voice-003",
+    "run_at": "2026-09-18T03:15:34.787Z",
+    "status": "success",
+    "audio": "voice-003.ogg",
+    "bytes": 489004,
+    "ttft_ms": 1031,
+    "latency_ms": 1031,
+    "voice": "en_US-lessac-medium",
+    "model": "rhasspy/piper-voices",
+    "endpoint": "local",
+    "streaming": true,
+    "device": "cpu",
+    "model_version": "piper-tts 1.8.0 / en_US-lessac-medium",
+    "sample_rate": 22050,
+    "scores": {
+      "accuracy": 7.4,
+      "naturalness": 7.6,
+      "adherence": null
+    },
+    "transcript": "You can reach our sport team at 0800 555 0199, that's 0800 555 0199, Monday to Friday, 9 to 5.",
+    "asr_model": "faster-whisper-small-int8",
+    "wer": 0.143,
+    "mos": {
+      "backend": "dnsmos",
+      "ovrl": 3.564,
+      "sig": 3.757,
+      "bak": 4.21,
+      "p808": 4.219
+    },
+    "scored_at": "2026-09-18T03:16:40.411Z"
+  }
+]
