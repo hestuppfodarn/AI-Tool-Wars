@@ -30,6 +30,11 @@ on:
         description: 'One-off INWORLD_API_KEY for this run only (prefer the repository secret; rotate the key afterwards)'
         required: false
         default: ''
+  # Push-triggered requests: commit .github/benchmark-request.json with
+  # {"tools": "inworld-tts", "limit": "3", "force": false} to start a run from
+  # a session that cannot call the dispatch API.
+  push:
+    paths: ['.github/benchmark-request.json']
   schedule:
     - cron: '17 5 * * 1'   # weekly, Monday 05:17 UTC
 
@@ -57,6 +62,19 @@ jobs:
           cache: npm
       - run: npm ci --no-audit --no-fund
 
+      - name: Resolve request
+        id: req
+        run: |
+          if [ "${{ github.event_name }}" = "push" ] && [ -f .github/benchmark-request.json ]; then
+            echo "tools=$(jq -r '.tools // "inworld-tts,openai-tts,elevenlabs,cartesia"' .github/benchmark-request.json)" >> "$GITHUB_OUTPUT"
+            echo "limit=$(jq -r '.limit // ""' .github/benchmark-request.json)" >> "$GITHUB_OUTPUT"
+            echo "force=$(jq -r '.force // false' .github/benchmark-request.json)" >> "$GITHUB_OUTPUT"
+          else
+            echo "tools=${{ github.event.inputs.tools || 'inworld-tts,openai-tts,elevenlabs,cartesia' }}" >> "$GITHUB_OUTPUT"
+            echo "limit=${{ github.event.inputs.limit }}" >> "$GITHUB_OUTPUT"
+            echo "force=${{ github.event.inputs.force || 'false' }}" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Mask one-off inputs
         if: github.event.inputs.inworld_key_override != ''
         run: echo "::add-mask::${{ github.event.inputs.inworld_key_override }}"
@@ -67,9 +85,9 @@ jobs:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           ELEVENLABS_API_KEY: ${{ secrets.ELEVENLABS_API_KEY }}
           CARTESIA_API_KEY: ${{ secrets.CARTESIA_API_KEY }}
-          TOOLS: ${{ github.event.inputs.tools || 'inworld-tts,openai-tts,elevenlabs,cartesia' }}
-          LIMIT: ${{ github.event.inputs.limit }}
-          FORCE: ${{ github.event.inputs.force }}
+          TOOLS: ${{ steps.req.outputs.tools }}
+          LIMIT: ${{ steps.req.outputs.limit }}
+          FORCE: ${{ steps.req.outputs.force }}
         run: |
           set -u
           status=0
@@ -94,7 +112,7 @@ jobs:
         if: env.OPENAI_API_KEY != ''
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-          TOOLS: ${{ github.event.inputs.tools || 'inworld-tts,openai-tts,elevenlabs,cartesia' }}
+          TOOLS: ${{ steps.req.outputs.tools }}
         run: |
           IFS=',' read -ra TOOL_LIST <<< "$TOOLS"
           for tool in "${TOOL_LIST[@]}"; do
