@@ -81,6 +81,7 @@ export function buildFromCatalog() {
   addVelocity(runs);
   const ratings = aggregateRatings(runs, tools, categories);
   for (const pair of pairs) pair.verdict = buildVerdict(pair, ratings, tools, categories, prompts);
+  const previous_holders = previousHolders(categories);
 
   return {
     version: 1,
@@ -89,7 +90,39 @@ export function buildFromCatalog() {
     demo: false,
     categories, tools, prompts,
     runs, ratings, pairs,
+    ...(previous_holders ? { previous_holders } : {}),
   };
+}
+
+/**
+ * Who held each prompt in the snapshot we are about to overwrite. Same rules as
+ * apps/site/src/lib/front.ts holders(): best composite per (tool, prompt) among
+ * successful scored runs; an exact tie at the top is null (contested); no scored
+ * run is null (unclaimed). Feeds the "Movements" list on the category page.
+ */
+function previousHolders(categories) {
+  if (!existsSync(outPath)) return null;
+  let prev;
+  try { prev = readJson(outPath); } catch { return null; }
+  if (!Array.isArray(prev?.runs) || !prev.runs.length) return null;
+  const out = {};
+  for (const cat of categories) {
+    const best = new Map(); // prompt_id -> Map(tool -> composite)
+    for (const r of prev.runs) {
+      if (r.category !== cat.slug || r.status !== 'success' || typeof r.composite !== 'number') continue;
+      if (!best.has(r.prompt_id)) best.set(r.prompt_id, new Map());
+      const m = best.get(r.prompt_id);
+      if (!m.has(r.tool) || m.get(r.tool) < r.composite) m.set(r.tool, r.composite);
+    }
+    if (!best.size) continue;
+    const holders = {};
+    for (const [pid, m] of best) {
+      const sorted = [...m.entries()].sort((a, b) => b[1] - a[1]);
+      holders[pid] = sorted.length > 1 && Math.abs(sorted[0][1] - sorted[1][1]) < 1e-6 ? null : sorted[0][0];
+    }
+    out[cat.slug] = { run_at: prev.generated_at, holders };
+  }
+  return Object.keys(out).length ? out : null;
 }
 
 const mean = (xs) => (xs.length ? xs.reduce((a, b) => a + b, 0) / xs.length : null);

@@ -7,3 +7,5 @@ apps/site/public/audio/demo/
 .env.*
 apps/site/public/runs/
 !.env.example
+__pycache__/
+*.pyc

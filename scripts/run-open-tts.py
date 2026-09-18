@@ -38,6 +38,12 @@ ROOT = Path(__file__).resolve().parent.parent
 ADAPTERS_DIR = ROOT / "scripts" / "open_tts_adapters"
 CATEGORY = "voice"
 
+# Module level (not under __main__) so the spawned worker gets the same path and
+# adapters can `from _common import ...`.
+if str(ADAPTERS_DIR) not in sys.path:
+    sys.path.insert(0, str(ADAPTERS_DIR))
+from _common import pick_voice, set_torch_threads  # noqa: E402
+
 # --- helpers ------------------------------------------------------------------
 
 STAGE_DIRECTION = re.compile(r"\[[^\]]*\]")
@@ -125,7 +131,6 @@ def _worker_main(conn, adapter_file: str, cfg: dict) -> None:
     try:
         import numpy  # noqa: F401  (base requirement)
         import soundfile  # noqa: F401
-        from _common import set_torch_threads  # type: ignore
 
         set_torch_threads()
         adapter = import_adapter(Path(adapter_file))
@@ -317,20 +322,11 @@ def main(argv=None) -> int:
                 job = {"text": text, "language": p["language"], "instructions": p.get("instructions"),
                        "out_path": str(out_dir / f"{p['id']}.wav")}
                 r = worker.request(job, args.timeout)
-                from_cfg_voice = None
-                try:
-                    sys.path.insert(0, str(ADAPTERS_DIR))
-                    from _common import pick_voice  # type: ignore
-
-                    from_cfg_voice = pick_voice(p["language"], cfg)
-                finally:
-                    if sys.path and sys.path[0] == str(ADAPTERS_DIR):
-                        sys.path.pop(0)
                 by_id[p["id"]] = {
                     "prompt_id": p["id"], "run_at": run_at, "status": "success",
                     "audio": f"{p['id']}.wav", "bytes": r["bytes"],
                     "ttft_ms": r["ttft_ms"], "latency_ms": r["latency_ms"],
-                    "voice": r.get("voice") or from_cfg_voice, "model": model_id, "endpoint": "local",
+                    "voice": r.get("voice") or pick_voice(p["language"], cfg), "model": model_id, "endpoint": "local",
                     "streaming": r["streaming"], "device": "cpu",
                     "model_version": worker.info.get("model_version"), "sample_rate": r["sample_rate"],
                 }
@@ -367,5 +363,4 @@ def main(argv=None) -> int:
 
 
 if __name__ == "__main__":
-    sys.path.insert(0, str(ADAPTERS_DIR))  # lets adapters `from _common import ...`
     sys.exit(main())
