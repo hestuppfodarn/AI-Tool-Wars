@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-09-18T04:31:17.152Z",
+  "generated_at": "2026-09-18T05:13:49.939Z",
   "source": "catalog",
   "demo": false,
   "categories": [
@@ -175,7 +175,7 @@
       "website": "https://huggingface.co/meta-llama/Llama-3.2-3B-Instruct",
       "description": "3-billion-parameter open-weight instruction model, run locally on CPU through llama.cpp at Q4_K_M.",
       "category": "legal",
-      "status": "pending",
+      "status": "benchmarked",
       "proxy": true,
       "proxy_note": "A general-purpose language model, not a legal product. It runs the bank so the prompts have a floor to be measured against while the legal vendors decide."
     },
@@ -197,7 +197,7 @@
       "website": "https://huggingface.co/microsoft/Phi-4-mini-instruct",
       "description": "3.8-billion-parameter open-weight instruction model trained on filtered and synthetic data, run locally through llama.cpp at Q4_K_M.",
       "category": "legal",
-      "status": "pending",
+      "status": "benchmarked",
       "proxy": true,
       "proxy_note": "A general-purpose language model, not a legal product. It runs the bank so the prompts have a floor to be measured against while the legal vendors decide."
     },
@@ -1615,6 +1615,1586 @@
   ],
   "runs": [
     {
+      "category": "legal",
+      "tool": "llama-3.2-3b-instruct",
+      "prompt_id": "legal-001",
+      "run_at": "2026-09-18T04:33:43.744Z",
+      "audio_url": null,
+      "output_url": "runs/legal/llama-3.2-3b-instruct/legal-001.md",
+      "output_excerpt": "Here are the obligations on Fenwick Data Ltd beyond keeping information confidential:\n\n• Use Confidential Information only for the Purpose (Clause 3(a))\n• Not disclose it to any third party other than its employees and advisers who need to know and are bound by written obligations no less protective (Clause 3(b))\n• Protect it with at least reasonable care (Clause 3(c))\n\nI would refuse to sign this draft as drafted because Clause 7.1 states that \"Nothing in this Agreement grants any licence to intellectual property.\" This clause is too broad and could be interpreted to mean that Fenwick Data…",
+      "output_chars": 1162,
+      "rubric_hits": [
+        {
+          "id": "clause-73",
+          "hit": true,
+          "note": "found: clause 7"
+        },
+        {
+          "id": "non-compete",
+          "hit": false,
+          "note": "no match"
+        },
+        {
+          "id": "tail-24",
+          "hit": false,
+          "note": "no match"
+        },
+        {
+          "id": "non-solicit",
+          "hit": false,
+          "note": "no match"
+        },
+        {
+          "id": "survival-5",
+          "hit": true,
+          "note": "matched 'five (5) years'"
+        },
+        {
+          "id": "territory",
+          "hit": false,
+          "note": "no match"
+        },
+        {
+          "id": "no-fake-clause",
+          "hit": true,
+          "note": "absent"
+        },
+        {
+          "id": "len",
+          "hit": true,
+          "note": "187 words, limit 350"
+        },
+        {
+          "id": "bullets",
+          "hit": false,
+          "note": "no match"
+        },
+        {
+          "id": "lang",
+          "hit": true,
+          "note": "detected en, wanted en"
+        }
+      ],
+      "transcript": null,
+      "ttft_ms": 22819,
+      "latency_ms": 38693,
+      "scores": {
+        "accuracy": 3.3,
+        "adherence": 10,
+        "conciseness": 3.3,
+        "velocity": 10
+      },
+      "composite": 6.65,
+      "wer": null,
+      "judge_rationale": null,
+      "status": "success",
+      "error": null
+    },
+    {
+      "category": "legal",
+      "tool": "llama-3.2-3b-instruct",
+      "prompt_id": "legal-002",
+      "run_at": "2026-09-18T04:34:33.514Z",
+      "audio_url": null,
+      "output_url": "runs/legal/llama-3.2-3b-instruct/legal-002.md",
+      "output_excerpt": "Här är en lista över de punkter som strider mot tvingande lag eller är oskäliga i Granska § 3, § 6 och § 8 mot lagen om anställningsskydd (LAS):\n\n* § 3: Anställningsform - Provanställning på nio månader kan vara oskälig eftersom den inte uppfyller kraven på en minst tvåårig anställning enligt § 4 § 1 LAS. Korrektionsförslag: Anställningen ska starta med en fulltidsanställning.\n* § 6: Uppsägningstid - Tre månaders uppsägningstid kan vara för kort eftersom den inte uppfyller kraven på en minst tvåårig anställning enligt § 4 § 1 LAS. Korrektionsförslag: Uppsägningstiden ska vara minst två år.\n*…",
+      "output_chars": 937,
+      "rubric_hits": [
+        {
+          "id": "probation-max",
+          "hit": false,
+          "note": "no match"
+        },
+        {
+          "id": "las-6",
+          "hit": true,
+          "note": "matched '§ 6'"
+        },
+        {
+          "id": "notice-11",
+          "hit": false,
+          "note": "no match"
+        },
+        {
+          "id": "notice-scale",
+          "hit": false,
+          "note": "no match"
+        },
+        {
+          "id": "noncompete-comp",
+          "hit": true,
+          "note": "matched 'oskälig'"
+        },
+        {
+          "id": "no-fake-section",
+          "hit": true,
+          "note": "absent"
+        },
+        {
+          "id": "lang",
+          "hit": true,
+          "note": "detected sv, wanted sv"
+        },
+        {
+          "id": "len",
+          "hit": true,
+          "note": "147 words, limit 250"
+        },
+        {
+          "id": "bullets",
+          "hit": false,
+          "note": "no match"
+        }
+      ],
+      "transcript": null,
+      "ttft_ms": 17697,
+      "latency_ms": 42157,
+      "scores": {
+        "accuracy": 3.6,
+        "adherence": 10,
+        "conciseness": 3.6,
+        "velocity": 10
+      },
+      "composite": 6.8,
+      "wer": null,
+      "judge_rationale": null,
+      "status": "success",
+      "error": null
+    },
+    {
+      "category": "legal",
+      "tool": "llama-3.2-3b-instruct",
+      "prompt_id": "legal-003",
+      "run_at": "2026-09-18T04:35:15.688Z",
+      "audio_url": null,
+      "output_url": "runs/legal/llama-3.2-3b-instruct/legal-003.md",
+      "output_excerpt": "Here's a comparison of the DPA against Article 28(3) GDPR:\n\n1. **Missing requirement: Data Protection Impact Assessment (DPIA)** - Article 28(3)(a) requires that the processor and controller conduct a DPIA before processing personal data, unless it is not applicable. The DPA does not mention this requirement.\n\n2. **Missing requirement: Data Protection by Design and Default (DPbD)** - Article 28(3)(c) states that the processor must implement DPbD measures to ensure the protection of personal data. The DPA only mentions security measures in Annex 2, without specifying DPbD.\n\n3. **Missing…",
+      "output_chars": 1825,
+      "rubric_hits": [
+        {
+          "id": "art-28",
+          "hit": true,
+          "note": "matched 'article 28'"
+        },
+        {
+          "id": "subprocessor",
+          "hit": true,
+          "note": "matched 'sub-processor'"
+        },
+        {
+          "id": "subprocessor-authorisation",
+          "hit": false,
+          "note": "no match"
+        },
+        {
+          "id": "deletion-return",
+          "hit": false,
+          "note": "no match"
+        },
+        {
+          "id": "audit",
+          "hit": false,
+          "note": "no match"
+        },
+        {
+          "id": "assistance",
+          "hit": true,
+          "note": "matched 'data subject'"
+        },
+        {
+          "id": "dpia",
+          "hit": true,
+          "note": "matched 'impact assessment'"
+        },
+        {
+          "id": "not-missing-confidentiality",
+          "hit": true,
+          "note": "absent"
+        },
+        {
+          "id": "len",
+          "hit": true,
+          "note": "265 words, limit 400"
+        },
+        {
+          "id": "numbered",
+          "hit": false,
+          "note": "no match"
+        },
+        {
+          "id": "lang",
+          "hit": true,
+          "note": "detected en, wanted en"
+        }
+      ],
+      "transcript": null,
+      "ttft_ms": 15507,
+      "latency_ms": 42811,
+      "scores": {
+        "accuracy": 5,
+        "adherence": 10,
+        "conciseness": 5,
+        "velocity": 10
+      },
+      "composite": 7.5,
+      "wer": null,
+      "judge_rationale": null,
+      "status": "success",
+      "error": null
+    },
+    {
+      "category": "legal",
+      "tool": "llama-3.2-3b-instruct",
+      "prompt_id": "legal-004",
+      "run_at": "2026-09-18T04:35:58.515Z",
+      "audio_url": null,
+      "output_url": "runs/legal/llama-3.2-3b-instruct/legal-004.md",
+      "output_excerpt": "[Bryggan Coffee Roasters Ltd]\n[Company No. 12233445]\n[Registered Office: Unit 4, Bryggan Yard, 17 Canal Street, Manchester M1 7HJ]\n\n[Date: 18 September 2026]\n\nHalden Estates Limited\n[Company No. 08811223]\n[Registered Office: 22 Bishopsgate, London EC2N 4BQ]\n\nLandlord's Address for Notice\n\nDear Sir/Madam,\n\nRe: Exercise of Option to Determine Lease under Clause 12.1\n\nWe are writing to inform you that we, Bryggan Coffee Roasters Ltd, hereby serve written notice on you, Halden Estates Limited, not less than six (6) months before the Break Date of 30 June 2027, exercising our option to determine…",
+      "output_chars": 1237,
+      "rubric_hits": [
+        {
+          "id": "landlord-name",
+          "hit": true,
+          "note": "found: halden estates limited"
+        },
+        {
+          "id": "landlord-address",
+          "hit": true,
+          "note": "found: 22 bishopsgate"
+        },
+        {
+          "id": "clause-121",
+          "hit": true,
+          "note": "found: 12.1"
+        },
+        {
+          "id": "break-date",
+          "hit": true,
+          "note": "matched '30 june 2027'"
+        },
+        {
+          "id": "premises",
+          "hit": true,
+          "note": "matched 'unit 4'"
+        },
+        {
+          "id": "tenant",
+          "hit": true,
+          "note": "found: bryggan coffee roasters"
+        },
+        {
+          "id": "vacant-possession",
+          "hit": true,
+          "note": "found: vacant possession"
+        },
+        {
+          "id": "recorded-delivery",
+          "hit": false,
+          "note": "no match"
+        },
+        {
+          "id": "last-post-date",
+          "hit": false,
+          "note": "no match"
+        },
+        {
+          "id": "len",
+          "hit": true,
+          "note": "203 words, limit 300"
+        },
+        {
+          "id": "lang",
+          "hit": true,
+          "note": "detected en, wanted en"
+        }
+      ],
+      "transcript": null,
+      "ttft_ms": 15465,
+      "latency_ms": 38138,
+      "scores": {
+        "accuracy": 7.7,
+        "adherence": 10,
+        "conciseness": 7.7,
+        "velocity": 10
+      },
+      "composite": 8.85,
+      "wer": null,
+      "judge_rationale": null,
+      "status": "success",
+      "error": null
+    },
+    {
+      "category": "legal",
+      "tool": "llama-3.2-3b-instruct",
+      "prompt_id": "legal-005",
+      "run_at": "2026-09-18T04:36:36.670Z",
+      "audio_url": null,
+      "output_url": "runs/legal/llama-3.2-3b-instruct/legal-005.md",
+      "output_excerpt": "Post-money valuation: SEK 200,000,000. Alder Ventures Fund III will own approximately 20% of the company. The liquidation preference is 1x the original purchase price, non-participating and senior to Ordinary Shares. Dividends are non-cumulative and declared as needed. An anti-dilution mechanism is in place, using a broad-based weighted average. A 1:1 conversion ratio applies, subject to adjustment. The board will consist of five directors, with two appointed by the founders, two by Alder, and one independent member chosen through mutual agreement. Protective provisions include consent from…",
+      "output_chars": 764,
+      "rubric_hits": [
+        {
+          "id": "post-money",
+          "hit": true,
+          "note": "matched '200,000,000'"
+        },
+        {
+          "id": "stake",
+          "hit": true,
+          "note": "matched '20%'"
+        },
+        {
+          "id": "pref-1x",
+          "hit": true,
+          "note": "matched '1x'"
+        },
+        {
+          "id": "non-participating",
+          "hit": true,
+          "note": "matched 'non-participating'"
+        },
+        {
+          "id": "anti-dilution",
+          "hit": true,
+          "note": "found: weighted average"
+        },
+        {
+          "id": "board",
+          "hit": true,
+          "note": "matched 'two appointed by the founders, two by alder, and one indepen'"
+        },
+        {
+          "id": "pool",
+          "hit": false,
+          "note": "no match"
+        },
+        {
+          "id": "wrong-post-money",
+          "hit": true,
+          "note": "absent"
+        },
+        {
+          "id": "len",
+          "hit": true,
+          "note": "111 words, limit 150"
+        },
+        {
+          "id": "lang",
+          "hit": true,
+          "note": "detected en, wanted en"
+        }
+      ],
+      "transcript": null,
+      "ttft_ms": 13431,
+      "latency_ms": 24244,
+      "scores": {
+        "accuracy": 9.1,
+        "adherence": 10,
+        "conciseness": 9.1,
+        "velocity": 10
+      },
+      "composite": 9.55,
+      "wer": null,
+      "judge_rationale": null,
+      "status": "success",
+      "error": null
+    },
+    {
+      "category": "legal",
+      "tool": "llama-3.2-3b-instruct",
+      "prompt_id": "legal-006",
+      "run_at": "2026-09-18T04:37:00.930Z",
+      "audio_url": null,
+      "output_url": "runs/legal/llama-3.2-3b-instruct/legal-006.md",
+      "output_excerpt": "13. LIABILITY\n\n13.1 The Supplier shall be liable to the Customer for all losses, damages, costs and expenses of any kind arising out of or in connection with this Agreement, however caused, including loss of profit, loss of business and indirect or consequential loss.\n\n13.2 {+ +}The Supplier's total liability is capped at the Fees paid in the twelve (12) months preceding the claim{ - -}. \n\n13.3 The Supplier shall not be liable for loss of profit, loss of business or indirect or consequential loss{ - -}. \n\n13.4 {+ +}However, the cap and exclusion do not apply to death or personal injury caused…",
+      "output_chars": 1094,
+      "rubric_hits": [
+        {
+          "id": "tracked-1",
+          "hit": false,
+          "note": "no match"
+        },
+        {
+          "id": "tracked-2",
+          "hit": true,
+          "note": "matched '{+ +}'"
+        },
+        {
+          "id": "cap-12",
+          "hit": true,
+          "note": "matched 'twelve (12) months'"
+        },
+        {
+          "id": "excl-profit",
+          "hit": true,
+          "note": "matched 'not be liable for loss of profit, loss of business or indire'"
+        },
+        {
+          "id": "carve-injury",
+          "hit": true,
+          "note": "matched 'death'"
+        },
+        {
+          "id": "carve-fraud",
+          "hit": true,
+          "note": "found: fraud"
+        },
+        {
+          "id": "carve-confidentiality",
+          "hit": true,
+          "note": "matched 'confidential'"
+        },
+        {
+          "id": "deleted-three",
+          "hit": false,
+          "note": "no match"
+        },
+        {
+          "id": "len",
+          "hit": true,
+          "note": "184 words, limit 400"
+        },
+        {
+          "id": "lang",
+          "hit": true,
+          "note": "detected en, wanted en"
+        }
+      ],
+      "transcript": null,
+      "ttft_ms": 9731,
+      "latency_ms": 26112,
+      "scores": {
+        "accuracy": 7.1,
+        "adherence": 10,
+        "conciseness": 7.1,
+        "velocity": 10
+      },
+      "composite": 8.55,
+      "wer": null,
+      "judge_rationale": null,
+      "status": "success",
+      "error": null
+    },
+    {
+      "category": "legal",
+      "tool": "llama-3.2-3b-instruct",
+      "prompt_id": "legal-007",
+      "run_at": "2026-09-18T04:37:27.058Z",
+      "audio_url": null,
+      "output_url": "runs/legal/llama-3.2-3b-instruct/legal-007.md",
+      "output_excerpt": "{\n  \"provider\": \"Ashgrove Software Limited\",\n  \"customer\": \"Marlow & Finch LLP\",\n  \"effective_date\": \"2026-10-01T00:00:00Z\",\n  \"initial_term_months\": 24,\n  \"renewal_term_months\": 12,\n  \"renewal_notice_days\": 90,\n  \"monthly_fee\": 4800,\n  \"currency\": \"EUR\",\n  \"payment_terms_days\": 30,\n  \"late_interest_percent\": 8,\n  \"uptime_percent\": 99.5,\n  \"data_deletion_days\": 60,\n  \"governing_law\": \"Ireland\"\n}",
+      "output_chars": 398,
+      "rubric_hits": [
+        {
+          "id": "json",
+          "hit": true,
+          "note": "keys present"
+        },
+        {
+          "id": "effective-date",
+          "hit": false,
+          "note": "no match"
+        },
+        {
+          "id": "initial-term",
+          "hit": true,
+          "note": "matched '\"initial_term_months\": 24'"
+        },
+        {
+          "id": "renewal-term",
+          "hit": true,
+          "note": "matched '\"renewal_term_months\": 12'"
+        },
+        {
+          "id": "notice",
+          "hit": true,
+          "note": "matched '\"renewal_notice_days\": 90'"
+        },
+        {
+          "id": "fee",
+          "hit": true,
+          "note": "matched '\"monthly_fee\": 4800'"
+        },
+        {
+          "id": "currency",
+          "hit": true,
+          "note": "matched '\"currency\": \"eur\"'"
+        },
+        {
+          "id": "payment-terms",
+          "hit": true,
+          "note": "matched '\"payment_terms_days\": 30'"
+        },
+        {
+          "id": "interest",
+          "hit": true,
+          "note": "matched '\"late_interest_percent\": 8'"
+        },
+        {
+          "id": "uptime",
+          "hit": true,
+          "note": "matched '\"uptime_percent\": 99.5'"
+        },
+        {
+          "id": "deletion",
+          "hit": true,
+          "note": "matched '\"data_deletion_days\": 60'"
+        },
+        {
+          "id": "law",
+          "hit": true,
+          "note": "matched '\"governing_law\": \"ireland\"'"
+        },
+        {
+          "id": "provider",
+          "hit": true,
+          "note": "matched '\"provider\": \"ashgrove software limited\"'"
+        },
+        {
+          "id": "no-fence",
+          "hit": true,
+          "note": "absent"
+        },
+        {
+          "id": "len",
+          "hit": true,
+          "note": "33 words, limit 120"
+        }
+      ],
+      "transcript": null,
+      "ttft_ms": 14709,
+      "latency_ms": 24333,
+      "scores": {
+        "accuracy": 8.6,
+        "adherence": 10,
+        "conciseness": 8.6,
+        "velocity": 10
+      },
+      "composite": 9.3,
+      "wer": null,
+      "judge_rationale": null,
+      "status": "success",
+      "error": null
+    },
+    {
+      "category": "legal",
+      "tool": "llama-3.2-3b-instruct",
+      "prompt_id": "legal-008",
+      "run_at": "2026-09-18T04:37:51.408Z",
+      "audio_url": null,
+      "output_url": "runs/legal/llama-3.2-3b-instruct/legal-008.md",
+      "output_excerpt": "Here's the verification of each citation:\n\n1. Hadley v Baxendale (1854) 9 Exch 341: \n   - Genuine reported case: Verified\n   - Proposition: Damages for breach of contract are limited to losses arising naturally from the breach or within the reasonable contemplation of both parties at the time of contracting.\n   - Memo's use: Accurate\n\n2. Donoghue v Stevenson [1932] AC 562:\n   - Genuine reported case: Verified\n   - Proposition: The duty-of-care analysis is engaged when a claim for damages involves personal injury, but not in contractual claims.\n   - Memo's use: Inaccurate (the memo incorrectly…",
+      "output_chars": 1169,
+      "rubric_hits": [
+        {
+          "id": "hadley",
+          "hit": true,
+          "note": "found: hadley"
+        },
+        {
+          "id": "donoghue",
+          "hit": true,
+          "note": "found: donoghue"
+        },
+        {
+          "id": "victoria-laundry",
+          "hit": true,
+          "note": "found: victoria laundry"
+        },
+        {
+          "id": "pemberton-named",
+          "hit": true,
+          "note": "found: pemberton"
+        },
+        {
+          "id": "pemberton-flagged",
+          "hit": false,
+          "note": "no match"
+        },
+        {
+          "id": "pemberton-not-endorsed",
+          "hit": true,
+          "note": "absent"
+        },
+        {
+          "id": "remoteness",
+          "hit": true,
+          "note": "matched 'reasonable contemplation'"
+        },
+        {
+          "id": "duty-of-care",
+          "hit": false,
+          "note": "no match"
+        },
+        {
+          "id": "len",
+          "hit": true,
+          "note": "180 words, limit 300"
+        },
+        {
+          "id": "lang",
+          "hit": true,
+          "note": "detected en, wanted en"
+        }
+      ],
+      "transcript": null,
+      "ttft_ms": 9547,
+      "latency_ms": 28516,
+      "scores": {
+        "accuracy": 5.8,
+        "adherence": 10,
+        "conciseness": 5.8,
+        "velocity": 10
+      },
+      "composite": 7.9,
+      "wer": null,
+      "judge_rationale": null,
+      "status": "success",
+      "error": null
+    },
+    {
+      "category": "legal",
+      "tool": "llama-3.2-3b-instruct",
+      "prompt_id": "legal-009",
+      "run_at": "2026-09-18T04:38:19.940Z",
+      "audio_url": null,
+      "output_url": "runs/legal/llama-3.2-3b-instruct/legal-009.md",
+      "output_excerpt": "9. RETURNS AND REFUNDS\n\nYou can return the goods within 14 days of receiving them. To do this, you must write to us saying you want to cancel the order and send the goods back to us. You need to pay for the return postage yourself.\n\nIf we receive the returned goods within 14 days of your cancellation notice, we will refund all the money you paid, including delivery costs, within 30 days. However, if you've used or damaged the goods before returning them, you might lose some of that money.",
+      "output_chars": 493,
+      "rubric_hits": [
+        {
+          "id": "no-legalese",
+          "hit": true,
+          "note": "absent"
+        },
+        {
+          "id": "fourteen",
+          "hit": true,
+          "note": "matched '14 days'"
+        },
+        {
+          "id": "thirty",
+          "hit": true,
+          "note": "matched '30 days'"
+        },
+        {
+          "id": "refund",
+          "hit": true,
+          "note": "matched 'refund'"
+        },
+        {
+          "id": "return-cost",
+          "hit": true,
+          "note": "matched 'you need to pay for the return post'"
+        },
+        {
+          "id": "used-goods",
+          "hit": true,
+          "note": "matched 'used'"
+        },
+        {
+          "id": "you-we",
+          "hit": true,
+          "note": "matched 'you can return the goods within 14 days of receiving them. t'"
+        },
+        {
+          "id": "len",
+          "hit": true,
+          "note": "91 words, limit 120"
+        },
+        {
+          "id": "lang",
+          "hit": true,
+          "note": "detected en, wanted en"
+        }
+      ],
+      "transcript": null,
+      "ttft_ms": 11216,
+      "latency_ms": 18711,
+      "scores": {
+        "accuracy": 10,
+        "adherence": 10,
+        "conciseness": 10,
+        "velocity": 10
+      },
+      "composite": 10,
+      "wer": null,
+      "judge_rationale": null,
+      "status": "success",
+      "error": null
+    },
+    {
+      "category": "legal",
+      "tool": "llama-3.2-3b-instruct",
+      "prompt_id": "legal-010",
+      "run_at": "2026-09-18T04:38:38.668Z",
+      "audio_url": null,
+      "output_url": "runs/legal/llama-3.2-3b-instruct/legal-010.md",
+      "output_excerpt": "**Issue**\n\nMikael Ek's employment status and ownership of the firmware developed for Volt Charging AB is unclear. The current agreement does not specify intellectual property rights, confidentiality, or termination notice, leaving room for potential disputes.\n\n**Risk**\n\nThe lack of clarity on Mikael's employment status poses a risk to Volt's control over the firmware, as it may be subject to claims of ownership by Ek. Additionally, if the agreement is terminated, Ek's access to sensitive information and intellectual property could compromise Volt's competitive…",
+      "output_chars": 930,
+      "rubric_hits": [
+        {
+          "id": "headings",
+          "hit": false,
+          "note": "no match"
+        },
+        {
+          "id": "heading-names",
+          "hit": true,
+          "note": "matched \"issue** mikael ek's employment status and ownership of the f\""
+        },
+        {
+          "id": "employment-status",
+          "hit": true,
+          "note": "matched 'employment'"
+        },
+        {
+          "id": "ip-gap",
+          "hit": true,
+          "note": "matched 'ownership'"
+        },
+        {
+          "id": "assignment",
+          "hit": false,
+          "note": "no match"
+        },
+        {
+          "id": "diligence",
+          "hit": false,
+          "note": "no match"
+        },
+        {
+          "id": "recommend-action",
+          "hit": false,
+          "note": "no match"
+        },
+        {
+          "id": "company",
+          "hit": true,
+          "note": "found: volt"
+        },
+        {
+          "id": "len",
+          "hit": true,
+          "note": "131 words, limit 200"
+        },
+        {
+          "id": "min",
+          "hit": true,
+          "note": "131 words, limit 80"
+        },
+        {
+          "id": "lang",
+          "hit": true,
+          "note": "detected en, wanted en"
+        }
+      ],
+      "transcript": null,
+      "ttft_ms": 8927,
+      "latency_ms": 19668,
+      "scores": {
+        "accuracy": 5.4,
+        "adherence": 10,
+        "conciseness": 5.4,
+        "velocity": 10
+      },
+      "composite": 7.7,
+      "wer": null,
+      "judge_rationale": null,
+      "status": "success",
+      "error": null
+    },
+    {
+      "category": "legal",
+      "tool": "phi-4-mini",
+      "prompt_id": "legal-001",
+      "run_at": "2026-09-18T04:33:23.005Z",
+      "audio_url": null,
+      "output_url": "runs/legal/phi-4-mini/legal-001.md",
+      "output_excerpt": "- Clause 3: Obligations to use Confidential Information only for the Purpose, not disclose it beyond necessary employees and advisers bound by protective obligations.\n- Clauses related to exclusions (Clause 4): No obligation if information is public through no fault of Receiving Party or already known/independently developed/included in law.\n\nRefusal Clause:\n\nI would refuse to sign as drafted because there are ambiguities regarding the definition \"reasonable person\" which could lead to subjective interpretations. The term may not be specific enough for legal clarity, potentially causing…",
+      "output_chars": 874,
+      "rubric_hits": [
+        {
+          "id": "clause-73",
+          "hit": false,
+          "note": "none of: 7.3, clause 7"
+        },
+        {
+          "id": "non-compete",
+          "hit": false,
+          "note": "no match"
+        },
+        {
+          "id": "tail-24",
+          "hit": false,
+          "note": "no match"
+        },
+        {
+          "id": "non-solicit",
+          "hit": false,
+          "note": "no match"
+        },
+        {
+          "id": "survival-5",
+          "hit": false,
+          "note": "no match"
+        },
+        {
+          "id": "territory",
+          "hit": false,
+          "note": "no match"
+        },
+        {
+          "id": "no-fake-clause",
+          "hit": true,
+          "note": "absent"
+        },
+        {
+          "id": "len",
+          "hit": true,
+          "note": "125 words, limit 350"
+        },
+        {
+          "id": "bullets",
+          "hit": true,
+          "note": "matched '- c'"
+        },
+        {
+          "id": "lang",
+          "hit": true,
+          "note": "detected en, wanted en"
+        }
+      ],
+      "transcript": null,
+      "ttft_ms": 28468,
+      "latency_ms": 42588,
+      "scores": {
+        "accuracy": 1.7,
+        "adherence": 10,
+        "conciseness": 1.7,
+        "velocity": 1
+      },
+      "composite": 3.6,
+      "wer": null,
+      "judge_rationale": null,
+      "status": "success",
+      "error": null
+    },
+    {
+      "category": "legal",
+      "tool": "phi-4-mini",
+      "prompt_id": "legal-002",
+      "run_at": "2026-09-18T04:34:19.837Z",
+      "audio_url": null,
+      "output_url": "runs/legal/phi-4-mini/legal-002.md",
+      "output_excerpt": "Här är en analys av de angivna anställningsavtalen (utdrag) med hänsyn till lagen om anställningsskydd (LAS):\n\n- § 3 Anställningsform:\nStrider mot LAS, paragraf 49(a): LAS kräver att provanställning ska vara minstsex månader. Avtalets provanställning är säsongbestämd på nio månader.\n\nKorrigering: Ändra provanställningen till minst sex (6) månader enligt LAS paragraf 49(a).\n\n- § 4 Arbetstid:\nStrider mot LAS, paragraf 44: LAS kräver att arbetstiden ska vara minst 36,67 timmar per vecka. Avtalets arbetstid är 40 timmar per vecka.\n\nKorrigering: Reductera arbetstiden till minst 36,67 timmar per…",
+      "output_chars": 1869,
+      "rubric_hits": [
+        {
+          "id": "probation-max",
+          "hit": true,
+          "note": "matched 'sex månader'"
+        },
+        {
+          "id": "las-6",
+          "hit": true,
+          "note": "matched '§ 6'"
+        },
+        {
+          "id": "notice-11",
+          "hit": false,
+          "note": "no match"
+        },
+        {
+          "id": "notice-scale",
+          "hit": false,
+          "note": "no match"
+        },
+        {
+          "id": "noncompete-comp",
+          "hit": true,
+          "note": "matched 'ersättning'"
+        },
+        {
+          "id": "no-fake-section",
+          "hit": true,
+          "note": "absent"
+        },
+        {
+          "id": "lang",
+          "hit": true,
+          "note": "detected sv, wanted sv"
+        },
+        {
+          "id": "len",
+          "hit": false,
+          "note": "271 words, limit 250"
+        },
+        {
+          "id": "bullets",
+          "hit": false,
+          "note": "no match"
+        }
+      ],
+      "transcript": null,
+      "ttft_ms": 20008,
+      "latency_ms": 69815,
+      "scores": {
+        "accuracy": 6.4,
+        "adherence": 6.7,
+        "conciseness": 5.9,
+        "velocity": 1
+      },
+      "composite": 5,
+      "wer": null,
+      "judge_rationale": null,
+      "status": "success",
+      "error": null
+    },
+    {
+      "category": "legal",
+      "tool": "phi-4-mini",
+      "prompt_id": "legal-003",
+      "run_at": "2026-09-18T04:35:29.661Z",
+      "audio_url": null,
+      "output_url": "runs/legal/phi-4-mini/legal-003.md",
+      "output_excerpt": "Article 28(3) GDPR requirements missing or defective in the DPA:\n\n1. **Purpose limitation**: The processing activities must be for specified, explicit and legitimate purposes (Art. 5(1)(a)). Clause 2 does not specify that data will only be processed to host/apply patient-booking functions.\n   - Missing/Defective clause: Purpose of storage, backup & transmission.\n\n2. **Data minimisation**: The processing should concern the minimal amount necessary for achieving its purpose (Art. 5(1)(c)). Clause 3 lists more data than may be strictly required; appointment times and types could potentially…",
+      "output_chars": 3491,
+      "rubric_hits": [
+        {
+          "id": "art-28",
+          "hit": true,
+          "note": "matched 'article 28'"
+        },
+        {
+          "id": "subprocessor",
+          "hit": true,
+          "note": "matched 'sub-processor'"
+        },
+        {
+          "id": "subprocessor-authorisation",
+          "hit": false,
+          "note": "no match"
+        },
+        {
+          "id": "deletion-return",
+          "hit": true,
+          "note": "matched 'delet'"
+        },
+        {
+          "id": "audit",
+          "hit": false,
+          "note": "no match"
+        },
+        {
+          "id": "assistance",
+          "hit": true,
+          "note": "matched 'data subject'"
+        },
+        {
+          "id": "dpia",
+          "hit": true,
+          "note": "matched 'impact assessment'"
+        },
+        {
+          "id": "not-missing-confidentiality",
+          "hit": true,
+          "note": "absent"
+        },
+        {
+          "id": "len",
+          "hit": false,
+          "note": "485 words, limit 400"
+        },
+        {
+          "id": "numbered",
+          "hit": false,
+          "note": "no match"
+        },
+        {
+          "id": "lang",
+          "hit": true,
+          "note": "detected en, wanted en"
+        }
+      ],
+      "transcript": null,
+      "ttft_ms": 19111,
+      "latency_ms": 80878,
+      "scores": {
+        "accuracy": 6.4,
+        "adherence": 5,
+        "conciseness": 5.3,
+        "velocity": 1
+      },
+      "composite": 4.43,
+      "wer": null,
+      "judge_rationale": null,
+      "status": "success",
+      "error": null
+    },
+    {
+      "category": "legal",
+      "tool": "phi-4-mini",
+      "prompt_id": "legal-004",
+      "run_at": "2026-09-18T04:36:50.549Z",
+      "audio_url": null,
+      "output_url": "runs/legal/phi-4-mini/legal-004.md",
+      "output_excerpt": "[Your Company Letterhead]\nBryggan Coffee Roasters Ltd\nUnit 4, Bryggan Yard,\n17 Canal Street,\nManchester M1 7HJ\n\nDate: [Today's Date]\n\nHalden Estates Limited (company no. 08811223)\n22 Bishopsgate,\nLondon EC2N 4BQ.\n\nSubject: Notice of Determination under Clause 12.1 – Break Date for Lease Termination on 30 June 2027\n\nDear Sir/Madam,\n\nWe hereby serve this notice in accordance with clause 12.1 of our lease agreement (Lease No.: [Your Lease Number]) to determine the tenancy at Unit 4, Bryggan Yard under your management as per Section 25.1.\n\nAs required by Clause 12.2 and for compliance purposes…",
+      "output_chars": 2440,
+      "rubric_hits": [
+        {
+          "id": "landlord-name",
+          "hit": true,
+          "note": "found: halden estates limited"
+        },
+        {
+          "id": "landlord-address",
+          "hit": true,
+          "note": "found: 22 bishopsgate"
+        },
+        {
+          "id": "clause-121",
+          "hit": true,
+          "note": "found: 12.1"
+        },
+        {
+          "id": "break-date",
+          "hit": true,
+          "note": "matched '30 june 2027'"
+        },
+        {
+          "id": "premises",
+          "hit": true,
+          "note": "matched 'unit 4'"
+        },
+        {
+          "id": "tenant",
+          "hit": true,
+          "note": "found: bryggan coffee roasters"
+        },
+        {
+          "id": "vacant-possession",
+          "hit": false,
+          "note": "none of: vacant possession"
+        },
+        {
+          "id": "recorded-delivery",
+          "hit": true,
+          "note": "matched 'recorded delivery'"
+        },
+        {
+          "id": "last-post-date",
+          "hit": false,
+          "note": "no match"
+        },
+        {
+          "id": "len",
+          "hit": false,
+          "note": "399 words, limit 300"
+        },
+        {
+          "id": "lang",
+          "hit": true,
+          "note": "detected en, wanted en"
+        }
+      ],
+      "transcript": null,
+      "ttft_ms": 18980,
+      "latency_ms": 67583,
+      "scores": {
+        "accuracy": 7.7,
+        "adherence": 5,
+        "conciseness": 5.8,
+        "velocity": 1
+      },
+      "composite": 4.88,
+      "wer": null,
+      "judge_rationale": null,
+      "status": "success",
+      "error": null
+    },
+    {
+      "category": "legal",
+      "tool": "phi-4-mini",
+      "prompt_id": "legal-005",
+      "run_at": "2026-09-18T04:37:58.141Z",
+      "audio_url": null,
+      "output_url": "runs/legal/phi-4-mini/legal-005.md",
+      "output_excerpt": "Alder Ventures Fund III invests SEK 40,000,000 in Skarv Robotics AB for Series A Preferred Shares. Pre-money valuation is SEK 160 million; post-money includes a 20% option pool (fully diluted). Liquidation preference: non-participating senior to ordinary shares at 1x original price with pro-rata rights and Alder's participation protection on future rounds, drag-along provisions apply if holders of over 60% plus Series A majority exist. Broad-based weighted average anti-dilution applies; founder vesting is four years post-commencement date (one-year cliff), with a one-time credit for time…",
+      "output_chars": 1245,
+      "rubric_hits": [
+        {
+          "id": "post-money",
+          "hit": true,
+          "note": "matched '200 m'"
+        },
+        {
+          "id": "stake",
+          "hit": true,
+          "note": "matched '20%'"
+        },
+        {
+          "id": "pref-1x",
+          "hit": true,
+          "note": "matched '1x'"
+        },
+        {
+          "id": "non-participating",
+          "hit": true,
+          "note": "matched 'non-participating'"
+        },
+        {
+          "id": "anti-dilution",
+          "hit": true,
+          "note": "found: weighted average"
+        },
+        {
+          "id": "board",
+          "hit": false,
+          "note": "no match"
+        },
+        {
+          "id": "pool",
+          "hit": true,
+          "note": "matched 'option pool'"
+        },
+        {
+          "id": "wrong-post-money",
+          "hit": true,
+          "note": "absent"
+        },
+        {
+          "id": "len",
+          "hit": false,
+          "note": "177 words, limit 150"
+        },
+        {
+          "id": "lang",
+          "hit": true,
+          "note": "detected en, wanted en"
+        }
+      ],
+      "transcript": null,
+      "ttft_ms": 15735,
+      "latency_ms": 36875,
+      "scores": {
+        "accuracy": 9.1,
+        "adherence": 3.3,
+        "conciseness": 7.7,
+        "velocity": 1
+      },
+      "composite": 5.28,
+      "wer": null,
+      "judge_rationale": null,
+      "status": "success",
+      "error": null
+    },
+    {
+      "category": "legal",
+      "tool": "phi-4-mini",
+      "prompt_id": "legal-006",
+      "run_at": "2026-09-18T04:38:35.025Z",
+      "audio_url": null,
+      "output_url": "runs/legal/phi-4-mini/legal-006.md",
+      "output_excerpt": "13. LIABILITY\n\n{+ +} The Supplier shall be liable to the Customer for all losses, damages, costs and expenses of any kind arising out of or in connection with this Agreement, however caused {+}, including loss of profit, loss of business and indirect or consequential loss {- -}. [+ +]\n\n{- -}\n\n13.2 The Customer's liability to the Supplier under this Agreement is limited to the Fees paid in twelve (12) months preceding the event giving rise to the claim [- -].\n\n{+ +} Nothing in this Agreement limits any liability which cannot legally be limited {+}, including loss of profit, loss of business or…",
+      "output_chars": 954,
+      "rubric_hits": [
+        {
+          "id": "tracked-1",
+          "hit": true,
+          "note": "matched '[- -]'"
+        },
+        {
+          "id": "tracked-2",
+          "hit": true,
+          "note": "matched '{+ +}'"
+        },
+        {
+          "id": "cap-12",
+          "hit": true,
+          "note": "matched 'twelve (12) months'"
+        },
+        {
+          "id": "excl-profit",
+          "hit": false,
+          "note": "no match"
+        },
+        {
+          "id": "carve-injury",
+          "hit": true,
+          "note": "matched 'death'"
+        },
+        {
+          "id": "carve-fraud",
+          "hit": true,
+          "note": "found: fraud"
+        },
+        {
+          "id": "carve-confidentiality",
+          "hit": true,
+          "note": "matched 'confidential'"
+        },
+        {
+          "id": "deleted-three",
+          "hit": false,
+          "note": "no match"
+        },
+        {
+          "id": "len",
+          "hit": true,
+          "note": "162 words, limit 400"
+        },
+        {
+          "id": "lang",
+          "hit": true,
+          "note": "detected en, wanted en"
+        }
+      ],
+      "transcript": null,
+      "ttft_ms": 11559,
+      "latency_ms": 29119,
+      "scores": {
+        "accuracy": 7.9,
+        "adherence": 10,
+        "conciseness": 7.9,
+        "velocity": 1
+      },
+      "composite": 6.7,
+      "wer": null,
+      "judge_rationale": null,
+      "status": "success",
+      "error": null
+    },
+    {
+      "category": "legal",
+      "tool": "phi-4-mini",
+      "prompt_id": "legal-007",
+      "run_at": "2026-09-18T04:39:04.153Z",
+      "audio_url": null,
+      "output_url": "runs/legal/phi-4-mini/legal-007.md",
+      "output_excerpt": "{\n  \"provider\": \"Ashgrove Software Limited\",\n  \"customer\": \"Marlow & Finch LLP\",\n  \"effective_date\": \"2026-10-01\",\n  \"initial_term_months\": 24,\n  \"renewal_term_months\": 12,\n  \"renewal_notice_days\": 90,\n  \"monthly_fee\": 4800,\n  \"currency\": \"EUR\",\n  \"payment_terms_days\": 30,\n  \"late_interest_percent\": 8,\n  \"uptime_percent\": 99.5,\n  \"data_deletion_days\": 60,\n  \"governing_law\": \"Ireland\"\n}",
+      "output_chars": 388,
+      "rubric_hits": [
+        {
+          "id": "json",
+          "hit": true,
+          "note": "keys present"
+        },
+        {
+          "id": "effective-date",
+          "hit": true,
+          "note": "matched '\"effective_date\": \"2026-10-01\"'"
+        },
+        {
+          "id": "initial-term",
+          "hit": true,
+          "note": "matched '\"initial_term_months\": 24'"
+        },
+        {
+          "id": "renewal-term",
+          "hit": true,
+          "note": "matched '\"renewal_term_months\": 12'"
+        },
+        {
+          "id": "notice",
+          "hit": true,
+          "note": "matched '\"renewal_notice_days\": 90'"
+        },
+        {
+          "id": "fee",
+          "hit": true,
+          "note": "matched '\"monthly_fee\": 4800'"
+        },
+        {
+          "id": "currency",
+          "hit": true,
+          "note": "matched '\"currency\": \"eur\"'"
+        },
+        {
+          "id": "payment-terms",
+          "hit": true,
+          "note": "matched '\"payment_terms_days\": 30'"
+        },
+        {
+          "id": "interest",
+          "hit": true,
+          "note": "matched '\"late_interest_percent\": 8'"
+        },
+        {
+          "id": "uptime",
+          "hit": true,
+          "note": "matched '\"uptime_percent\": 99.5'"
+        },
+        {
+          "id": "deletion",
+          "hit": true,
+          "note": "matched '\"data_deletion_days\": 60'"
+        },
+        {
+          "id": "law",
+          "hit": true,
+          "note": "matched '\"governing_law\": \"ireland\"'"
+        },
+        {
+          "id": "provider",
+          "hit": true,
+          "note": "matched '\"provider\": \"ashgrove software limited\"'"
+        },
+        {
+          "id": "no-fence",
+          "hit": true,
+          "note": "absent"
+        },
+        {
+          "id": "len",
+          "hit": true,
+          "note": "33 words, limit 120"
+        }
+      ],
+      "transcript": null,
+      "ttft_ms": 18249,
+      "latency_ms": 30096,
+      "scores": {
+        "accuracy": 10,
+        "adherence": 10,
+        "conciseness": 10,
+        "velocity": 1
+      },
+      "composite": 7.75,
+      "wer": null,
+      "judge_rationale": null,
+      "status": "success",
+      "error": null
+    },
+    {
+      "category": "legal",
+      "tool": "phi-4-mini",
+      "prompt_id": "legal-008",
+      "run_at": "2026-09-18T04:39:34.258Z",
+      "audio_url": null,
+      "output_url": "runs/legal/phi-4-mini/legal-008.md",
+      "output_excerpt": "1. Hadley v Baxendale (1854) 9 Exch 341\n   - Genuine reported case: Yes, this is a genuine legal precedent.\n   - Proposition it stands for: Damages in breach of contract cases are limited to losses that were foreseeable or within the reasonable contemplation at the time of contracting between parties. \n   - Accuracy of use: The memo correctly references Hadley v Baxendale as establishing limitations on recoverable damages due to foreseeability and reasonableness.\n\n2. Donoghue v Stevenson [1932] AC 562\n   - Genuine reported case: Yes, this is a genuine legal precedent.\n   - Proposition it…",
+      "output_chars": 2091,
+      "rubric_hits": [
+        {
+          "id": "hadley",
+          "hit": true,
+          "note": "found: hadley"
+        },
+        {
+          "id": "donoghue",
+          "hit": true,
+          "note": "found: donoghue"
+        },
+        {
+          "id": "victoria-laundry",
+          "hit": true,
+          "note": "found: victoria laundry"
+        },
+        {
+          "id": "pemberton-named",
+          "hit": true,
+          "note": "found: pemberton"
+        },
+        {
+          "id": "pemberton-flagged",
+          "hit": false,
+          "note": "no match"
+        },
+        {
+          "id": "pemberton-not-endorsed",
+          "hit": true,
+          "note": "absent"
+        },
+        {
+          "id": "remoteness",
+          "hit": true,
+          "note": "matched 'reasonable contemplation'"
+        },
+        {
+          "id": "duty-of-care",
+          "hit": true,
+          "note": "matched 'negligence'"
+        },
+        {
+          "id": "len",
+          "hit": false,
+          "note": "319 words, limit 300"
+        },
+        {
+          "id": "lang",
+          "hit": true,
+          "note": "detected en, wanted en"
+        }
+      ],
+      "transcript": null,
+      "ttft_ms": 11356,
+      "latency_ms": 48825,
+      "scores": {
+        "accuracy": 6.7,
+        "adherence": 5,
+        "conciseness": 6.3,
+        "velocity": 1
+      },
+      "composite": 4.75,
+      "wer": null,
+      "judge_rationale": null,
+      "status": "success",
+      "error": null
+    },
+    {
+      "category": "legal",
+      "tool": "phi-4-mini",
+      "prompt_id": "legal-009",
+      "run_at": "2026-09-18T04:40:23.092Z",
+      "audio_url": null,
+      "output_url": "runs/legal/phi-4-mini/legal-009.md",
+      "output_excerpt": "9.1 Even if there are other rules in these Terms, you can cancel the deal within 14 days after getting your goods without giving any reason by telling us (the seller) this is happening.\n9.2 If we agree to that cancellation and return all paid money including delivery costs back to you at our place for returned items; you'll need to send them back in another 14-day period, but we'll give the full amount of what was originally spent within a month after getting your goods again.\n\n9.3 You have to pay us if there's any loss we suffer because you've used up or damaged more than just enough parts…",
+      "output_chars": 701,
+      "rubric_hits": [
+        {
+          "id": "no-legalese",
+          "hit": true,
+          "note": "absent"
+        },
+        {
+          "id": "fourteen",
+          "hit": true,
+          "note": "matched '14 days'"
+        },
+        {
+          "id": "thirty",
+          "hit": false,
+          "note": "no match"
+        },
+        {
+          "id": "refund",
+          "hit": false,
+          "note": "no match"
+        },
+        {
+          "id": "return-cost",
+          "hit": false,
+          "note": "no match"
+        },
+        {
+          "id": "used-goods",
+          "hit": true,
+          "note": "matched 'used'"
+        },
+        {
+          "id": "you-we",
+          "hit": true,
+          "note": "matched 'you can cancel the deal within 14 days after getting your go'"
+        },
+        {
+          "id": "len",
+          "hit": false,
+          "note": "129 words, limit 120"
+        },
+        {
+          "id": "lang",
+          "hit": true,
+          "note": "detected en, wanted en"
+        }
+      ],
+      "transcript": null,
+      "ttft_ms": 13275,
+      "latency_ms": 25661,
+      "scores": {
+        "accuracy": 6.4,
+        "adherence": 3.3,
+        "conciseness": 6,
+        "velocity": 1
+      },
+      "composite": 4.18,
+      "wer": null,
+      "judge_rationale": null,
+      "status": "success",
+      "error": null
+    },
+    {
+      "category": "legal",
+      "tool": "phi-4-mini",
+      "prompt_id": "legal-010",
+      "run_at": "2026-09-18T04:40:48.762Z",
+      "audio_url": null,
+      "output_url": "runs/legal/phi-4-mini/legal-010.md",
+      "output_excerpt": "**Issue**\n\nEmployment Status: Mikael Ek, a freelance firmware developer for Volt Charging AB since March 2023 under an informal agreement with no explicit terms on intellectual property or confidentiality. His role involves significant contributions to the flagship charger’s firmware.\n\nOwnership of Firmware: The one-page contract lacks clarity regarding ownership rights over developed firmware and contains only non-specific clauses about exclusivity without addressing termination notice, posing potential risks for both parties involved in this collaboration.\n\n\n**Risk**\n\n1. **Employment Status…",
+      "output_chars": 1568,
+      "rubric_hits": [
+        {
+          "id": "headings",
+          "hit": false,
+          "note": "no match"
+        },
+        {
+          "id": "heading-names",
+          "hit": true,
+          "note": "matched 'issue** employment status: mikael ek, a freelance firmware d'"
+        },
+        {
+          "id": "employment-status",
+          "hit": true,
+          "note": "matched 'employment'"
+        },
+        {
+          "id": "ip-gap",
+          "hit": true,
+          "note": "matched 'intellectual property'"
+        },
+        {
+          "id": "assignment",
+          "hit": false,
+          "note": "no match"
+        },
+        {
+          "id": "diligence",
+          "hit": true,
+          "note": "matched 'series b'"
+        },
+        {
+          "id": "recommend-action",
+          "hit": true,
+          "note": "matched 'sign'"
+        },
+        {
+          "id": "company",
+          "hit": true,
+          "note": "found: volt"
+        },
+        {
+          "id": "len",
+          "hit": false,
+          "note": "205 words, limit 200"
+        },
+        {
+          "id": "min",
+          "hit": true,
+          "note": "205 words, limit 80"
+        },
+        {
+          "id": "lang",
+          "hit": true,
+          "note": "detected en, wanted en"
+        }
+      ],
+      "transcript": null,
+      "ttft_ms": 10332,
+      "latency_ms": 32014,
+      "scores": {
+        "accuracy": 6.9,
+        "adherence": 5,
+        "conciseness": 6.7,
+        "velocity": 1
+      },
+      "composite": 4.9,
+      "wer": null,
+      "judge_rationale": null,
+      "status": "success",
+      "error": null
+    },
+    {
       "category": "voice",
       "tool": "kittentts",
       "prompt_id": "voice-001",
@@ -2645,6 +4225,36 @@
   ],
   "ratings": [
     {
+      "category": "legal",
+      "tool": "llama-3.2-3b-instruct",
+      "runs": 10,
+      "composite": 8.28,
+      "scores": {
+        "accuracy": 6.56,
+        "adherence": 10,
+        "conciseness": 6.56,
+        "velocity": 10
+      },
+      "median_ttft_ms": 14709,
+      "median_latency_ms": 28516,
+      "rank": 1
+    },
+    {
+      "category": "legal",
+      "tool": "phi-4-mini",
+      "runs": 10,
+      "composite": 5.15,
+      "scores": {
+        "accuracy": 6.92,
+        "adherence": 6.33,
+        "conciseness": 6.33,
+        "velocity": 1
+      },
+      "median_ttft_ms": 18249,
+      "median_latency_ms": 42588,
+      "rank": 2
+    },
+    {
       "category": "voice",
       "tool": "piper",
       "runs": 10,
@@ -2917,7 +4527,10 @@
       "slug": "llama-3.2-3b-instruct-vs-phi-4-mini",
       "a": "llama-3.2-3b-instruct",
       "b": "phi-4-mini",
-      "verdict": null
+      "verdict": {
+        "headline": "Llama 3.2 3B Instruct leads Phi-4 mini 8.3 to 5.2 on the 10-prompt Legal AI bank.",
+        "summary": "Llama 3.2 3B Instruct is ahead on speed and constraint adherence. Phi-4 mini wins on rubric accuracy. Median time to first byte: Llama 3.2 3B Instruct 14709 ms, Phi-4 mini 18249 ms."
+      }
     },
     {
       "category": "legal",
@@ -3974,7 +5587,7 @@
   ],
   "previous_holders": {
     "voice": {
-      "run_at": "2026-09-18T04:16:53.111Z",
+      "run_at": "2026-09-18T04:31:17.152Z",
       "holders": {
         "voice-001": "piper",
         "voice-002": "piper",
