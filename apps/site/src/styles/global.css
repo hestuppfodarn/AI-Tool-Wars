@@ -195,7 +195,7 @@ footer p { max-width: 80ch; }
 .swatch { display: inline-block; width: 10px; height: 10px; border-radius: 3px; background: var(--c, var(--surface-2)); margin-right: 8px; vertical-align: -1px; }
 .territory .share { height: 8px; min-width: 90px; background: var(--surface-2); border-radius: 999px; overflow: hidden; }
 .territory .share .fill { height: 100%; border-radius: 999px; background: var(--c); }
-td.terr { white-space: nowrap; }
+td.terr, .territory td.num { white-space: nowrap; }
 
 /* Movements list. */
 .movements { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }

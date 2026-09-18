@@ -191,7 +191,8 @@ export function colourSlots(s: Snapshot, category: string): Map<string, number> 
   return new Map(toolsIn(s, category).map((t, i) => [t.slug, (i % 12) + 1]));
 }
 
+/** Margin for a tile: one decimal; anything that would round to 0.0 reads as "<0.1". */
 export function fmtMargin(m: number | null): string {
   if (m == null) return '';
-  return `+${m.toFixed(1)}`;
+  return m < 0.05 ? '<0.1' : `+${m.toFixed(1)}`;
 }

@@ -2,7 +2,7 @@
 // The front line between two tools: one tile per prompt, coloured for A, B or contested.
 import type { Category, Snapshot, Tool } from '../lib/snapshot';
 import { promptsIn } from '../lib/snapshot';
-import { frontLine, CONTESTED_BAND } from '../lib/front';
+import { frontLine, fmtMargin, CONTESTED_BAND } from '../lib/front';
 import { fmtScore } from '../lib/site';
 
 interface Props { snapshot: Snapshot; category: Category; a: Tool; b: Tool; }
@@ -35,13 +35,13 @@ const parts = [
     const label = t.holder === 'a' ? a.name : t.holder === 'b' ? b.name : state;
     const title = `${p.rank}. ${p.title}: ${
       t.holder === 'contested' ? `contested, ${a.name} ${fmtScore(t.a)} to ${b.name} ${fmtScore(t.b)}`
-      : t.holder ? `${label} holds${t.delta != null ? `, +${Math.abs(t.delta).toFixed(1)}` : ' unopposed'}`
+      : t.holder ? `${label} holds${t.delta != null ? `, ${fmtMargin(Math.abs(t.delta))}` : ' unopposed'}`
       : 'unclaimed'}`;
     return (
       <div class={`tile ${state}`} role="listitem" tabindex="0" aria-label={title}>
         <span class="n">{p.rank}</span>
         <span class="who">{label}</span>
-        {t.delta != null && t.holder !== 'contested' && <span class="margin">+{Math.abs(t.delta).toFixed(1)}</span>}
+        {t.delta != null && t.holder !== 'contested' && <span class="margin">{fmtMargin(Math.abs(t.delta))}</span>}
         <div class="detail" aria-hidden="true">
           <strong>{p.rank}. {p.title}</strong>
           <ol>
