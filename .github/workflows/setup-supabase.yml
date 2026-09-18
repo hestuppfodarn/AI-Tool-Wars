@@ -1,0 +1,170 @@
+name: setup-supabase
+
+# One-secret Supabase provisioning. The human creates a Supabase account and a
+# personal access token (supabase.com/dashboard/account/tokens) and stores it as
+# the repository secret SUPABASE_ACCESS_TOKEN. Everything else happens here:
+#   1. create (or reuse) a project named "tool-wars" in the first organisation
+#   2. wait until it is healthy
+#   3. apply supabase/migrations/*.sql through the Management API SQL endpoint
+#   4. deploy supabase/functions/* with the Supabase CLI
+#   5. configure auth (magic link) redirect URLs for the site
+#   6. seed the tools reference table from data/catalog
+#   7. commit data/supabase.public.json (project URL + anon key: public by design,
+#      protected by RLS) so the site build picks it up and the claim page goes live.
+# The service-role key is never stored: CI fetches it from the Management API at
+# run time with the access token when it needs it.
+#
+# Trigger: commit a change to .github/supabase-setup-request.json, or dispatch.
+
+on:
+  push:
+    paths: ['.github/supabase-setup-request.json']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: supabase-setup
+  cancel-in-progress: false
+
+env:
+  PROJECT_NAME: tool-wars
+  REGION: eu-central-1
+  SITE_URL: https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}
+
+jobs:
+  provision:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Check the access token exists
+        env:
+          TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+        run: |
+          if [ -z "$TOKEN" ]; then
+            echo "::error::Repository secret SUPABASE_ACCESS_TOKEN is missing. Create one at https://supabase.com/dashboard/account/tokens and add it under Settings > Secrets and variables > Actions."
+            exit 1
+          fi
+          echo "token present (length ${#TOKEN})"
+
+      - name: Create or reuse the project
+        id: project
+        env:
+          TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+        run: |
+          set -euo pipefail
+          api() { curl -sS -f -H "Authorization: Bearer $TOKEN" -H "Content-Type: application/json" "$@"; }
+          ORG=$(api https://api.supabase.com/v1/organizations | jq -r '.[0].id')
+          [ -n "$ORG" ] && [ "$ORG" != "null" ] || { echo "::error::No Supabase organisation found for this token"; exit 1; }
+          REF=$(api https://api.supabase.com/v1/projects | jq -r --arg n "$PROJECT_NAME" '.[] | select(.name == $n) | .id' | head -n1)
+          if [ -z "$REF" ]; then
+            DB_PASS=$(openssl rand -base64 30 | tr -d '/+=' | cut -c1-32)
+            echo "::add-mask::$DB_PASS"
+            REF=$(api -X POST https://api.supabase.com/v1/projects \
+              -d "$(jq -nc --arg n "$PROJECT_NAME" --arg o "$ORG" --arg r "$REGION" --arg p "$DB_PASS" '{name:$n, organization_id:$o, region:$r, db_pass:$p, plan:"free"}')" | jq -r '.id')
+            echo "created project $REF"
+          else
+            echo "reusing project $REF"
+          fi
+          echo "ref=$REF" >> "$GITHUB_OUTPUT"
+
+      - name: Wait until healthy
+        env:
+          TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+          REF: ${{ steps.project.outputs.ref }}
+        run: |
+          for i in $(seq 1 60); do
+            S=$(curl -sS -H "Authorization: Bearer $TOKEN" "https://api.supabase.com/v1/projects/$REF" | jq -r '.status')
+            echo "status: $S"
+            [ "$S" = "ACTIVE_HEALTHY" ] && exit 0
+            sleep 10
+          done
+          echo "::error::project did not become healthy in time"; exit 1
+
+      - name: Fetch API keys
+        id: keys
+        env:
+          TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+          REF: ${{ steps.project.outputs.ref }}
+        run: |
+          set -euo pipefail
+          KEYS=$(curl -sS -f -H "Authorization: Bearer $TOKEN" "https://api.supabase.com/v1/projects/$REF/api-keys?reveal=true")
+          ANON=$(echo "$KEYS" | jq -r '.[] | select(.name=="anon" or .type=="publishable" or .name=="publishable") | .api_key' | head -n1)
+          SERVICE=$(echo "$KEYS" | jq -r '.[] | select(.name=="service_role" or .type=="secret" or .name=="secret") | .api_key' | head -n1)
+          [ -n "$ANON" ] && [ -n "$SERVICE" ] || { echo "::error::could not read api keys"; echo "$KEYS" | jq 'map(.name)'; exit 1; }
+          echo "::add-mask::$SERVICE"
+          echo "anon=$ANON" >> "$GITHUB_OUTPUT"
+          echo "service=$SERVICE" >> "$GITHUB_OUTPUT"
+          echo "url=https://$REF.supabase.co" >> "$GITHUB_OUTPUT"
+
+      - name: Apply migrations (Management API SQL endpoint)
+        env:
+          TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+          REF: ${{ steps.project.outputs.ref }}
+        run: |
+          set -euo pipefail
+          shopt -s nullglob
+          for f in supabase/migrations/*.sql; do
+            echo "applying $f"
+            jq -Rs '{query: .}' "$f" > /tmp/q.json
+            curl -sS -f -H "Authorization: Bearer $TOKEN" -H "Content-Type: application/json" \
+              -X POST "https://api.supabase.com/v1/projects/$REF/database/query" -d @/tmp/q.json > /tmp/out.json \
+              || { echo "::error::migration $f failed"; cat /tmp/out.json; exit 1; }
+          done
+
+      - name: Deploy edge functions
+        if: hashFiles('supabase/functions/**') != ''
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+          REF: ${{ steps.project.outputs.ref }}
+        run: |
+          set -euo pipefail
+          npx --yes supabase@latest --version
+          for d in supabase/functions/*/; do
+            fn=$(basename "$d")
+            echo "deploying $fn"
+            npx --yes supabase@latest functions deploy "$fn" --project-ref "$REF" --no-verify-jwt=false
+          done
+
+      - name: Configure auth redirects
+        env:
+          TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+          REF: ${{ steps.project.outputs.ref }}
+        run: |
+          curl -sS -f -H "Authorization: Bearer $TOKEN" -H "Content-Type: application/json" \
+            -X PATCH "https://api.supabase.com/v1/projects/$REF/config/auth" \
+            -d "$(jq -nc --arg s "$SITE_URL/claim/" --arg a "$SITE_URL/**,http://localhost:4321/**" '{site_url:$s, uri_allow_list:$a, external_email_enabled:true}')" \
+            | jq '{site_url, uri_allow_list}'
+
+      - name: Seed tools reference table
+        if: hashFiles('scripts/seed-supabase-tools.mjs') != ''
+        env:
+          SUPABASE_URL: ${{ steps.keys.outputs.url }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ steps.keys.outputs.service }}
+        run: |
+          npm ci --no-audit --no-fund
+          node scripts/seed-supabase-tools.mjs
+
+      - name: Commit public config
+        env:
+          URL: ${{ steps.keys.outputs.url }}
+          ANON: ${{ steps.keys.outputs.anon }}
+        run: |
+          jq -n --arg u "$URL" --arg a "$ANON" '{url:$u, anon_key:$a, note:"Public by design: the anon key only grants what row-level security allows."}' > data/supabase.public.json
+          git config user.name "arena-bot"; git config user.email "arena-bot@users.noreply.github.com"
+          git add data/supabase.public.json
+          if git diff --cached --quiet; then echo "config unchanged"; else
+            git commit -m "Supabase provisioned: public config"
+            git pull --rebase origin "${GITHUB_REF_NAME}"
+            git push origin "HEAD:${GITHUB_REF_NAME}"
+          fi
+          echo "### Supabase ready" >> "$GITHUB_STEP_SUMMARY"
+          echo "- project: $URL" >> "$GITHUB_STEP_SUMMARY"
+          echo "- claim page: $SITE_URL/claim/ (after the next site deploy)" >> "$GITHUB_STEP_SUMMARY"
