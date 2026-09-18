@@ -769,7 +769,7 @@
   },
   {
     "prompt_id": "voice-025",
-    "run_at": "2026-09-18T03:23:32.800Z",
+    "run_at": "2026-09-18T04:19:34.983Z",
     "status": "error",
     "error": "InvalidArgument: [ONNXRuntimeError] : 2 : INVALID_ARGUMENT : Non-zero status code returned while running Expand node. Name:'/bert/Expand' Status Message: invalid expand shape",
     "model": "KittenML/kitten-tts-nano-0.1",

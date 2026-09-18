@@ -225,7 +225,7 @@
   },
   {
     "prompt_id": "voice-008",
-    "run_at": "2026-09-18T03:34:17.065Z",
+    "run_at": "2026-09-18T04:21:13.306Z",
     "status": "error",
     "error": "ValueError: XTTS-v2 does not support language 'sv' (supported: en, es, fr, de, it, pt, pl, tr, ru, nl, cs, ar, zh-cn, hu, ko, ja, hi)",
     "model": "tts_models/multilingual/multi-dataset/xtts_v2",
