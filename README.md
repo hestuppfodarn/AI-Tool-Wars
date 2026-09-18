@@ -17,7 +17,8 @@ day-60 success test.
 | `data/fixtures/demo-snapshot.json` | Generated. A fictional dataset for previewing the populated layout. Never deployed as real data. |
 | `apps/site/` | Astro static site: home, category leaderboard, `X vs Y` pages, tool pages, methodology, sitemap. |
 | `scripts/export-snapshot.mjs` | Catalog + recorded runs → snapshot. Copies run audio into the site. Grows a Postgres path later. |
-| `scripts/run-voice.mjs` | Runner: executes the prompt bank against one tool, records audio and timings under `data/runs/`. Adapters: `inworld`. |
+| `scripts/run-voice.mjs` | Runner: executes the prompt bank against one tool, records audio and timings under `data/runs/`. Adapters: `inworld`, `openai`, `elevenlabs`, `cartesia`. |
+| `.github/workflows/benchmark.yml` | Runs the bank on a GitHub runner from repository secrets, commits `data/runs/`, redeploys the site. Manual trigger or weekly. |
 | `scripts/mock-tts-server.mjs` | Local stand-in for a vendor TTS API to test the pipeline offline. |
 | `scripts/make-demo-fixtures.py` | Fictional snapshot + tone audio for `SNAPSHOT=demo`. |
 | `db/` | PostgreSQL schema, optional pgvector migration, smoke test. |
@@ -50,6 +51,20 @@ npm run build                                                # snapshot picks up
 Runs are idempotent (successful prompts are skipped unless `--force`). Failures are recorded and
 published, never hidden. There is no scoring yet, so tools with outputs show as
 "outputs recorded, scoring pending".
+
+### Running from GitHub Actions (no local machine needed)
+
+1. Add the vendor keys as repository secrets under Settings, Secrets and variables, Actions:
+   `INWORLD_API_KEY`, `OPENAI_API_KEY`, `ELEVENLABS_API_KEY`, `CARTESIA_API_KEY`. Tools without a
+   secret are skipped.
+2. Run the **benchmark** workflow from the Actions tab (or via the API). Inputs: `tools`
+   (comma-separated slugs), `limit` (smoke test), `force`.
+3. The workflow commits `data/runs/` back to the branch and redeploys the site.
+
+Only the Inworld adapter has been exercised (against a mock). The OpenAI, ElevenLabs and
+Cartesia adapters are written from their public API shapes and untested; Cartesia also needs a
+real voice id in `data/catalog/voice/tools.json`. Google Cloud TTS and Amazon Polly need
+signed auth and have no adapter yet.
 
 To test the pipeline without network access: `node scripts/mock-tts-server.mjs &` then add
 `--base-url http://localhost:9999` to the runner.

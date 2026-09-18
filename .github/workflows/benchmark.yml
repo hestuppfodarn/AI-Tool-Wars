@@ -1,0 +1,102 @@
+name: benchmark
+
+# Runs the voice prompt bank against one or more tools on a GitHub-hosted
+# runner (which has open egress), commits the recorded audio + timings under
+# data/runs/, and then rebuilds and deploys the site.
+#
+# Vendor keys are repository secrets (Settings -> Secrets and variables ->
+# Actions). Names must match the adapter's env var in scripts/run-voice.mjs:
+#   INWORLD_API_KEY, OPENAI_API_KEY, ELEVENLABS_API_KEY, CARTESIA_API_KEY
+# A tool whose secret is missing is skipped with a note, never failed.
+
+on:
+  workflow_dispatch:
+    inputs:
+      tools:
+        description: 'Comma-separated tool slugs (default: every tool with an adapter)'
+        required: false
+        default: 'inworld-tts,openai-tts,elevenlabs,cartesia'
+      limit:
+        description: 'Only the first N prompts (smoke test). Empty = full bank.'
+        required: false
+        default: ''
+      force:
+        description: 'Re-run prompts that already succeeded'
+        type: boolean
+        default: false
+  schedule:
+    - cron: '17 5 * * 1'   # weekly, Monday 05:17 UTC
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: benchmark
+  cancel-in-progress: false
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    outputs:
+      changed: ${{ steps.commit.outputs.changed }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci --no-audit --no-fund
+
+      - name: Run tools
+        env:
+          INWORLD_API_KEY: ${{ secrets.INWORLD_API_KEY }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          ELEVENLABS_API_KEY: ${{ secrets.ELEVENLABS_API_KEY }}
+          CARTESIA_API_KEY: ${{ secrets.CARTESIA_API_KEY }}
+          TOOLS: ${{ github.event.inputs.tools || 'inworld-tts,openai-tts,elevenlabs,cartesia' }}
+          LIMIT: ${{ github.event.inputs.limit }}
+          FORCE: ${{ github.event.inputs.force }}
+        run: |
+          set -u
+          status=0
+          IFS=',' read -ra TOOL_LIST <<< "$TOOLS"
+          for tool in "${TOOL_LIST[@]}"; do
+            tool="$(echo "$tool" | xargs)"
+            args=(--tool "$tool")
+            [ -n "${LIMIT:-}" ] && args+=(--limit "$LIMIT")
+            [ "${FORCE:-false}" = "true" ] && args+=(--force)
+            echo "::group::$tool"
+            if node scripts/run-voice.mjs "${args[@]}"; then
+              echo "$tool: ok"
+            else
+              rc=$?
+              if [ "$rc" -eq 3 ]; then echo "$tool: skipped (no key configured)"; else echo "::warning::$tool exited $rc"; status=1; fi
+            fi
+            echo "::endgroup::"
+          done
+          exit 0   # partial failures are recorded in runs.json and published; the job stays green so the site still deploys
+
+      - name: Commit recorded runs
+        id: commit
+        run: |
+          git config user.name "arena-bot"
+          git config user.email "arena-bot@users.noreply.github.com"
+          git add data/runs
+          if git diff --cached --quiet; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            echo "no new runs"
+          else
+            git commit -m "Record benchmark runs ($(date -u +%Y-%m-%d))"
+            git pull --rebase origin "${GITHUB_REF_NAME}"
+            git push origin "HEAD:${GITHUB_REF_NAME}"
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+  publish:
+    needs: run
+    if: needs.run.outputs.changed == 'true'
+    uses: ./.github/workflows/site.yml

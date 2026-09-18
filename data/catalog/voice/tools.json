@@ -5,8 +5,15 @@
     "vendor": "ElevenLabs",
     "website": "https://elevenlabs.io",
     "description": "Multilingual text-to-speech and voice cloning API, widely used for narration, dubbing and conversational agents.",
-    "adapter": "http_json",
-    "model_hint": "eleven_multilingual_v2"
+    "adapter": "elevenlabs",
+    "model_hint": "eleven_multilingual_v2",
+    "run": {
+      "model_id": "eleven_multilingual_v2",
+      "voice_by_language": {
+        "default": "21m00Tcm4TlvDq8ikWAM"
+      },
+      "output_format": "mp3_44100_128"
+    }
   },
   {
     "slug": "openai-tts",
@@ -14,8 +21,14 @@
     "vendor": "OpenAI",
     "website": "https://openai.com",
     "description": "OpenAI's speech synthesis endpoint with steerable delivery via natural-language instructions.",
-    "adapter": "openai_audio_speech",
-    "model_hint": "gpt-4o-mini-tts"
+    "adapter": "openai",
+    "model_hint": "gpt-4o-mini-tts",
+    "run": {
+      "model_id": "gpt-4o-mini-tts",
+      "voice_by_language": {
+        "default": "alloy"
+      }
+    }
   },
   {
     "slug": "google-cloud-tts",
@@ -32,8 +45,15 @@
     "vendor": "Cartesia",
     "website": "https://cartesia.ai",
     "description": "Low-latency streaming text-to-speech built for real-time voice agents.",
-    "adapter": "http_json",
-    "model_hint": "sonic-2"
+    "adapter": "cartesia",
+    "model_hint": "sonic-2",
+    "run": {
+      "model_id": "sonic-2",
+      "voice_by_language": {
+        "default": "REPLACE_WITH_CARTESIA_VOICE_ID"
+      },
+      "api_version": "2024-11-13"
+    }
   },
   {
     "slug": "amazon-polly",

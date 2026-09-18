@@ -42,12 +42,100 @@ if (!tool) { console.error(`unknown tool ${args.tool}`); process.exit(1); }
 // --- adapters ----------------------------------------------------------------
 // Each adapter: { env, defaultBaseUrl, synth(prompt, cfg, ctx) -> { bytes, ext, ttft_ms, latency_ms, meta } }
 
+/** Read a streamed binary body, recording time-to-first-byte. */
+async function readBinary(res, t0) {
+  const reader = res.body.getReader();
+  const chunks = [];
+  let ttft = null;
+  while (true) {
+    const { value, done } = await reader.read();
+    if (done) break;
+    if (value?.length) { if (ttft === null) ttft = Math.round(performance.now() - t0); chunks.push(Buffer.from(value)); }
+  }
+  const t1 = performance.now();
+  const bytes = Buffer.concat(chunks);
+  if (!bytes.length) throw new Error('empty audio body');
+  return { bytes, ttft_ms: ttft ?? Math.round(t1 - t0), latency_ms: Math.round(t1 - t0) };
+}
+
+async function failIfNotOk(res) {
+  if (!res.ok) throw new Error(`HTTP ${res.status}: ${(await res.text()).slice(0, 300)}`);
+}
+
+function pickVoice(prompt, cfg, fallback) {
+  const lang = prompt.language;
+  return cfg.voice_by_language?.[lang] ?? cfg.voice_by_language?.[lang.split('-')[0]] ?? cfg.voice_by_language?.default ?? fallback;
+}
+
 const adapters = {
+  // OpenAI: POST /v1/audio/speech, binary audio body, streams as it generates.
+  openai: {
+    env: 'OPENAI_API_KEY',
+    defaultBaseUrl: 'https://api.openai.com',
+    async synth(prompt, cfg, { key, baseUrl, timeoutMs }) {
+      const voice = pickVoice(prompt, cfg, 'alloy');
+      const body = { model: cfg.model_id ?? 'gpt-4o-mini-tts', voice, input: prompt.text, response_format: 'mp3' };
+      if (prompt.instructions && (cfg.model_id ?? 'gpt-4o-mini-tts').includes('4o')) body.instructions = prompt.instructions;
+      const ctrl = new AbortController(); const timer = setTimeout(() => ctrl.abort(), timeoutMs);
+      try {
+        const t0 = performance.now();
+        const res = await fetch(`${baseUrl}/v1/audio/speech`, { method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${key}` }, body: JSON.stringify(body), signal: ctrl.signal });
+        await failIfNotOk(res);
+        return { ...(await readBinary(res, t0)), ext: 'mp3', meta: { voice, model: body.model, endpoint: 'speech' } };
+      } finally { clearTimeout(timer); }
+    },
+  },
+
+  // ElevenLabs: POST /v1/text-to-speech/{voice_id}/stream, header xi-api-key, binary mp3.
+  elevenlabs: {
+    env: 'ELEVENLABS_API_KEY',
+    defaultBaseUrl: 'https://api.elevenlabs.io',
+    async synth(prompt, cfg, { key, baseUrl, timeoutMs }) {
+      const voice = pickVoice(prompt, cfg, '21m00Tcm4TlvDq8ikWAM'); // "Rachel", a default premade voice
+      const model = cfg.model_id ?? 'eleven_multilingual_v2';
+      const ctrl = new AbortController(); const timer = setTimeout(() => ctrl.abort(), timeoutMs);
+      try {
+        const t0 = performance.now();
+        const res = await fetch(`${baseUrl}/v1/text-to-speech/${encodeURIComponent(voice)}/stream?output_format=${cfg.output_format ?? 'mp3_44100_128'}`, {
+          method: 'POST', headers: { 'Content-Type': 'application/json', 'xi-api-key': key, Accept: 'audio/mpeg' },
+          body: JSON.stringify({ text: prompt.text, model_id: model }), signal: ctrl.signal,
+        });
+        await failIfNotOk(res);
+        return { ...(await readBinary(res, t0)), ext: 'mp3', meta: { voice, model, endpoint: 'stream' } };
+      } finally { clearTimeout(timer); }
+    },
+  },
+
+  // Cartesia: POST /tts/bytes, headers X-API-Key + Cartesia-Version, binary body.
+  cartesia: {
+    env: 'CARTESIA_API_KEY',
+    defaultBaseUrl: 'https://api.cartesia.ai',
+    async synth(prompt, cfg, { key, baseUrl, timeoutMs }) {
+      const voice = pickVoice(prompt, cfg, cfg.voice_by_language?.default);
+      if (!voice) throw new Error('cartesia needs run.voice_by_language.default (a voice id) in tools.json');
+      const model = cfg.model_id ?? 'sonic-2';
+      const lang = prompt.language.split('-')[0];
+      const ctrl = new AbortController(); const timer = setTimeout(() => ctrl.abort(), timeoutMs);
+      try {
+        const t0 = performance.now();
+        const res = await fetch(`${baseUrl}/tts/bytes`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'X-API-Key': key, 'Cartesia-Version': cfg.api_version ?? '2024-11-13' },
+          body: JSON.stringify({ model_id: model, transcript: prompt.text, voice: { mode: 'id', id: voice }, language: lang,
+            output_format: { container: 'mp3', bit_rate: 128000, sample_rate: 44100 } }),
+          signal: ctrl.signal,
+        });
+        await failIfNotOk(res);
+        return { ...(await readBinary(res, t0)), ext: 'mp3', meta: { voice, model, endpoint: 'bytes' } };
+      } finally { clearTimeout(timer); }
+    },
+  },
+
   inworld: {
     env: 'INWORLD_API_KEY',
     defaultBaseUrl: 'https://api.inworld.ai',
     async synth(prompt, cfg, { key, baseUrl, timeoutMs }) {
-      const voice = cfg.voice_by_language?.[prompt.language] ?? cfg.voice_by_language?.[prompt.language.split('-')[0]] ?? cfg.voice_by_language?.default ?? 'Ashley';
+      const voice = pickVoice(prompt, cfg, 'Ashley');
       const encoding = cfg.audio_encoding ?? 'MP3';
       const body = JSON.stringify({
         text: prompt.text,
@@ -102,7 +190,7 @@ const adapters = {
 const adapter = adapters[tool.adapter];
 if (!adapter) { console.error(`no adapter '${tool.adapter}' for ${tool.slug}; adapters: ${Object.keys(adapters).join(', ')}`); process.exit(1); }
 const key = process.env[adapter.env];
-if (!key) { console.error(`missing ${adapter.env} (put it in .env)`); process.exit(1); }
+if (!key) { console.error(`missing ${adapter.env} (put it in .env or the environment)`); process.exit(3); }
 const baseUrl = args['base-url'] ?? adapter.defaultBaseUrl;
 const timeoutMs = Number(args.timeout ?? 60000);
 
