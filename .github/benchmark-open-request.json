@@ -1,6 +1,6 @@
 {
-  "tools": "kokoro,piper,kittentts,speecht5",
-  "limit": "3",
+  "tools": "kokoro,piper,kittentts,speecht5,melotts,xtts-v2",
+  "limit": "",
   "force": false,
-  "note": "Smoke test of the four lightest open models, first three prompts. Requested 2026-09-18T03:14:15Z"
+  "note": "Full 30-prompt bank on the light and medium open models. Requested 2026-09-18T03:20:19Z"
 }

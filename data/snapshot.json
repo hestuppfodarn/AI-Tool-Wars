@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-09-18T03:01:42.913Z",
+  "generated_at": "2026-09-18T03:19:28.610Z",
   "source": "catalog",
   "demo": false,
   "categories": [
@@ -85,6 +85,96 @@
       "vendor": "Inworld AI",
       "website": "https://inworld.ai",
       "description": "Inworld's text-to-speech API, built for real-time character and agent voices with low latency and expressive delivery.",
+      "category": "voice",
+      "status": "pending"
+    },
+    {
+      "slug": "kokoro",
+      "name": "Kokoro-82M",
+      "vendor": "hexgrad",
+      "website": "https://huggingface.co/hexgrad/Kokoro-82M",
+      "description": "82M-parameter open-weight TTS with 50+ preset voices across nine languages; runs many times faster than real time on a CPU through ONNX Runtime.",
+      "category": "voice",
+      "status": "benchmarked"
+    },
+    {
+      "slug": "piper",
+      "name": "Piper",
+      "vendor": "Rhasspy (Michael Hansen)",
+      "website": "https://github.com/rhasspy/piper",
+      "description": "Fast VITS-based neural TTS built for the Raspberry Pi, with community voices in 30+ languages; the engine behind Home Assistant's local speech.",
+      "category": "voice",
+      "status": "benchmarked"
+    },
+    {
+      "slug": "kittentts",
+      "name": "KittenTTS Nano",
+      "vendor": "KittenML",
+      "website": "https://github.com/KittenML/KittenTTS",
+      "description": "A 15M-parameter, 25 MB English TTS model with eight expressive preset voices, designed to run on any CPU without a GPU.",
+      "category": "voice",
+      "status": "benchmarked"
+    },
+    {
+      "slug": "speecht5",
+      "name": "SpeechT5 TTS",
+      "vendor": "Microsoft",
+      "website": "https://huggingface.co/microsoft/speecht5_tts",
+      "description": "Microsoft's unified speech-text transformer fine-tuned for English TTS, voiced through a HiFi-GAN vocoder and a CMU ARCTIC speaker embedding.",
+      "category": "voice",
+      "status": "pending"
+    },
+    {
+      "slug": "melotts",
+      "name": "MeloTTS",
+      "vendor": "MyShell.ai",
+      "website": "https://github.com/myshell-ai/MeloTTS",
+      "description": "Multilingual VITS-family TTS from MyShell with English (US, British, Indian, Australian), Spanish, French, Chinese, Japanese and Korean models; real-time on CPU.",
+      "category": "voice",
+      "status": "pending"
+    },
+    {
+      "slug": "xtts-v2",
+      "name": "XTTS-v2",
+      "vendor": "Coqui",
+      "website": "https://huggingface.co/coqui/XTTS-v2",
+      "description": "Coqui's 17-language voice-cloning TTS, now maintained by Idiap as coqui-tts; used here with a built-in studio speaker. Non-commercial licence (CPML).",
+      "category": "voice",
+      "status": "pending"
+    },
+    {
+      "slug": "parler-tts-mini",
+      "name": "Parler-TTS Mini",
+      "vendor": "Hugging Face",
+      "website": "https://github.com/huggingface/parler-tts",
+      "description": "880M-parameter English TTS steered by a natural-language description of the speaker and delivery; the only open model here that consumes the prompt's style instructions directly.",
+      "category": "voice",
+      "status": "pending"
+    },
+    {
+      "slug": "bark-small",
+      "name": "Bark (small)",
+      "vendor": "Suno",
+      "website": "https://huggingface.co/suno/bark-small",
+      "description": "Suno's generative audio transformer, small variant, with multilingual speaker presets; produces expressive speech but is slow on CPU and caps each generation at about 13 seconds.",
+      "category": "voice",
+      "status": "pending"
+    },
+    {
+      "slug": "f5-tts",
+      "name": "F5-TTS",
+      "vendor": "SWivid",
+      "website": "https://github.com/SWivid/F5-TTS",
+      "description": "Flow-matching diffusion transformer TTS (v1 Base) that clones a short reference clip; English and Chinese training data. Weights are CC-BY-NC-4.0.",
+      "category": "voice",
+      "status": "pending"
+    },
+    {
+      "slug": "chatterbox",
+      "name": "Chatterbox Multilingual",
+      "vendor": "Resemble AI",
+      "website": "https://github.com/resemble-ai/chatterbox",
+      "description": "Resemble AI's 500M-parameter Llama-backbone TTS with emotion exaggeration control and 23 languages including Swedish; heavy on CPU.",
       "category": "voice",
       "status": "pending"
     }
@@ -603,8 +693,264 @@
       ]
     }
   ],
-  "runs": [],
-  "ratings": [],
+  "runs": [
+    {
+      "category": "voice",
+      "tool": "kittentts",
+      "prompt_id": "voice-001",
+      "run_at": "2026-09-18T03:15:08.371Z",
+      "audio_url": "runs/voice/kittentts/voice-001.ogg",
+      "transcript": "Neat ledger, the invoicing tool that gets you paid in days, not weeks. Send an invoice, track it, and let automatic reminders do the chasing.",
+      "ttft_ms": 5479,
+      "latency_ms": 5479,
+      "scores": {
+        "accuracy": 9.3,
+        "naturalness": 7.4,
+        "velocity": 1
+      },
+      "composite": 5.9,
+      "wer": 0.04,
+      "judge_rationale": null,
+      "status": "success",
+      "error": null
+    },
+    {
+      "category": "voice",
+      "tool": "kittentts",
+      "prompt_id": "voice-002",
+      "run_at": "2026-09-18T03:15:17.328Z",
+      "audio_url": "runs/voice/kittentts/voice-002.ogg",
+      "transcript": "Thank you for calling Northgate Dental. For appointments, press 1, for billing, press 2, for all other inquiries, press 3, or stay on the line.",
+      "ttft_ms": 5719,
+      "latency_ms": 5719,
+      "scores": {
+        "accuracy": 9.3,
+        "naturalness": 7.3,
+        "velocity": 1
+      },
+      "composite": 5.87,
+      "wer": 0.04,
+      "judge_rationale": null,
+      "status": "success",
+      "error": null
+    },
+    {
+      "category": "voice",
+      "tool": "kittentts",
+      "prompt_id": "voice-003",
+      "run_at": "2026-09-18T03:15:23.052Z",
+      "audio_url": "runs/voice/kittentts/voice-003.ogg",
+      "transcript": "You can reach our support team at 0800-555-0199. This 0800-555-0199, Monday to Friday, 9 to 5.",
+      "ttft_ms": 5983,
+      "latency_ms": 5983,
+      "scores": {
+        "accuracy": 6.6,
+        "naturalness": 7.2,
+        "velocity": 5.5
+      },
+      "composite": 6.43,
+      "wer": 0.19,
+      "judge_rationale": null,
+      "status": "success",
+      "error": null
+    },
+    {
+      "category": "voice",
+      "tool": "kokoro",
+      "prompt_id": "voice-001",
+      "run_at": "2026-09-18T03:17:19.570Z",
+      "audio_url": "runs/voice/kokoro/voice-001.ogg",
+      "transcript": "Meet Ledger, the invoicing tool that gets you paid in days, not weeks. Send an invoice, track it, and let automatic reminders do the chasing.",
+      "ttft_ms": 4327,
+      "latency_ms": 4327,
+      "scores": {
+        "accuracy": 10,
+        "naturalness": 7.5,
+        "velocity": 5.5
+      },
+      "composite": 7.67,
+      "wer": 0,
+      "judge_rationale": null,
+      "status": "success",
+      "error": null
+    },
+    {
+      "category": "voice",
+      "tool": "kokoro",
+      "prompt_id": "voice-002",
+      "run_at": "2026-09-18T03:17:30.171Z",
+      "audio_url": "runs/voice/kokoro/voice-002.ogg",
+      "transcript": "Thank you for calling Northgate Dental. For appointments, press 1. For billing, press 2. For all other inquiries, press 3 or stay on the line.",
+      "ttft_ms": 4341,
+      "latency_ms": 4341,
+      "scores": {
+        "accuracy": 9.3,
+        "naturalness": 7.4,
+        "velocity": 5.5
+      },
+      "composite": 7.4,
+      "wer": 0.04,
+      "judge_rationale": null,
+      "status": "success",
+      "error": null
+    },
+    {
+      "category": "voice",
+      "tool": "kokoro",
+      "prompt_id": "voice-003",
+      "run_at": "2026-09-18T03:17:34.516Z",
+      "audio_url": "runs/voice/kokoro/voice-003.ogg",
+      "transcript": "You can reach our support team at 0800-555-0199. That's 0800-555-0199, Monday to Friday, 9 to 5.",
+      "ttft_ms": 6361,
+      "latency_ms": 6361,
+      "scores": {
+        "accuracy": 8.3,
+        "naturalness": 7.3,
+        "velocity": 1
+      },
+      "composite": 5.53,
+      "wer": 0.095,
+      "judge_rationale": null,
+      "status": "success",
+      "error": null
+    },
+    {
+      "category": "voice",
+      "tool": "piper",
+      "prompt_id": "voice-001",
+      "run_at": "2026-09-18T03:15:18.749Z",
+      "audio_url": "runs/voice/piper/voice-001.ogg",
+      "transcript": "Meek Ledger, the invoicing tool that gets you paid in days, not weeks. Send an invoice, track it, and let automatic reminders do the chasing.",
+      "ttft_ms": 399,
+      "latency_ms": 804,
+      "scores": {
+        "accuracy": 9.3,
+        "naturalness": 7.5,
+        "velocity": 10
+      },
+      "composite": 8.93,
+      "wer": 0.04,
+      "judge_rationale": null,
+      "status": "success",
+      "error": null
+    },
+    {
+      "category": "voice",
+      "tool": "piper",
+      "prompt_id": "voice-002",
+      "run_at": "2026-09-18T03:15:33.999Z",
+      "audio_url": "runs/voice/piper/voice-002.ogg",
+      "transcript": "Thank you for calling Northgate Dental, for appointments, press 1, for billing, press 2, for all other inquiries, press 3, or stay on the line.",
+      "ttft_ms": 175,
+      "latency_ms": 783,
+      "scores": {
+        "accuracy": 9.3,
+        "naturalness": 7,
+        "velocity": 10
+      },
+      "composite": 8.77,
+      "wer": 0.04,
+      "judge_rationale": null,
+      "status": "success",
+      "error": null
+    },
+    {
+      "category": "voice",
+      "tool": "piper",
+      "prompt_id": "voice-003",
+      "run_at": "2026-09-18T03:15:34.787Z",
+      "audio_url": "runs/voice/piper/voice-003.ogg",
+      "transcript": "You can reach our sport team at 0800 555 0199, that's 0800 555 0199, Monday to Friday, 9 to 5.",
+      "ttft_ms": 1031,
+      "latency_ms": 1031,
+      "scores": {
+        "accuracy": 7.4,
+        "naturalness": 7.6,
+        "velocity": 10
+      },
+      "composite": 8.33,
+      "wer": 0.143,
+      "judge_rationale": null,
+      "status": "success",
+      "error": null
+    },
+    {
+      "category": "voice",
+      "tool": "speecht5",
+      "prompt_id": "voice-001",
+      "run_at": "2026-09-18T03:15:38.494Z",
+      "audio_url": null,
+      "transcript": null,
+      "ttft_ms": null,
+      "latency_ms": null,
+      "scores": {},
+      "composite": null,
+      "wer": null,
+      "judge_rationale": null,
+      "status": "error",
+      "error": "RuntimeError: Dataset scripts are no longer supported, but found cmu-arctic-xvectors.py"
+    },
+    {
+      "category": "voice",
+      "tool": "speecht5",
+      "prompt_id": "voice-002",
+      "run_at": "2026-09-18T03:16:02.405Z",
+      "audio_url": null,
+      "transcript": null,
+      "ttft_ms": null,
+      "latency_ms": null,
+      "scores": {},
+      "composite": null,
+      "wer": null,
+      "judge_rationale": null,
+      "status": "error",
+      "error": "RuntimeError: Dataset scripts are no longer supported, but found cmu-arctic-xvectors.py"
+    }
+  ],
+  "ratings": [
+    {
+      "category": "voice",
+      "tool": "piper",
+      "runs": 3,
+      "composite": 8.68,
+      "scores": {
+        "accuracy": 8.67,
+        "naturalness": 7.37,
+        "velocity": 10
+      },
+      "median_ttft_ms": 399,
+      "median_latency_ms": 804,
+      "rank": 1
+    },
+    {
+      "category": "voice",
+      "tool": "kokoro",
+      "runs": 3,
+      "composite": 6.87,
+      "scores": {
+        "accuracy": 9.2,
+        "naturalness": 7.4,
+        "velocity": 4
+      },
+      "median_ttft_ms": 4341,
+      "median_latency_ms": 4341,
+      "rank": 2
+    },
+    {
+      "category": "voice",
+      "tool": "kittentts",
+      "runs": 3,
+      "composite": 6.07,
+      "scores": {
+        "accuracy": 8.4,
+        "naturalness": 7.3,
+        "velocity": 2.5
+      },
+      "median_ttft_ms": 5719,
+      "median_latency_ms": 5719,
+      "rank": 3
+    }
+  ],
   "pairs": [
     {
       "category": "voice",
@@ -643,6 +989,76 @@
     },
     {
       "category": "voice",
+      "slug": "elevenlabs-vs-kokoro",
+      "a": "elevenlabs",
+      "b": "kokoro",
+      "verdict": null
+    },
+    {
+      "category": "voice",
+      "slug": "elevenlabs-vs-piper",
+      "a": "elevenlabs",
+      "b": "piper",
+      "verdict": null
+    },
+    {
+      "category": "voice",
+      "slug": "elevenlabs-vs-kittentts",
+      "a": "elevenlabs",
+      "b": "kittentts",
+      "verdict": null
+    },
+    {
+      "category": "voice",
+      "slug": "elevenlabs-vs-speecht5",
+      "a": "elevenlabs",
+      "b": "speecht5",
+      "verdict": null
+    },
+    {
+      "category": "voice",
+      "slug": "elevenlabs-vs-melotts",
+      "a": "elevenlabs",
+      "b": "melotts",
+      "verdict": null
+    },
+    {
+      "category": "voice",
+      "slug": "elevenlabs-vs-xtts-v2",
+      "a": "elevenlabs",
+      "b": "xtts-v2",
+      "verdict": null
+    },
+    {
+      "category": "voice",
+      "slug": "elevenlabs-vs-parler-tts-mini",
+      "a": "elevenlabs",
+      "b": "parler-tts-mini",
+      "verdict": null
+    },
+    {
+      "category": "voice",
+      "slug": "elevenlabs-vs-bark-small",
+      "a": "elevenlabs",
+      "b": "bark-small",
+      "verdict": null
+    },
+    {
+      "category": "voice",
+      "slug": "elevenlabs-vs-f5-tts",
+      "a": "elevenlabs",
+      "b": "f5-tts",
+      "verdict": null
+    },
+    {
+      "category": "voice",
+      "slug": "elevenlabs-vs-chatterbox",
+      "a": "elevenlabs",
+      "b": "chatterbox",
+      "verdict": null
+    },
+    {
+      "category": "voice",
       "slug": "openai-tts-vs-google-cloud-tts",
       "a": "openai-tts",
       "b": "google-cloud-tts",
@@ -671,6 +1087,76 @@
     },
     {
       "category": "voice",
+      "slug": "openai-tts-vs-kokoro",
+      "a": "openai-tts",
+      "b": "kokoro",
+      "verdict": null
+    },
+    {
+      "category": "voice",
+      "slug": "openai-tts-vs-piper",
+      "a": "openai-tts",
+      "b": "piper",
+      "verdict": null
+    },
+    {
+      "category": "voice",
+      "slug": "openai-tts-vs-kittentts",
+      "a": "openai-tts",
+      "b": "kittentts",
+      "verdict": null
+    },
+    {
+      "category": "voice",
+      "slug": "openai-tts-vs-speecht5",
+      "a": "openai-tts",
+      "b": "speecht5",
+      "verdict": null
+    },
+    {
+      "category": "voice",
+      "slug": "openai-tts-vs-melotts",
+      "a": "openai-tts",
+      "b": "melotts",
+      "verdict": null
+    },
+    {
+      "category": "voice",
+      "slug": "openai-tts-vs-xtts-v2",
+      "a": "openai-tts",
+      "b": "xtts-v2",
+      "verdict": null
+    },
+    {
+      "category": "voice",
+      "slug": "openai-tts-vs-parler-tts-mini",
+      "a": "openai-tts",
+      "b": "parler-tts-mini",
+      "verdict": null
+    },
+    {
+      "category": "voice",
+      "slug": "openai-tts-vs-bark-small",
+      "a": "openai-tts",
+      "b": "bark-small",
+      "verdict": null
+    },
+    {
+      "category": "voice",
+      "slug": "openai-tts-vs-f5-tts",
+      "a": "openai-tts",
+      "b": "f5-tts",
+      "verdict": null
+    },
+    {
+      "category": "voice",
+      "slug": "openai-tts-vs-chatterbox",
+      "a": "openai-tts",
+      "b": "chatterbox",
+      "verdict": null
+    },
+    {
+      "category": "voice",
       "slug": "google-cloud-tts-vs-cartesia",
       "a": "google-cloud-tts",
       "b": "cartesia",
@@ -692,6 +1178,76 @@
     },
     {
       "category": "voice",
+      "slug": "google-cloud-tts-vs-kokoro",
+      "a": "google-cloud-tts",
+      "b": "kokoro",
+      "verdict": null
+    },
+    {
+      "category": "voice",
+      "slug": "google-cloud-tts-vs-piper",
+      "a": "google-cloud-tts",
+      "b": "piper",
+      "verdict": null
+    },
+    {
+      "category": "voice",
+      "slug": "google-cloud-tts-vs-kittentts",
+      "a": "google-cloud-tts",
+      "b": "kittentts",
+      "verdict": null
+    },
+    {
+      "category": "voice",
+      "slug": "google-cloud-tts-vs-speecht5",
+      "a": "google-cloud-tts",
+      "b": "speecht5",
+      "verdict": null
+    },
+    {
+      "category": "voice",
+      "slug": "google-cloud-tts-vs-melotts",
+      "a": "google-cloud-tts",
+      "b": "melotts",
+      "verdict": null
+    },
+    {
+      "category": "voice",
+      "slug": "google-cloud-tts-vs-xtts-v2",
+      "a": "google-cloud-tts",
+      "b": "xtts-v2",
+      "verdict": null
+    },
+    {
+      "category": "voice",
+      "slug": "google-cloud-tts-vs-parler-tts-mini",
+      "a": "google-cloud-tts",
+      "b": "parler-tts-mini",
+      "verdict": null
+    },
+    {
+      "category": "voice",
+      "slug": "google-cloud-tts-vs-bark-small",
+      "a": "google-cloud-tts",
+      "b": "bark-small",
+      "verdict": null
+    },
+    {
+      "category": "voice",
+      "slug": "google-cloud-tts-vs-f5-tts",
+      "a": "google-cloud-tts",
+      "b": "f5-tts",
+      "verdict": null
+    },
+    {
+      "category": "voice",
+      "slug": "google-cloud-tts-vs-chatterbox",
+      "a": "google-cloud-tts",
+      "b": "chatterbox",
+      "verdict": null
+    },
+    {
+      "category": "voice",
       "slug": "cartesia-vs-amazon-polly",
       "a": "cartesia",
       "b": "amazon-polly",
@@ -706,20 +1262,544 @@
     },
     {
       "category": "voice",
+      "slug": "cartesia-vs-kokoro",
+      "a": "cartesia",
+      "b": "kokoro",
+      "verdict": null
+    },
+    {
+      "category": "voice",
+      "slug": "cartesia-vs-piper",
+      "a": "cartesia",
+      "b": "piper",
+      "verdict": null
+    },
+    {
+      "category": "voice",
+      "slug": "cartesia-vs-kittentts",
+      "a": "cartesia",
+      "b": "kittentts",
+      "verdict": null
+    },
+    {
+      "category": "voice",
+      "slug": "cartesia-vs-speecht5",
+      "a": "cartesia",
+      "b": "speecht5",
+      "verdict": null
+    },
+    {
+      "category": "voice",
+      "slug": "cartesia-vs-melotts",
+      "a": "cartesia",
+      "b": "melotts",
+      "verdict": null
+    },
+    {
+      "category": "voice",
+      "slug": "cartesia-vs-xtts-v2",
+      "a": "cartesia",
+      "b": "xtts-v2",
+      "verdict": null
+    },
+    {
+      "category": "voice",
+      "slug": "cartesia-vs-parler-tts-mini",
+      "a": "cartesia",
+      "b": "parler-tts-mini",
+      "verdict": null
+    },
+    {
+      "category": "voice",
+      "slug": "cartesia-vs-bark-small",
+      "a": "cartesia",
+      "b": "bark-small",
+      "verdict": null
+    },
+    {
+      "category": "voice",
+      "slug": "cartesia-vs-f5-tts",
+      "a": "cartesia",
+      "b": "f5-tts",
+      "verdict": null
+    },
+    {
+      "category": "voice",
+      "slug": "cartesia-vs-chatterbox",
+      "a": "cartesia",
+      "b": "chatterbox",
+      "verdict": null
+    },
+    {
+      "category": "voice",
       "slug": "amazon-polly-vs-inworld-tts",
       "a": "amazon-polly",
       "b": "inworld-tts",
       "verdict": null
-    }
-  ],
-  "previous_holders": {
-    "voice": {
-      "run_at": "2026-09-18T03:01:37.809Z",
-      "holders": {
-        "voice-001": "openai-tts",
-        "voice-002": null,
-        "voice-003": null
+    },
+    {
+      "category": "voice",
+      "slug": "amazon-polly-vs-kokoro",
+      "a": "amazon-polly",
+      "b": "kokoro",
+      "verdict": null
+    },
+    {
+      "category": "voice",
+      "slug": "amazon-polly-vs-piper",
+      "a": "amazon-polly",
+      "b": "piper",
+      "verdict": null
+    },
+    {
+      "category": "voice",
+      "slug": "amazon-polly-vs-kittentts",
+      "a": "amazon-polly",
+      "b": "kittentts",
+      "verdict": null
+    },
+    {
+      "category": "voice",
+      "slug": "amazon-polly-vs-speecht5",
+      "a": "amazon-polly",
+      "b": "speecht5",
+      "verdict": null
+    },
+    {
+      "category": "voice",
+      "slug": "amazon-polly-vs-melotts",
+      "a": "amazon-polly",
+      "b": "melotts",
+      "verdict": null
+    },
+    {
+      "category": "voice",
+      "slug": "amazon-polly-vs-xtts-v2",
+      "a": "amazon-polly",
+      "b": "xtts-v2",
+      "verdict": null
+    },
+    {
+      "category": "voice",
+      "slug": "amazon-polly-vs-parler-tts-mini",
+      "a": "amazon-polly",
+      "b": "parler-tts-mini",
+      "verdict": null
+    },
+    {
+      "category": "voice",
+      "slug": "amazon-polly-vs-bark-small",
+      "a": "amazon-polly",
+      "b": "bark-small",
+      "verdict": null
+    },
+    {
+      "category": "voice",
+      "slug": "amazon-polly-vs-f5-tts",
+      "a": "amazon-polly",
+      "b": "f5-tts",
+      "verdict": null
+    },
+    {
+      "category": "voice",
+      "slug": "amazon-polly-vs-chatterbox",
+      "a": "amazon-polly",
+      "b": "chatterbox",
+      "verdict": null
+    },
+    {
+      "category": "voice",
+      "slug": "inworld-tts-vs-kokoro",
+      "a": "inworld-tts",
+      "b": "kokoro",
+      "verdict": null
+    },
+    {
+      "category": "voice",
+      "slug": "inworld-tts-vs-piper",
+      "a": "inworld-tts",
+      "b": "piper",
+      "verdict": null
+    },
+    {
+      "category": "voice",
+      "slug": "inworld-tts-vs-kittentts",
+      "a": "inworld-tts",
+      "b": "kittentts",
+      "verdict": null
+    },
+    {
+      "category": "voice",
+      "slug": "inworld-tts-vs-speecht5",
+      "a": "inworld-tts",
+      "b": "speecht5",
+      "verdict": null
+    },
+    {
+      "category": "voice",
+      "slug": "inworld-tts-vs-melotts",
+      "a": "inworld-tts",
+      "b": "melotts",
+      "verdict": null
+    },
+    {
+      "category": "voice",
+      "slug": "inworld-tts-vs-xtts-v2",
+      "a": "inworld-tts",
+      "b": "xtts-v2",
+      "verdict": null
+    },
+    {
+      "category": "voice",
+      "slug": "inworld-tts-vs-parler-tts-mini",
+      "a": "inworld-tts",
+      "b": "parler-tts-mini",
+      "verdict": null
+    },
+    {
+      "category": "voice",
+      "slug": "inworld-tts-vs-bark-small",
+      "a": "inworld-tts",
+      "b": "bark-small",
+      "verdict": null
+    },
+    {
+      "category": "voice",
+      "slug": "inworld-tts-vs-f5-tts",
+      "a": "inworld-tts",
+      "b": "f5-tts",
+      "verdict": null
+    },
+    {
+      "category": "voice",
+      "slug": "inworld-tts-vs-chatterbox",
+      "a": "inworld-tts",
+      "b": "chatterbox",
+      "verdict": null
+    },
+    {
+      "category": "voice",
+      "slug": "kokoro-vs-piper",
+      "a": "kokoro",
+      "b": "piper",
+      "verdict": {
+        "headline": "Piper leads Kokoro-82M 8.7 to 6.9 on the 30-prompt AI Voice bank.",
+        "summary": "Piper is ahead on speed. Kokoro-82M wins on transcript accuracy. Median time to first byte: Kokoro-82M 4341 ms, Piper 399 ms. Scored on 3 of 30 prompts so far."
       }
+    },
+    {
+      "category": "voice",
+      "slug": "kokoro-vs-kittentts",
+      "a": "kokoro",
+      "b": "kittentts",
+      "verdict": {
+        "headline": "Kokoro-82M leads KittenTTS Nano 6.9 to 6.1 on the 30-prompt AI Voice bank.",
+        "summary": "Kokoro-82M is ahead on speed and transcript accuracy. Median time to first byte: Kokoro-82M 4341 ms, KittenTTS Nano 5719 ms. Scored on 3 of 30 prompts so far."
+      }
+    },
+    {
+      "category": "voice",
+      "slug": "kokoro-vs-speecht5",
+      "a": "kokoro",
+      "b": "speecht5",
+      "verdict": null
+    },
+    {
+      "category": "voice",
+      "slug": "kokoro-vs-melotts",
+      "a": "kokoro",
+      "b": "melotts",
+      "verdict": null
+    },
+    {
+      "category": "voice",
+      "slug": "kokoro-vs-xtts-v2",
+      "a": "kokoro",
+      "b": "xtts-v2",
+      "verdict": null
+    },
+    {
+      "category": "voice",
+      "slug": "kokoro-vs-parler-tts-mini",
+      "a": "kokoro",
+      "b": "parler-tts-mini",
+      "verdict": null
+    },
+    {
+      "category": "voice",
+      "slug": "kokoro-vs-bark-small",
+      "a": "kokoro",
+      "b": "bark-small",
+      "verdict": null
+    },
+    {
+      "category": "voice",
+      "slug": "kokoro-vs-f5-tts",
+      "a": "kokoro",
+      "b": "f5-tts",
+      "verdict": null
+    },
+    {
+      "category": "voice",
+      "slug": "kokoro-vs-chatterbox",
+      "a": "kokoro",
+      "b": "chatterbox",
+      "verdict": null
+    },
+    {
+      "category": "voice",
+      "slug": "piper-vs-kittentts",
+      "a": "piper",
+      "b": "kittentts",
+      "verdict": {
+        "headline": "Piper leads KittenTTS Nano 8.7 to 6.1 on the 30-prompt AI Voice bank.",
+        "summary": "Piper is ahead on speed. Median time to first byte: Piper 399 ms, KittenTTS Nano 5719 ms. Scored on 3 of 30 prompts so far."
+      }
+    },
+    {
+      "category": "voice",
+      "slug": "piper-vs-speecht5",
+      "a": "piper",
+      "b": "speecht5",
+      "verdict": null
+    },
+    {
+      "category": "voice",
+      "slug": "piper-vs-melotts",
+      "a": "piper",
+      "b": "melotts",
+      "verdict": null
+    },
+    {
+      "category": "voice",
+      "slug": "piper-vs-xtts-v2",
+      "a": "piper",
+      "b": "xtts-v2",
+      "verdict": null
+    },
+    {
+      "category": "voice",
+      "slug": "piper-vs-parler-tts-mini",
+      "a": "piper",
+      "b": "parler-tts-mini",
+      "verdict": null
+    },
+    {
+      "category": "voice",
+      "slug": "piper-vs-bark-small",
+      "a": "piper",
+      "b": "bark-small",
+      "verdict": null
+    },
+    {
+      "category": "voice",
+      "slug": "piper-vs-f5-tts",
+      "a": "piper",
+      "b": "f5-tts",
+      "verdict": null
+    },
+    {
+      "category": "voice",
+      "slug": "piper-vs-chatterbox",
+      "a": "piper",
+      "b": "chatterbox",
+      "verdict": null
+    },
+    {
+      "category": "voice",
+      "slug": "kittentts-vs-speecht5",
+      "a": "kittentts",
+      "b": "speecht5",
+      "verdict": null
+    },
+    {
+      "category": "voice",
+      "slug": "kittentts-vs-melotts",
+      "a": "kittentts",
+      "b": "melotts",
+      "verdict": null
+    },
+    {
+      "category": "voice",
+      "slug": "kittentts-vs-xtts-v2",
+      "a": "kittentts",
+      "b": "xtts-v2",
+      "verdict": null
+    },
+    {
+      "category": "voice",
+      "slug": "kittentts-vs-parler-tts-mini",
+      "a": "kittentts",
+      "b": "parler-tts-mini",
+      "verdict": null
+    },
+    {
+      "category": "voice",
+      "slug": "kittentts-vs-bark-small",
+      "a": "kittentts",
+      "b": "bark-small",
+      "verdict": null
+    },
+    {
+      "category": "voice",
+      "slug": "kittentts-vs-f5-tts",
+      "a": "kittentts",
+      "b": "f5-tts",
+      "verdict": null
+    },
+    {
+      "category": "voice",
+      "slug": "kittentts-vs-chatterbox",
+      "a": "kittentts",
+      "b": "chatterbox",
+      "verdict": null
+    },
+    {
+      "category": "voice",
+      "slug": "speecht5-vs-melotts",
+      "a": "speecht5",
+      "b": "melotts",
+      "verdict": null
+    },
+    {
+      "category": "voice",
+      "slug": "speecht5-vs-xtts-v2",
+      "a": "speecht5",
+      "b": "xtts-v2",
+      "verdict": null
+    },
+    {
+      "category": "voice",
+      "slug": "speecht5-vs-parler-tts-mini",
+      "a": "speecht5",
+      "b": "parler-tts-mini",
+      "verdict": null
+    },
+    {
+      "category": "voice",
+      "slug": "speecht5-vs-bark-small",
+      "a": "speecht5",
+      "b": "bark-small",
+      "verdict": null
+    },
+    {
+      "category": "voice",
+      "slug": "speecht5-vs-f5-tts",
+      "a": "speecht5",
+      "b": "f5-tts",
+      "verdict": null
+    },
+    {
+      "category": "voice",
+      "slug": "speecht5-vs-chatterbox",
+      "a": "speecht5",
+      "b": "chatterbox",
+      "verdict": null
+    },
+    {
+      "category": "voice",
+      "slug": "melotts-vs-xtts-v2",
+      "a": "melotts",
+      "b": "xtts-v2",
+      "verdict": null
+    },
+    {
+      "category": "voice",
+      "slug": "melotts-vs-parler-tts-mini",
+      "a": "melotts",
+      "b": "parler-tts-mini",
+      "verdict": null
+    },
+    {
+      "category": "voice",
+      "slug": "melotts-vs-bark-small",
+      "a": "melotts",
+      "b": "bark-small",
+      "verdict": null
+    },
+    {
+      "category": "voice",
+      "slug": "melotts-vs-f5-tts",
+      "a": "melotts",
+      "b": "f5-tts",
+      "verdict": null
+    },
+    {
+      "category": "voice",
+      "slug": "melotts-vs-chatterbox",
+      "a": "melotts",
+      "b": "chatterbox",
+      "verdict": null
+    },
+    {
+      "category": "voice",
+      "slug": "xtts-v2-vs-parler-tts-mini",
+      "a": "xtts-v2",
+      "b": "parler-tts-mini",
+      "verdict": null
+    },
+    {
+      "category": "voice",
+      "slug": "xtts-v2-vs-bark-small",
+      "a": "xtts-v2",
+      "b": "bark-small",
+      "verdict": null
+    },
+    {
+      "category": "voice",
+      "slug": "xtts-v2-vs-f5-tts",
+      "a": "xtts-v2",
+      "b": "f5-tts",
+      "verdict": null
+    },
+    {
+      "category": "voice",
+      "slug": "xtts-v2-vs-chatterbox",
+      "a": "xtts-v2",
+      "b": "chatterbox",
+      "verdict": null
+    },
+    {
+      "category": "voice",
+      "slug": "parler-tts-mini-vs-bark-small",
+      "a": "parler-tts-mini",
+      "b": "bark-small",
+      "verdict": null
+    },
+    {
+      "category": "voice",
+      "slug": "parler-tts-mini-vs-f5-tts",
+      "a": "parler-tts-mini",
+      "b": "f5-tts",
+      "verdict": null
+    },
+    {
+      "category": "voice",
+      "slug": "parler-tts-mini-vs-chatterbox",
+      "a": "parler-tts-mini",
+      "b": "chatterbox",
+      "verdict": null
+    },
+    {
+      "category": "voice",
+      "slug": "bark-small-vs-f5-tts",
+      "a": "bark-small",
+      "b": "f5-tts",
+      "verdict": null
+    },
+    {
+      "category": "voice",
+      "slug": "bark-small-vs-chatterbox",
+      "a": "bark-small",
+      "b": "chatterbox",
+      "verdict": null
+    },
+    {
+      "category": "voice",
+      "slug": "f5-tts-vs-chatterbox",
+      "a": "f5-tts",
+      "b": "chatterbox",
+      "verdict": null
     }
-  }
+  ]
 }

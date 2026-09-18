@@ -48,10 +48,19 @@ def _speaker(voice: str, cfg):
         return _speakers[voice]
     dataset = cfg.get("speaker_dataset", "Matthijs/cmu-arctic-xvectors")
     if voice.isdigit():
-        from datasets import load_dataset
+        # The dataset repo ships a loading script, which `datasets>=3` refuses to
+        # run. Read the auto-converted parquet export instead; if that is
+        # unavailable, fall back to the .npy file behind the well-known row 7306.
+        try:
+            from datasets import load_dataset
 
-        rows = load_dataset(dataset, split="validation")
-        vec = np.asarray(rows[int(voice)]["xvector"], dtype=np.float32)
+            rows = load_dataset(dataset, revision="refs/convert/parquet", split="validation")
+            vec = np.asarray(rows[int(voice)]["xvector"], dtype=np.float32)
+        except Exception as exc:  # noqa: BLE001
+            fallback = {"7306": "cmu_us_slt_arctic-wav-arctic_a0508"}.get(voice)
+            if not fallback:
+                raise RuntimeError(f"could not load x-vector row {voice} from {dataset}: {exc}") from exc
+            vec = np.load(hf_download(dataset, f"spkrec-xvect/{fallback}.npy", repo_type="dataset")).astype(np.float32)
     else:
         vec = np.load(hf_download(dataset, f"spkrec-xvect/{voice}.npy", repo_type="dataset")).astype(np.float32)
     _speakers[voice] = torch.tensor(vec).unsqueeze(0)
