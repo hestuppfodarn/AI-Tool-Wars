@@ -1,0 +1,1160 @@
+[
+  {
+    "prompt_id": "legal-001",
+    "run_at": "2026-09-18T04:33:23.005Z",
+    "status": "success",
+    "output": "legal-001.md",
+    "output_chars": 874,
+    "output_words": 125,
+    "tokens_in": 600,
+    "tokens_out": 161,
+    "ttft_ms": 28468,
+    "latency_ms": 42588,
+    "tokens_per_s": 11.33,
+    "finish_reason": "stop",
+    "model": "bartowski/microsoft_Phi-4-mini-instruct-GGUF",
+    "model_version": "microsoft_Phi-4-mini-instruct-Q4_K_M.gguf (Phi 4 Mini Instruct; llama-cpp-python 0.3.16)",
+    "device": "cpu",
+    "endpoint": "local",
+    "threads": 4,
+    "error": null,
+    "scores": {
+      "accuracy": 1.7,
+      "adherence": 10,
+      "conciseness": 1.7,
+      "velocity": null
+    },
+    "rubric_hits": [
+      {
+        "id": "clause-73",
+        "type": "must_include",
+        "metric": "accuracy",
+        "weight": 2.0,
+        "hit": false,
+        "note": "none of: 7.3, clause 7"
+      },
+      {
+        "id": "non-compete",
+        "type": "regex",
+        "metric": "accuracy",
+        "weight": 3.0,
+        "hit": false,
+        "note": "no match"
+      },
+      {
+        "id": "tail-24",
+        "type": "regex",
+        "metric": "accuracy",
+        "weight": 2.0,
+        "hit": false,
+        "note": "no match"
+      },
+      {
+        "id": "non-solicit",
+        "type": "regex",
+        "metric": "accuracy",
+        "weight": 1.0,
+        "hit": false,
+        "note": "no match"
+      },
+      {
+        "id": "survival-5",
+        "type": "regex",
+        "metric": "accuracy",
+        "weight": 1.0,
+        "hit": false,
+        "note": "no match"
+      },
+      {
+        "id": "territory",
+        "type": "regex",
+        "metric": "accuracy",
+        "weight": 1.0,
+        "hit": false,
+        "note": "no match"
+      },
+      {
+        "id": "no-fake-clause",
+        "type": "must_not_include",
+        "metric": "accuracy",
+        "weight": 1.0,
+        "hit": true,
+        "note": "absent"
+      },
+      {
+        "id": "len",
+        "type": "max_words",
+        "metric": "adherence",
+        "weight": 1.0,
+        "hit": true,
+        "note": "125 words, limit 350"
+      },
+      {
+        "id": "bullets",
+        "type": "regex",
+        "metric": "accuracy",
+        "weight": 1.0,
+        "hit": true,
+        "note": "matched '- c'"
+      },
+      {
+        "id": "lang",
+        "type": "language",
+        "metric": "adherence",
+        "weight": 1.0,
+        "hit": true,
+        "note": "detected en, wanted en"
+      }
+    ],
+    "words": 125,
+    "target_words": 350,
+    "scored_at": "2026-09-18T04:41:21.065Z"
+  },
+  {
+    "prompt_id": "legal-002",
+    "run_at": "2026-09-18T04:34:19.837Z",
+    "status": "success",
+    "output": "legal-002.md",
+    "output_chars": 1869,
+    "output_words": 266,
+    "tokens_in": 413,
+    "tokens_out": 567,
+    "ttft_ms": 20008,
+    "latency_ms": 69815,
+    "tokens_per_s": 11.36,
+    "finish_reason": "stop",
+    "model": "bartowski/microsoft_Phi-4-mini-instruct-GGUF",
+    "model_version": "microsoft_Phi-4-mini-instruct-Q4_K_M.gguf (Phi 4 Mini Instruct; llama-cpp-python 0.3.16)",
+    "device": "cpu",
+    "endpoint": "local",
+    "threads": 4,
+    "error": null,
+    "scores": {
+      "accuracy": 6.4,
+      "adherence": 6.7,
+      "conciseness": 5.9,
+      "velocity": null
+    },
+    "rubric_hits": [
+      {
+        "id": "probation-max",
+        "type": "regex",
+        "metric": "accuracy",
+        "weight": 3.0,
+        "hit": true,
+        "note": "matched 'sex månader'"
+      },
+      {
+        "id": "las-6",
+        "type": "regex",
+        "metric": "accuracy",
+        "weight": 1.0,
+        "hit": true,
+        "note": "matched '§ 6'"
+      },
+      {
+        "id": "notice-11",
+        "type": "regex",
+        "metric": "accuracy",
+        "weight": 2.0,
+        "hit": false,
+        "note": "no match"
+      },
+      {
+        "id": "notice-scale",
+        "type": "regex",
+        "metric": "accuracy",
+        "weight": 1.0,
+        "hit": false,
+        "note": "no match"
+      },
+      {
+        "id": "noncompete-comp",
+        "type": "regex",
+        "metric": "accuracy",
+        "weight": 2.0,
+        "hit": true,
+        "note": "matched 'ersättning'"
+      },
+      {
+        "id": "no-fake-section",
+        "type": "must_not_include",
+        "metric": "accuracy",
+        "weight": 1.0,
+        "hit": true,
+        "note": "absent"
+      },
+      {
+        "id": "lang",
+        "type": "language",
+        "metric": "adherence",
+        "weight": 2.0,
+        "hit": true,
+        "note": "detected sv, wanted sv"
+      },
+      {
+        "id": "len",
+        "type": "max_words",
+        "metric": "adherence",
+        "weight": 1.0,
+        "hit": false,
+        "note": "271 words, limit 250"
+      },
+      {
+        "id": "bullets",
+        "type": "regex",
+        "metric": "accuracy",
+        "weight": 1.0,
+        "hit": false,
+        "note": "no match"
+      }
+    ],
+    "words": 271,
+    "target_words": 250,
+    "scored_at": "2026-09-18T04:41:21.067Z"
+  },
+  {
+    "prompt_id": "legal-003",
+    "run_at": "2026-09-18T04:35:29.661Z",
+    "status": "success",
+    "output": "legal-003.md",
+    "output_chars": 3491,
+    "output_words": 492,
+    "tokens_in": 406,
+    "tokens_out": 700,
+    "ttft_ms": 19111,
+    "latency_ms": 80878,
+    "tokens_per_s": 11.32,
+    "finish_reason": "length",
+    "model": "bartowski/microsoft_Phi-4-mini-instruct-GGUF",
+    "model_version": "microsoft_Phi-4-mini-instruct-Q4_K_M.gguf (Phi 4 Mini Instruct; llama-cpp-python 0.3.16)",
+    "device": "cpu",
+    "endpoint": "local",
+    "threads": 4,
+    "error": null,
+    "scores": {
+      "accuracy": 6.4,
+      "adherence": 5,
+      "conciseness": 5.3,
+      "velocity": null
+    },
+    "rubric_hits": [
+      {
+        "id": "art-28",
+        "type": "regex",
+        "metric": "accuracy",
+        "weight": 1.0,
+        "hit": true,
+        "note": "matched 'article 28'"
+      },
+      {
+        "id": "subprocessor",
+        "type": "regex",
+        "metric": "accuracy",
+        "weight": 2.0,
+        "hit": true,
+        "note": "matched 'sub-processor'"
+      },
+      {
+        "id": "subprocessor-authorisation",
+        "type": "regex",
+        "metric": "accuracy",
+        "weight": 2.0,
+        "hit": false,
+        "note": "no match"
+      },
+      {
+        "id": "deletion-return",
+        "type": "regex",
+        "metric": "accuracy",
+        "weight": 2.0,
+        "hit": true,
+        "note": "matched 'delet'"
+      },
+      {
+        "id": "audit",
+        "type": "regex",
+        "metric": "accuracy",
+        "weight": 2.0,
+        "hit": false,
+        "note": "no match"
+      },
+      {
+        "id": "assistance",
+        "type": "regex",
+        "metric": "accuracy",
+        "weight": 2.0,
+        "hit": true,
+        "note": "matched 'data subject'"
+      },
+      {
+        "id": "dpia",
+        "type": "regex",
+        "metric": "accuracy",
+        "weight": 1.0,
+        "hit": true,
+        "note": "matched 'impact assessment'"
+      },
+      {
+        "id": "not-missing-confidentiality",
+        "type": "must_not_include",
+        "metric": "accuracy",
+        "weight": 1.0,
+        "hit": true,
+        "note": "absent"
+      },
+      {
+        "id": "len",
+        "type": "max_words",
+        "metric": "adherence",
+        "weight": 1.0,
+        "hit": false,
+        "note": "485 words, limit 400"
+      },
+      {
+        "id": "numbered",
+        "type": "regex",
+        "metric": "accuracy",
+        "weight": 1.0,
+        "hit": false,
+        "note": "no match"
+      },
+      {
+        "id": "lang",
+        "type": "language",
+        "metric": "adherence",
+        "weight": 1.0,
+        "hit": true,
+        "note": "detected en, wanted en"
+      }
+    ],
+    "words": 485,
+    "target_words": 400,
+    "scored_at": "2026-09-18T04:41:21.070Z"
+  },
+  {
+    "prompt_id": "legal-004",
+    "run_at": "2026-09-18T04:36:50.549Z",
+    "status": "success",
+    "output": "legal-004.md",
+    "output_chars": 2440,
+    "output_words": 398,
+    "tokens_in": 404,
+    "tokens_out": 547,
+    "ttft_ms": 18980,
+    "latency_ms": 67583,
+    "tokens_per_s": 11.23,
+    "finish_reason": "stop",
+    "model": "bartowski/microsoft_Phi-4-mini-instruct-GGUF",
+    "model_version": "microsoft_Phi-4-mini-instruct-Q4_K_M.gguf (Phi 4 Mini Instruct; llama-cpp-python 0.3.16)",
+    "device": "cpu",
+    "endpoint": "local",
+    "threads": 4,
+    "error": null,
+    "scores": {
+      "accuracy": 7.7,
+      "adherence": 5,
+      "conciseness": 5.8,
+      "velocity": null
+    },
+    "rubric_hits": [
+      {
+        "id": "landlord-name",
+        "type": "must_include",
+        "metric": "accuracy",
+        "weight": 2.0,
+        "hit": true,
+        "note": "found: halden estates limited"
+      },
+      {
+        "id": "landlord-address",
+        "type": "must_include",
+        "metric": "accuracy",
+        "weight": 2.0,
+        "hit": true,
+        "note": "found: 22 bishopsgate"
+      },
+      {
+        "id": "clause-121",
+        "type": "must_include",
+        "metric": "accuracy",
+        "weight": 1.0,
+        "hit": true,
+        "note": "found: 12.1"
+      },
+      {
+        "id": "break-date",
+        "type": "regex",
+        "metric": "accuracy",
+        "weight": 2.0,
+        "hit": true,
+        "note": "matched '30 june 2027'"
+      },
+      {
+        "id": "premises",
+        "type": "regex",
+        "metric": "accuracy",
+        "weight": 1.0,
+        "hit": true,
+        "note": "matched 'unit 4'"
+      },
+      {
+        "id": "tenant",
+        "type": "must_include",
+        "metric": "accuracy",
+        "weight": 1.0,
+        "hit": true,
+        "note": "found: bryggan coffee roasters"
+      },
+      {
+        "id": "vacant-possession",
+        "type": "must_include",
+        "metric": "accuracy",
+        "weight": 1.0,
+        "hit": false,
+        "note": "none of: vacant possession"
+      },
+      {
+        "id": "recorded-delivery",
+        "type": "regex",
+        "metric": "accuracy",
+        "weight": 1.0,
+        "hit": true,
+        "note": "matched 'recorded delivery'"
+      },
+      {
+        "id": "last-post-date",
+        "type": "regex",
+        "metric": "accuracy",
+        "weight": 2.0,
+        "hit": false,
+        "note": "no match"
+      },
+      {
+        "id": "len",
+        "type": "max_words",
+        "metric": "adherence",
+        "weight": 1.0,
+        "hit": false,
+        "note": "399 words, limit 300"
+      },
+      {
+        "id": "lang",
+        "type": "language",
+        "metric": "adherence",
+        "weight": 1.0,
+        "hit": true,
+        "note": "detected en, wanted en"
+      }
+    ],
+    "words": 399,
+    "target_words": 300,
+    "scored_at": "2026-09-18T04:41:21.073Z"
+  },
+  {
+    "prompt_id": "legal-005",
+    "run_at": "2026-09-18T04:37:58.141Z",
+    "status": "success",
+    "output": "legal-005.md",
+    "output_chars": 1245,
+    "output_words": 179,
+    "tokens_in": 337,
+    "tokens_out": 246,
+    "ttft_ms": 15735,
+    "latency_ms": 36875,
+    "tokens_per_s": 11.59,
+    "finish_reason": "stop",
+    "model": "bartowski/microsoft_Phi-4-mini-instruct-GGUF",
+    "model_version": "microsoft_Phi-4-mini-instruct-Q4_K_M.gguf (Phi 4 Mini Instruct; llama-cpp-python 0.3.16)",
+    "device": "cpu",
+    "endpoint": "local",
+    "threads": 4,
+    "error": null,
+    "scores": {
+      "accuracy": 9.1,
+      "adherence": 3.3,
+      "conciseness": 7.7,
+      "velocity": null
+    },
+    "rubric_hits": [
+      {
+        "id": "post-money",
+        "type": "regex",
+        "metric": "accuracy",
+        "weight": 3.0,
+        "hit": true,
+        "note": "matched '200 m'"
+      },
+      {
+        "id": "stake",
+        "type": "regex",
+        "metric": "accuracy",
+        "weight": 2.0,
+        "hit": true,
+        "note": "matched '20%'"
+      },
+      {
+        "id": "pref-1x",
+        "type": "regex",
+        "metric": "accuracy",
+        "weight": 1.0,
+        "hit": true,
+        "note": "matched '1x'"
+      },
+      {
+        "id": "non-participating",
+        "type": "regex",
+        "metric": "accuracy",
+        "weight": 1.0,
+        "hit": true,
+        "note": "matched 'non-participating'"
+      },
+      {
+        "id": "anti-dilution",
+        "type": "must_include",
+        "metric": "accuracy",
+        "weight": 1.0,
+        "hit": true,
+        "note": "found: weighted average"
+      },
+      {
+        "id": "board",
+        "type": "regex",
+        "metric": "accuracy",
+        "weight": 1.0,
+        "hit": false,
+        "note": "no match"
+      },
+      {
+        "id": "pool",
+        "type": "regex",
+        "metric": "accuracy",
+        "weight": 1.0,
+        "hit": true,
+        "note": "matched 'option pool'"
+      },
+      {
+        "id": "wrong-post-money",
+        "type": "must_not_include",
+        "metric": "accuracy",
+        "weight": 1.0,
+        "hit": true,
+        "note": "absent"
+      },
+      {
+        "id": "len",
+        "type": "max_words",
+        "metric": "adherence",
+        "weight": 2.0,
+        "hit": false,
+        "note": "177 words, limit 150"
+      },
+      {
+        "id": "lang",
+        "type": "language",
+        "metric": "adherence",
+        "weight": 1.0,
+        "hit": true,
+        "note": "detected en, wanted en"
+      }
+    ],
+    "words": 177,
+    "target_words": 150,
+    "scored_at": "2026-09-18T04:41:21.075Z"
+  },
+  {
+    "prompt_id": "legal-006",
+    "run_at": "2026-09-18T04:38:35.025Z",
+    "status": "success",
+    "output": "legal-006.md",
+    "output_chars": 954,
+    "output_words": 140,
+    "tokens_in": 248,
+    "tokens_out": 202,
+    "ttft_ms": 11559,
+    "latency_ms": 29119,
+    "tokens_per_s": 11.45,
+    "finish_reason": "stop",
+    "model": "bartowski/microsoft_Phi-4-mini-instruct-GGUF",
+    "model_version": "microsoft_Phi-4-mini-instruct-Q4_K_M.gguf (Phi 4 Mini Instruct; llama-cpp-python 0.3.16)",
+    "device": "cpu",
+    "endpoint": "local",
+    "threads": 4,
+    "error": null,
+    "scores": {
+      "accuracy": 7.9,
+      "adherence": 10,
+      "conciseness": 7.9,
+      "velocity": null
+    },
+    "rubric_hits": [
+      {
+        "id": "tracked-1",
+        "type": "regex",
+        "metric": "accuracy",
+        "weight": 3.0,
+        "hit": true,
+        "note": "matched '[- -]'"
+      },
+      {
+        "id": "tracked-2",
+        "type": "regex",
+        "metric": "accuracy",
+        "weight": 3.0,
+        "hit": true,
+        "note": "matched '{+ +}'"
+      },
+      {
+        "id": "cap-12",
+        "type": "regex",
+        "metric": "accuracy",
+        "weight": 2.0,
+        "hit": true,
+        "note": "matched 'twelve (12) months'"
+      },
+      {
+        "id": "excl-profit",
+        "type": "regex",
+        "metric": "accuracy",
+        "weight": 2.0,
+        "hit": false,
+        "note": "no match"
+      },
+      {
+        "id": "carve-injury",
+        "type": "regex",
+        "metric": "accuracy",
+        "weight": 1.0,
+        "hit": true,
+        "note": "matched 'death'"
+      },
+      {
+        "id": "carve-fraud",
+        "type": "must_include",
+        "metric": "accuracy",
+        "weight": 1.0,
+        "hit": true,
+        "note": "found: fraud"
+      },
+      {
+        "id": "carve-confidentiality",
+        "type": "regex",
+        "metric": "accuracy",
+        "weight": 1.0,
+        "hit": true,
+        "note": "matched 'confidential'"
+      },
+      {
+        "id": "deleted-three",
+        "type": "regex",
+        "metric": "accuracy",
+        "weight": 1.0,
+        "hit": false,
+        "note": "no match"
+      },
+      {
+        "id": "len",
+        "type": "max_words",
+        "metric": "adherence",
+        "weight": 1.0,
+        "hit": true,
+        "note": "162 words, limit 400"
+      },
+      {
+        "id": "lang",
+        "type": "language",
+        "metric": "adherence",
+        "weight": 1.0,
+        "hit": true,
+        "note": "detected en, wanted en"
+      }
+    ],
+    "words": 162,
+    "target_words": 400,
+    "scored_at": "2026-09-18T04:41:21.077Z"
+  },
+  {
+    "prompt_id": "legal-007",
+    "run_at": "2026-09-18T04:39:04.153Z",
+    "status": "success",
+    "output": "legal-007.md",
+    "output_chars": 388,
+    "output_words": 30,
+    "tokens_in": 386,
+    "tokens_out": 134,
+    "ttft_ms": 18249,
+    "latency_ms": 30096,
+    "tokens_per_s": 11.23,
+    "finish_reason": "stop",
+    "model": "bartowski/microsoft_Phi-4-mini-instruct-GGUF",
+    "model_version": "microsoft_Phi-4-mini-instruct-Q4_K_M.gguf (Phi 4 Mini Instruct; llama-cpp-python 0.3.16)",
+    "device": "cpu",
+    "endpoint": "local",
+    "threads": 4,
+    "error": null,
+    "scores": {
+      "accuracy": 10,
+      "adherence": 10,
+      "conciseness": 10,
+      "velocity": null
+    },
+    "rubric_hits": [
+      {
+        "id": "json",
+        "type": "format_json",
+        "metric": "adherence",
+        "weight": 3.0,
+        "hit": true,
+        "note": "keys present"
+      },
+      {
+        "id": "effective-date",
+        "type": "regex",
+        "metric": "accuracy",
+        "weight": 2.0,
+        "hit": true,
+        "note": "matched '\"effective_date\": \"2026-10-01\"'"
+      },
+      {
+        "id": "initial-term",
+        "type": "regex",
+        "metric": "accuracy",
+        "weight": 1.0,
+        "hit": true,
+        "note": "matched '\"initial_term_months\": 24'"
+      },
+      {
+        "id": "renewal-term",
+        "type": "regex",
+        "metric": "accuracy",
+        "weight": 1.0,
+        "hit": true,
+        "note": "matched '\"renewal_term_months\": 12'"
+      },
+      {
+        "id": "notice",
+        "type": "regex",
+        "metric": "accuracy",
+        "weight": 1.0,
+        "hit": true,
+        "note": "matched '\"renewal_notice_days\": 90'"
+      },
+      {
+        "id": "fee",
+        "type": "regex",
+        "metric": "accuracy",
+        "weight": 1.0,
+        "hit": true,
+        "note": "matched '\"monthly_fee\": 4800'"
+      },
+      {
+        "id": "currency",
+        "type": "regex",
+        "metric": "accuracy",
+        "weight": 1.0,
+        "hit": true,
+        "note": "matched '\"currency\": \"eur\"'"
+      },
+      {
+        "id": "payment-terms",
+        "type": "regex",
+        "metric": "accuracy",
+        "weight": 1.0,
+        "hit": true,
+        "note": "matched '\"payment_terms_days\": 30'"
+      },
+      {
+        "id": "interest",
+        "type": "regex",
+        "metric": "accuracy",
+        "weight": 1.0,
+        "hit": true,
+        "note": "matched '\"late_interest_percent\": 8'"
+      },
+      {
+        "id": "uptime",
+        "type": "regex",
+        "metric": "accuracy",
+        "weight": 1.0,
+        "hit": true,
+        "note": "matched '\"uptime_percent\": 99.5'"
+      },
+      {
+        "id": "deletion",
+        "type": "regex",
+        "metric": "accuracy",
+        "weight": 1.0,
+        "hit": true,
+        "note": "matched '\"data_deletion_days\": 60'"
+      },
+      {
+        "id": "law",
+        "type": "regex",
+        "metric": "accuracy",
+        "weight": 1.0,
+        "hit": true,
+        "note": "matched '\"governing_law\": \"ireland\"'"
+      },
+      {
+        "id": "provider",
+        "type": "regex",
+        "metric": "accuracy",
+        "weight": 1.0,
+        "hit": true,
+        "note": "matched '\"provider\": \"ashgrove software limited\"'"
+      },
+      {
+        "id": "no-fence",
+        "type": "must_not_include",
+        "metric": "accuracy",
+        "weight": 1.0,
+        "hit": true,
+        "note": "absent"
+      },
+      {
+        "id": "len",
+        "type": "max_words",
+        "metric": "adherence",
+        "weight": 1.0,
+        "hit": true,
+        "note": "33 words, limit 120"
+      }
+    ],
+    "words": 33,
+    "target_words": 120,
+    "scored_at": "2026-09-18T04:41:21.079Z"
+  },
+  {
+    "prompt_id": "legal-008",
+    "run_at": "2026-09-18T04:39:34.258Z",
+    "status": "success",
+    "output": "legal-008.md",
+    "output_chars": 2091,
+    "output_words": 308,
+    "tokens_in": 243,
+    "tokens_out": 432,
+    "ttft_ms": 11356,
+    "latency_ms": 48825,
+    "tokens_per_s": 11.5,
+    "finish_reason": "stop",
+    "model": "bartowski/microsoft_Phi-4-mini-instruct-GGUF",
+    "model_version": "microsoft_Phi-4-mini-instruct-Q4_K_M.gguf (Phi 4 Mini Instruct; llama-cpp-python 0.3.16)",
+    "device": "cpu",
+    "endpoint": "local",
+    "threads": 4,
+    "error": null,
+    "scores": {
+      "accuracy": 6.7,
+      "adherence": 5,
+      "conciseness": 6.3,
+      "velocity": null
+    },
+    "rubric_hits": [
+      {
+        "id": "hadley",
+        "type": "must_include",
+        "metric": "accuracy",
+        "weight": 1.0,
+        "hit": true,
+        "note": "found: hadley"
+      },
+      {
+        "id": "donoghue",
+        "type": "must_include",
+        "metric": "accuracy",
+        "weight": 1.0,
+        "hit": true,
+        "note": "found: donoghue"
+      },
+      {
+        "id": "victoria-laundry",
+        "type": "must_include",
+        "metric": "accuracy",
+        "weight": 1.0,
+        "hit": true,
+        "note": "found: victoria laundry"
+      },
+      {
+        "id": "pemberton-named",
+        "type": "must_include",
+        "metric": "accuracy",
+        "weight": 1.0,
+        "hit": true,
+        "note": "found: pemberton"
+      },
+      {
+        "id": "pemberton-flagged",
+        "type": "regex",
+        "metric": "accuracy",
+        "weight": 4.0,
+        "hit": false,
+        "note": "no match"
+      },
+      {
+        "id": "pemberton-not-endorsed",
+        "type": "must_not_include",
+        "metric": "accuracy",
+        "weight": 2.0,
+        "hit": true,
+        "note": "absent"
+      },
+      {
+        "id": "remoteness",
+        "type": "regex",
+        "metric": "accuracy",
+        "weight": 1.0,
+        "hit": true,
+        "note": "matched 'reasonable contemplation'"
+      },
+      {
+        "id": "duty-of-care",
+        "type": "regex",
+        "metric": "accuracy",
+        "weight": 1.0,
+        "hit": true,
+        "note": "matched 'negligence'"
+      },
+      {
+        "id": "len",
+        "type": "max_words",
+        "metric": "adherence",
+        "weight": 1.0,
+        "hit": false,
+        "note": "319 words, limit 300"
+      },
+      {
+        "id": "lang",
+        "type": "language",
+        "metric": "adherence",
+        "weight": 1.0,
+        "hit": true,
+        "note": "detected en, wanted en"
+      }
+    ],
+    "words": 319,
+    "target_words": 300,
+    "scored_at": "2026-09-18T04:41:21.082Z"
+  },
+  {
+    "prompt_id": "legal-009",
+    "run_at": "2026-09-18T04:40:23.092Z",
+    "status": "success",
+    "output": "legal-009.md",
+    "output_chars": 701,
+    "output_words": 129,
+    "tokens_in": 282,
+    "tokens_out": 146,
+    "ttft_ms": 13275,
+    "latency_ms": 25661,
+    "tokens_per_s": 11.71,
+    "finish_reason": "stop",
+    "model": "bartowski/microsoft_Phi-4-mini-instruct-GGUF",
+    "model_version": "microsoft_Phi-4-mini-instruct-Q4_K_M.gguf (Phi 4 Mini Instruct; llama-cpp-python 0.3.16)",
+    "device": "cpu",
+    "endpoint": "local",
+    "threads": 4,
+    "error": null,
+    "scores": {
+      "accuracy": 6.4,
+      "adherence": 3.3,
+      "conciseness": 6,
+      "velocity": null
+    },
+    "rubric_hits": [
+      {
+        "id": "no-legalese",
+        "type": "must_not_include",
+        "metric": "accuracy",
+        "weight": 3.0,
+        "hit": true,
+        "note": "absent"
+      },
+      {
+        "id": "fourteen",
+        "type": "regex",
+        "metric": "accuracy",
+        "weight": 2.0,
+        "hit": true,
+        "note": "matched '14 days'"
+      },
+      {
+        "id": "thirty",
+        "type": "regex",
+        "metric": "accuracy",
+        "weight": 2.0,
+        "hit": false,
+        "note": "no match"
+      },
+      {
+        "id": "refund",
+        "type": "regex",
+        "metric": "accuracy",
+        "weight": 1.0,
+        "hit": false,
+        "note": "no match"
+      },
+      {
+        "id": "return-cost",
+        "type": "regex",
+        "metric": "accuracy",
+        "weight": 1.0,
+        "hit": false,
+        "note": "no match"
+      },
+      {
+        "id": "used-goods",
+        "type": "regex",
+        "metric": "accuracy",
+        "weight": 1.0,
+        "hit": true,
+        "note": "matched 'used'"
+      },
+      {
+        "id": "you-we",
+        "type": "regex",
+        "metric": "accuracy",
+        "weight": 1.0,
+        "hit": true,
+        "note": "matched 'you can cancel the deal within 14 days after getting your go'"
+      },
+      {
+        "id": "len",
+        "type": "max_words",
+        "metric": "adherence",
+        "weight": 2.0,
+        "hit": false,
+        "note": "129 words, limit 120"
+      },
+      {
+        "id": "lang",
+        "type": "language",
+        "metric": "adherence",
+        "weight": 1.0,
+        "hit": true,
+        "note": "detected en, wanted en"
+      }
+    ],
+    "words": 129,
+    "target_words": 120,
+    "scored_at": "2026-09-18T04:41:21.084Z"
+  },
+  {
+    "prompt_id": "legal-010",
+    "run_at": "2026-09-18T04:40:48.762Z",
+    "status": "success",
+    "output": "legal-010.md",
+    "output_chars": 1568,
+    "output_words": 203,
+    "tokens_in": 221,
+    "tokens_out": 257,
+    "ttft_ms": 10332,
+    "latency_ms": 32014,
+    "tokens_per_s": 11.81,
+    "finish_reason": "stop",
+    "model": "bartowski/microsoft_Phi-4-mini-instruct-GGUF",
+    "model_version": "microsoft_Phi-4-mini-instruct-Q4_K_M.gguf (Phi 4 Mini Instruct; llama-cpp-python 0.3.16)",
+    "device": "cpu",
+    "endpoint": "local",
+    "threads": 4,
+    "error": null,
+    "scores": {
+      "accuracy": 6.9,
+      "adherence": 5,
+      "conciseness": 6.7,
+      "velocity": null
+    },
+    "rubric_hits": [
+      {
+        "id": "headings",
+        "type": "regex",
+        "metric": "accuracy",
+        "weight": 2.0,
+        "hit": false,
+        "note": "no match"
+      },
+      {
+        "id": "heading-names",
+        "type": "regex",
+        "metric": "accuracy",
+        "weight": 2.0,
+        "hit": true,
+        "note": "matched 'issue** employment status: mikael ek, a freelance firmware d'"
+      },
+      {
+        "id": "employment-status",
+        "type": "regex",
+        "metric": "accuracy",
+        "weight": 2.0,
+        "hit": true,
+        "note": "matched 'employment'"
+      },
+      {
+        "id": "ip-gap",
+        "type": "regex",
+        "metric": "accuracy",
+        "weight": 2.0,
+        "hit": true,
+        "note": "matched 'intellectual property'"
+      },
+      {
+        "id": "assignment",
+        "type": "regex",
+        "metric": "accuracy",
+        "weight": 2.0,
+        "hit": false,
+        "note": "no match"
+      },
+      {
+        "id": "diligence",
+        "type": "regex",
+        "metric": "accuracy",
+        "weight": 1.0,
+        "hit": true,
+        "note": "matched 'series b'"
+      },
+      {
+        "id": "recommend-action",
+        "type": "regex",
+        "metric": "accuracy",
+        "weight": 1.0,
+        "hit": true,
+        "note": "matched 'sign'"
+      },
+      {
+        "id": "company",
+        "type": "must_include",
+        "metric": "accuracy",
+        "weight": 1.0,
+        "hit": true,
+        "note": "found: volt"
+      },
+      {
+        "id": "len",
+        "type": "max_words",
+        "metric": "adherence",
+        "weight": 2.0,
+        "hit": false,
+        "note": "205 words, limit 200"
+      },
+      {
+        "id": "min",
+        "type": "min_words",
+        "metric": "adherence",
+        "weight": 1.0,
+        "hit": true,
+        "note": "205 words, limit 80"
+      },
+      {
+        "id": "lang",
+        "type": "language",
+        "metric": "adherence",
+        "weight": 1.0,
+        "hit": true,
+        "note": "detected en, wanted en"
+      }
+    ],
+    "words": 205,
+    "target_words": 200,
+    "scored_at": "2026-09-18T04:41:21.086Z"
+  }
+]
