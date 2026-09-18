@@ -79,6 +79,20 @@ jobs:
         if: github.event.inputs.inworld_key_override != ''
         run: echo "::add-mask::${{ github.event.inputs.inworld_key_override }}"
 
+      - name: Fetch vendor keys from the claims vault
+        id: vendor
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+          SUPABASE_PROJECT_REF: ${{ vars.SUPABASE_PROJECT_REF }}
+        run: |
+          # Project ref falls back to the public config the setup workflow commits.
+          if [ -z "${SUPABASE_PROJECT_REF:-}" ] && [ -f data/supabase.public.json ]; then
+            export SUPABASE_PROJECT_REF=$(jq -r '.url' data/supabase.public.json | sed -E 's#https://([^.]+)\.supabase\.co#\1#')
+          fi
+          node scripts/fetch-vendor-keys.mjs --out .vendor-keys.env || [ $? -eq 2 ]
+
       - name: Run tools
         env:
           INWORLD_API_KEY: ${{ github.event.inputs.inworld_key_override || secrets.INWORLD_API_KEY }}
@@ -90,6 +104,8 @@ jobs:
           FORCE: ${{ steps.req.outputs.force }}
         run: |
           set -u
+          # Vendor keys from the vault override repository secrets for the same adapter.
+          [ -f .vendor-keys.env ] && source .vendor-keys.env
           status=0
           IFS=',' read -ra TOOL_LIST <<< "$TOOLS"
           for tool in "${TOOL_LIST[@]}"; do
