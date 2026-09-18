@@ -128,7 +128,8 @@ jobs:
         run: |
           git config user.name "arena-bot"
           git config user.email "arena-bot@users.noreply.github.com"
-          git add data/runs
+          mkdir -p data/runs
+          git add -A data/runs
           if git diff --cached --quiet; then
             echo "changed=false" >> "$GITHUB_OUTPUT"
             echo "no new runs"
