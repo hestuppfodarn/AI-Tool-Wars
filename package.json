@@ -1,0 +1,15 @@
+{
+  "name": "ai-tool-wars",
+  "private": true,
+  "workspaces": ["apps/site"],
+  "scripts": {
+    "snapshot": "node scripts/export-snapshot.mjs",
+    "demo:fixtures": "python3 scripts/make-demo-fixtures.py",
+    "dev": "npm run dev -w apps/site",
+    "dev:demo": "SNAPSHOT=demo npm run dev -w apps/site",
+    "build": "npm run snapshot && npm run build -w apps/site",
+    "build:demo": "npm run demo:fixtures && SNAPSHOT=demo npm run build -w apps/site",
+    "preview": "npm run preview -w apps/site",
+    "check": "npm run check -w apps/site"
+  }
+}

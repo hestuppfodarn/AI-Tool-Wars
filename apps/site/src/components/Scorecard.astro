@@ -1,0 +1,45 @@
+---
+import type { Category, Rating, Tool } from '../lib/snapshot';
+import { fmtScore, fmtMs } from '../lib/site';
+
+interface Props {
+  category: Category;
+  a: Tool; b: Tool;
+  ra: Rating | null; rb: Rating | null;
+}
+const { category, a, b, ra, rb } = Astro.props;
+const ready = ra && rb;
+const pct = (n: number | undefined) => `${Math.max(0, Math.min(100, ((n ?? 0) / 10) * 100))}%`;
+---
+{ready ? (
+  <div class="card">
+    <div class="scorecard">
+      {category.metrics.map((m) => (
+        <div class="metric">
+          <span class="label">{m.label}</span>
+          <span class="muted small">out of 10</span>
+          <span class="desc">{m.description}</span>
+          <div class="bars">
+            <div class="bar a"><span>{a.name}</span><div class="track"><div class="fill" style={`width:${pct(ra!.scores[m.key])}`}></div></div><span class="val">{fmtScore(ra!.scores[m.key])}</span></div>
+            <div class="bar b"><span>{b.name}</span><div class="track"><div class="fill" style={`width:${pct(rb!.scores[m.key])}`}></div></div><span class="val">{fmtScore(rb!.scores[m.key])}</span></div>
+          </div>
+        </div>
+      ))}
+    </div>
+    <div class="table-wrap" style="margin-top:16px">
+      <table>
+        <thead><tr><th></th><th class="num">Composite</th><th class="num">Runs</th><th class="num">Median TTFB</th><th class="num">Median total</th></tr></thead>
+        <tbody>
+          <tr><td>{a.name}</td><td class="num"><strong>{fmtScore(ra!.composite)}</strong></td><td class="num">{ra!.runs}</td><td class="num">{fmtMs(ra!.median_ttft_ms)}</td><td class="num">{fmtMs(ra!.median_latency_ms)}</td></tr>
+          <tr><td>{b.name}</td><td class="num"><strong>{fmtScore(rb!.composite)}</strong></td><td class="num">{rb!.runs}</td><td class="num">{fmtMs(rb!.median_ttft_ms)}</td><td class="num">{fmtMs(rb!.median_latency_ms)}</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+) : (
+  <div class="pending-box">
+    <strong>Benchmark not yet run.</strong> When it runs, this card shows {a.name} and {b.name} scored 1–10 on
+    {category.metrics.map((m, i) => <span>{i > 0 ? ', ' : ' '}{m.label.toLowerCase()}</span>)}, computed from the outputs listed below.
+    Scores are never estimated or hand-entered; an empty card means we have not executed the prompts yet.
+  </div>
+)}

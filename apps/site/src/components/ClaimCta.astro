@@ -1,0 +1,18 @@
+---
+import type { Category, Tool } from '../lib/snapshot';
+import { claimMailto, href } from '../lib/site';
+interface Props { tools: Tool[]; category: Category; }
+const { tools, category } = Astro.props;
+---
+<div class="cta">
+  <h3>Is one of these your product?</h3>
+  <p>
+    Claim your listing and provide an API key. Runs then execute on your account, your listing gets the
+    <em>vendor verified</em> mark, and you get an embeddable badge with your live scores. No fee, no placement,
+    and the prompts are public, so there is nothing to optimise for except the output.
+  </p>
+  <p>
+    {tools.map((t, i) => <span>{i > 0 ? ' ' : ''}<a class="btn" href={claimMailto(t.name, category.name)}>Claim {t.name}</a></span>)}
+  </p>
+  <p class="small muted">Keys are stored encrypted and only ever used to run the published prompt set. Read how in the <a href={href('/methodology/')}>methodology</a>.</p>
+</div>

@@ -1,0 +1,3328 @@
+{
+  "version": 1,
+  "generated_at": "2026-09-18T02:15:15.271091+00:00",
+  "source": "demo",
+  "demo": true,
+  "categories": [
+    {
+      "slug": "voice",
+      "name": "AI Voice (Text to Speech)",
+      "description": "Text-to-speech APIs compared on the same 30 prompts: transcript accuracy, naturalness, instruction following, and speed.",
+      "output_modality": "audio",
+      "metrics": [
+        {
+          "key": "accuracy",
+          "label": "Transcript accuracy",
+          "description": "The audio is transcribed by an independent speech-recognition model and compared word-for-word with the prompt. 10 = zero word errors."
+        },
+        {
+          "key": "naturalness",
+          "label": "Naturalness",
+          "description": "Predicted mean opinion score from a reference-free speech quality model (UTMOS / NISQA), rescaled to 1-10."
+        },
+        {
+          "key": "adherence",
+          "label": "Instruction following",
+          "description": "An LLM jury checks the transcript and audio metadata against the prompt's explicit constraints: language, pauses, digit-by-digit numbers, pronunciation notes, tone."
+        },
+        {
+          "key": "velocity",
+          "label": "Speed",
+          "description": "Time to first audio byte and total generation time, ranked against every other run in the category. 10 = fastest decile."
+        }
+      ]
+    }
+  ],
+  "tools": [
+    {
+      "slug": "aria-voice",
+      "name": "Aria Voice",
+      "vendor": "Aria Labs (fictional)",
+      "website": "https://example.com",
+      "description": "Aria Voice is a fictional text-to-speech API used to preview this site's layout.",
+      "category": "voice",
+      "status": "verified"
+    },
+    {
+      "slug": "cobalt-speech",
+      "name": "Cobalt Speech",
+      "vendor": "Cobalt (fictional)",
+      "website": "https://example.com",
+      "description": "Cobalt Speech is a fictional text-to-speech API used to preview this site's layout.",
+      "category": "voice",
+      "status": "benchmarked"
+    },
+    {
+      "slug": "meridian-tts",
+      "name": "Meridian TTS",
+      "vendor": "Meridian Cloud (fictional)",
+      "website": "https://example.com",
+      "description": "Meridian TTS is a fictional text-to-speech API used to preview this site's layout.",
+      "category": "voice",
+      "status": "verified"
+    },
+    {
+      "slug": "northwind-audio",
+      "name": "Northwind Audio",
+      "vendor": "Northwind (fictional)",
+      "website": "https://example.com",
+      "description": "Northwind Audio is a fictional text-to-speech API used to preview this site's layout.",
+      "category": "voice",
+      "status": "benchmarked"
+    },
+    {
+      "slug": "quill-voice",
+      "name": "Quill Voice",
+      "vendor": "Quill (fictional)",
+      "website": "https://example.com",
+      "description": "Quill Voice is a fictional text-to-speech API used to preview this site's layout.",
+      "category": "voice",
+      "status": "benchmarked"
+    }
+  ],
+  "prompts": [
+    {
+      "id": "voice-001",
+      "category": "voice",
+      "rank": 1,
+      "title": "Plain product intro",
+      "language": "en-US",
+      "tags": [
+        "baseline",
+        "marketing"
+      ],
+      "text": "Meet Ledger, the invoicing tool that gets you paid in days, not weeks. Send an invoice, track it, and let automatic reminders do the chasing.",
+      "instructions": "Neutral, friendly product voice.",
+      "constraints": [
+        "Reads every word of the script",
+        "No added words or sign-off"
+      ]
+    },
+    {
+      "id": "voice-002",
+      "category": "voice",
+      "rank": 2,
+      "title": "IVR menu",
+      "language": "en-US",
+      "tags": [
+        "ivr",
+        "numbers"
+      ],
+      "text": "Thank you for calling Northgate Dental. For appointments, press 1. For billing, press 2. For all other enquiries, press 3, or stay on the line.",
+      "instructions": "Calm, clear, slightly slower than conversational pace.",
+      "constraints": [
+        "Says digits as 'one', 'two', 'three'",
+        "Brief pause after each option"
+      ]
+    },
+    {
+      "id": "voice-003",
+      "category": "voice",
+      "rank": 3,
+      "title": "Phone number digit by digit",
+      "language": "en-US",
+      "tags": [
+        "numbers",
+        "ivr"
+      ],
+      "text": "You can reach our support team at 0800 555 0199, that's 0800 555 0199, Monday to Friday, nine to five.",
+      "instructions": "Read the phone number one digit at a time.",
+      "constraints": [
+        "Phone number read digit by digit, both times",
+        "'0800' is not read as 'eight hundred'"
+      ]
+    },
+    {
+      "id": "voice-004",
+      "category": "voice",
+      "rank": 4,
+      "title": "Address and postcode",
+      "language": "en-GB",
+      "tags": [
+        "numbers",
+        "names"
+      ],
+      "text": "Our office is at 14A Clerkenwell Road, London, EC1M 5PA. The entrance is on Turnmill Street.",
+      "instructions": "British English.",
+      "constraints": [
+        "Postcode read as letters and digits, 'E C one M, five P A'",
+        "British pronunciation of 'Clerkenwell'"
+      ]
+    },
+    {
+      "id": "voice-005",
+      "category": "voice",
+      "rank": 5,
+      "title": "Audiobook narration",
+      "language": "en-US",
+      "tags": [
+        "audiobook",
+        "long-form",
+        "emotion"
+      ],
+      "text": "The house had been empty for eleven years, and it showed. Paint curled from the porch rails in long grey ribbons, and the swing, still hanging by one chain, moved when there was no wind. Mara set her bag down on the step and did not go in.",
+      "instructions": "Literary narration, unhurried, a little melancholy.",
+      "constraints": [
+        "Clear pause at the full stops",
+        "No rushed delivery of the final sentence"
+      ]
+    },
+    {
+      "id": "voice-006",
+      "category": "voice",
+      "rank": 6,
+      "title": "Radio ad, high energy",
+      "language": "en-US",
+      "tags": [
+        "ad",
+        "emotion"
+      ],
+      "text": "This weekend only, everything at Summit Outdoor is thirty percent off. Tents, boots, bikes, all of it. Doors open Saturday at eight. Don't miss it.",
+      "instructions": "Upbeat radio-spot energy, brisk.",
+      "constraints": [
+        "'thirty percent' spoken as words",
+        "Energetic delivery, not flat"
+      ]
+    },
+    {
+      "id": "voice-007",
+      "category": "voice",
+      "rank": 7,
+      "title": "Legal disclaimer, fast",
+      "language": "en-US",
+      "tags": [
+        "ad",
+        "long-form"
+      ],
+      "text": "Offer valid for new customers only. Terms and conditions apply. Rates subject to change without notice. See website for details. Lending criteria apply. Credit provided by Summit Finance Limited.",
+      "instructions": "Fast disclaimer read, still intelligible.",
+      "constraints": [
+        "Every word intelligible at speed",
+        "Total duration under 12 seconds"
+      ]
+    },
+    {
+      "id": "voice-008",
+      "category": "voice",
+      "rank": 8,
+      "title": "Swedish customer notice",
+      "language": "sv-SE",
+      "tags": [
+        "multilingual"
+      ],
+      "text": "Hej! Din beställning har skickats och beräknas anlända på torsdag. Du kan följa paketet via länken i ditt mejl. Tack för att du handlar hos oss.",
+      "instructions": "Native Swedish, friendly.",
+      "constraints": [
+        "Swedish pronunciation throughout",
+        "No English accent on 'beställning' or 'torsdag'"
+      ]
+    },
+    {
+      "id": "voice-009",
+      "category": "voice",
+      "rank": 9,
+      "title": "Spanish appointment reminder",
+      "language": "es-ES",
+      "tags": [
+        "multilingual",
+        "numbers"
+      ],
+      "text": "Hola, le recordamos su cita con la doctora Ruiz el martes 14 de mayo a las 10:30. Si necesita cambiarla, llame al 91 555 01 23.",
+      "instructions": "Castilian Spanish.",
+      "constraints": [
+        "Time read as 'diez y media'",
+        "Phone number read in groups as written"
+      ]
+    },
+    {
+      "id": "voice-010",
+      "category": "voice",
+      "rank": 10,
+      "title": "German safety announcement",
+      "language": "de-DE",
+      "tags": [
+        "multilingual"
+      ],
+      "text": "Achtung: Bitte halten Sie Abstand zur Bahnsteigkante. Der nächste Zug nach München Hauptbahnhof fährt in drei Minuten von Gleis 7 ab.",
+      "instructions": "Clear station announcement.",
+      "constraints": [
+        "'Gleis 7' read as 'Gleis sieben'",
+        "Formal, even pace"
+      ]
+    },
+    {
+      "id": "voice-011",
+      "category": "voice",
+      "rank": 11,
+      "title": "Mixed-language brand names",
+      "language": "en-US",
+      "tags": [
+        "names",
+        "multilingual"
+      ],
+      "text": "We integrate with Klarna, Spotify, Zalando, Bolt, Skanska and Ikea, so your team can stay in the tools it already uses.",
+      "instructions": "English sentence with Nordic brand names.",
+      "constraints": [
+        "'Ikea' pronounced 'eye-KEE-ah' or 'ee-KAY-ah', not spelled out",
+        "No stumble on 'Skanska'"
+      ]
+    },
+    {
+      "id": "voice-012",
+      "category": "voice",
+      "rank": 12,
+      "title": "Acronyms and initialisms",
+      "language": "en-US",
+      "tags": [
+        "names"
+      ],
+      "text": "Our API supports OAuth, SAML, and SCIM. Export to CSV or PDF, and connect via SQL or the SDK. NASA and the FBI are not customers, in case you were wondering.",
+      "instructions": "Technical but conversational.",
+      "constraints": [
+        "'API', 'CSV', 'PDF', 'SQL', 'SDK', 'FBI' spelled letter by letter",
+        "'NASA', 'SAML', 'SCIM', 'OAuth' spoken as words"
+      ]
+    },
+    {
+      "id": "voice-013",
+      "category": "voice",
+      "rank": 13,
+      "title": "Currency and dates",
+      "language": "en-US",
+      "tags": [
+        "numbers"
+      ],
+      "text": "Your invoice for $1,249.50 is due on March 3rd, 2027. A late fee of 1.5% applies after 30 days.",
+      "instructions": "Neutral finance voice.",
+      "constraints": [
+        "'$1,249.50' read as 'one thousand two hundred forty-nine dollars and fifty cents'",
+        "'1.5%' read as 'one point five percent'",
+        "'March 3rd, 2027' read as a date, not digits"
+      ]
+    },
+    {
+      "id": "voice-014",
+      "category": "voice",
+      "rank": 14,
+      "title": "Heteronyms",
+      "language": "en-US",
+      "tags": [
+        "pronunciation"
+      ],
+      "text": "I read the report yesterday and I will read the next one tomorrow. The wind was strong enough to wind the flag around the pole. Please record the record time.",
+      "instructions": "Plain read.",
+      "constraints": [
+        "Past-tense 'read' as 'red', future 'read' as 'reed'",
+        "Noun 'record' and verb 'record' stressed differently"
+      ]
+    },
+    {
+      "id": "voice-015",
+      "category": "voice",
+      "rank": 15,
+      "title": "Explicit pauses",
+      "language": "en-US",
+      "tags": [
+        "ssml",
+        "pauses"
+      ],
+      "text": "Take a breath. ... Now, let's begin. ... First, close your eyes. ... Second, relax your shoulders. ... Good.",
+      "instructions": "Meditation guide. Each '...' is a pause of at least one second.",
+      "constraints": [
+        "Silence of at least 800 ms at each ellipsis",
+        "Ellipses are not spoken"
+      ]
+    },
+    {
+      "id": "voice-016",
+      "category": "voice",
+      "rank": 16,
+      "title": "Whisper / soft delivery",
+      "language": "en-US",
+      "tags": [
+        "emotion",
+        "style"
+      ],
+      "text": "Shh. The baby's finally asleep. Let's go downstairs and I'll make us some tea.",
+      "instructions": "Whispered or very soft delivery.",
+      "constraints": [
+        "Noticeably lower volume and softer delivery than baseline",
+        "All words still intelligible"
+      ]
+    },
+    {
+      "id": "voice-017",
+      "category": "voice",
+      "rank": 17,
+      "title": "Angry customer line",
+      "language": "en-US",
+      "tags": [
+        "emotion",
+        "style"
+      ],
+      "text": "I've been on hold for forty minutes. Forty. This is the third time I've called about the same charge and nobody can tell me why it's there.",
+      "instructions": "Frustrated, controlled anger.",
+      "constraints": [
+        "Audibly frustrated tone",
+        "Emphasis on the second 'Forty'"
+      ]
+    },
+    {
+      "id": "voice-018",
+      "category": "voice",
+      "rank": 18,
+      "title": "Cheerful onboarding",
+      "language": "en-US",
+      "tags": [
+        "emotion",
+        "style"
+      ],
+      "text": "Welcome aboard! You're all set up. Your first project is waiting, and we've added a couple of templates to get you going.",
+      "instructions": "Warm and upbeat.",
+      "constraints": [
+        "Positive, smiling tone",
+        "Exclamation carries energy without shouting"
+      ]
+    },
+    {
+      "id": "voice-019",
+      "category": "voice",
+      "rank": 19,
+      "title": "Dialogue with two speakers",
+      "language": "en-US",
+      "tags": [
+        "style",
+        "long-form"
+      ],
+      "text": "\"Did you send the file?\" she asked. \"Twice,\" he said. \"Check your spam folder.\" She sighed. \"It's not in spam.\"",
+      "instructions": "Narrate the dialogue; distinguish the two speakers by delivery, not by different voices.",
+      "constraints": [
+        "Quotation marks are not spoken",
+        "Attributions ('she asked') read in narrator tone"
+      ]
+    },
+    {
+      "id": "voice-020",
+      "category": "voice",
+      "rank": 20,
+      "title": "Long-form explainer",
+      "language": "en-US",
+      "tags": [
+        "long-form",
+        "audiobook"
+      ],
+      "text": "Compound interest is interest calculated on both the original principal and the interest already added. Over short periods the difference is small. Over decades it is the whole story: a sum growing at seven percent a year doubles roughly every ten years, so money invested at twenty-five has doubled four times by sixty-five. That is why the usual advice is simply to start early.",
+      "instructions": "Explainer, measured pace.",
+      "constraints": [
+        "Consistent pace across the whole passage",
+        "'seven percent' and 'twenty-five' as words, not digits"
+      ]
+    },
+    {
+      "id": "voice-021",
+      "category": "voice",
+      "rank": 21,
+      "title": "Product names with odd casing",
+      "language": "en-US",
+      "tags": [
+        "names"
+      ],
+      "text": "Try iPhone, watchOS, PostgreSQL, GraphQL, NGINX, and the k8s CLI. Then tell me which one you'd rather pronounce.",
+      "instructions": "Developer-facing tone.",
+      "constraints": [
+        "'iPhone' as 'eye-phone'",
+        "'PostgreSQL' as 'post-gres-Q-L' or 'postgres'",
+        "'NGINX' as 'engine-X'",
+        "'k8s' as 'kates' or 'kubernetes'"
+      ]
+    },
+    {
+      "id": "voice-022",
+      "category": "voice",
+      "rank": 22,
+      "title": "Medical dosage",
+      "language": "en-US",
+      "tags": [
+        "numbers",
+        "pronunciation"
+      ],
+      "text": "Take 500 mg of amoxicillin every 8 hours for 10 days. Do not exceed 3 g in 24 hours. Contact your doctor if symptoms persist beyond 72 hours.",
+      "instructions": "Clear, clinical.",
+      "constraints": [
+        "'mg' read as 'milligrams', 'g' as 'grams'",
+        "'amoxicillin' pronounced correctly",
+        "All numbers as words"
+      ]
+    },
+    {
+      "id": "voice-023",
+      "category": "voice",
+      "rank": 23,
+      "title": "Verification code",
+      "language": "en-US",
+      "tags": [
+        "numbers",
+        "ivr"
+      ],
+      "text": "Your verification code is 4 8 2 9 1 7. Again, 4 8 2 9 1 7. This code expires in ten minutes.",
+      "instructions": "OTP read-out.",
+      "constraints": [
+        "Each digit spoken separately with a short gap",
+        "Both read-outs identical"
+      ]
+    },
+    {
+      "id": "voice-024",
+      "category": "voice",
+      "rank": 24,
+      "title": "French luxury ad",
+      "language": "fr-FR",
+      "tags": [
+        "multilingual",
+        "ad"
+      ],
+      "text": "Découvrez la nouvelle collection Maison Lyre. Des matières nobles, un savoir-faire d'exception, et une élégance qui ne se démode pas.",
+      "instructions": "Sophisticated, unhurried French.",
+      "constraints": [
+        "Native French pronunciation",
+        "Liaison on 'savoir-faire d'exception'"
+      ]
+    },
+    {
+      "id": "voice-025",
+      "category": "voice",
+      "rank": 25,
+      "title": "Japanese greeting",
+      "language": "ja-JP",
+      "tags": [
+        "multilingual"
+      ],
+      "text": "いらっしゃいませ。本日はご来店いただきありがとうございます。ご注文がお決まりになりましたら、お呼びください。",
+      "instructions": "Polite retail Japanese.",
+      "constraints": [
+        "Natural Japanese pitch accent",
+        "Polite register maintained"
+      ]
+    },
+    {
+      "id": "voice-026",
+      "category": "voice",
+      "rank": 26,
+      "title": "Sports commentary",
+      "language": "en-GB",
+      "tags": [
+        "emotion",
+        "style"
+      ],
+      "text": "And he's through, one on one with the keeper, he shoots, and it's in! Unbelievable! Two minutes from time and the underdogs have done it!",
+      "instructions": "Live football commentary, rising excitement.",
+      "constraints": [
+        "Pace and pitch rise through the passage",
+        "'Unbelievable!' delivered with peak energy"
+      ]
+    },
+    {
+      "id": "voice-027",
+      "category": "voice",
+      "rank": 27,
+      "title": "Bedtime story",
+      "language": "en-US",
+      "tags": [
+        "emotion",
+        "audiobook"
+      ],
+      "text": "Once upon a time, in a burrow under the old oak, lived a very small rabbit who was afraid of the dark. Every night his mother lit a tiny lantern and said, 'The dark is only the day resting.'",
+      "instructions": "Gentle, slow, for a child.",
+      "constraints": [
+        "Slow pace",
+        "Soft, warm delivery",
+        "Quoted line delivered as the mother, gently"
+      ]
+    },
+    {
+      "id": "voice-028",
+      "category": "voice",
+      "rank": 28,
+      "title": "Homograph proper nouns",
+      "language": "en-US",
+      "tags": [
+        "names",
+        "pronunciation"
+      ],
+      "text": "We have offices in Reading, Worcester, Leicester, Nice, and Lima, and a small team in Cairns.",
+      "instructions": "Place names.",
+      "constraints": [
+        "'Reading' as 'Redding'",
+        "'Worcester' as 'Wooster'",
+        "'Leicester' as 'Lester'",
+        "'Nice' as 'Neese'",
+        "'Cairns' as 'Cans'"
+      ]
+    },
+    {
+      "id": "voice-029",
+      "category": "voice",
+      "rank": 29,
+      "title": "Very short utterance",
+      "language": "en-US",
+      "tags": [
+        "baseline",
+        "latency"
+      ],
+      "text": "Okay.",
+      "instructions": "Single-word acknowledgement.",
+      "constraints": [
+        "Audio contains only 'Okay'",
+        "Time to first byte is the primary measure"
+      ]
+    },
+    {
+      "id": "voice-030",
+      "category": "voice",
+      "rank": 30,
+      "title": "Instructed style change mid-text",
+      "language": "en-US",
+      "tags": [
+        "style",
+        "ssml"
+      ],
+      "text": "Here are today's headlines. Markets closed higher for a third day. [Now, sadly:] The city has lost one of its longest-serving librarians, who died at ninety-one. [Back to neutral:] And in sport, the final is set for Sunday.",
+      "instructions": "Bracketed notes are stage directions, not to be spoken.",
+      "constraints": [
+        "Bracketed directions are not spoken",
+        "Audible tone shift at the second and third segments"
+      ]
+    }
+  ],
+  "runs": [
+    {
+      "category": "voice",
+      "tool": "aria-voice",
+      "prompt_id": "voice-001",
+      "run_at": "2026-09-12T06:00:00+00:00",
+      "audio_url": "audio/demo/aria-voice.wav",
+      "transcript": null,
+      "ttft_ms": 174,
+      "latency_ms": 980,
+      "scores": {
+        "accuracy": 8.9,
+        "naturalness": 8.3,
+        "adherence": 7.9,
+        "velocity": 8.1
+      },
+      "composite": 8.3
+    },
+    {
+      "category": "voice",
+      "tool": "aria-voice",
+      "prompt_id": "voice-002",
+      "run_at": "2026-09-12T06:00:00+00:00",
+      "audio_url": "audio/demo/aria-voice.wav",
+      "transcript": null,
+      "ttft_ms": 190,
+      "latency_ms": 1725,
+      "scores": {
+        "accuracy": 9.3,
+        "naturalness": 8.3,
+        "adherence": 7.8,
+        "velocity": 7.6
+      },
+      "composite": 8.25
+    },
+    {
+      "category": "voice",
+      "tool": "aria-voice",
+      "prompt_id": "voice-003",
+      "run_at": "2026-09-12T06:00:00+00:00",
+      "audio_url": "audio/demo/aria-voice.wav",
+      "transcript": null,
+      "ttft_ms": 191,
+      "latency_ms": 1767,
+      "scores": {
+        "accuracy": 9.6,
+        "naturalness": 8.6,
+        "adherence": 7.3,
+        "velocity": 6.6
+      },
+      "composite": 8.03
+    },
+    {
+      "category": "voice",
+      "tool": "aria-voice",
+      "prompt_id": "voice-004",
+      "run_at": "2026-09-12T06:00:00+00:00",
+      "audio_url": "audio/demo/aria-voice.wav",
+      "transcript": null,
+      "ttft_ms": 165,
+      "latency_ms": 1537,
+      "scores": {
+        "accuracy": 9.0,
+        "naturalness": 8.4,
+        "adherence": 8.5,
+        "velocity": 6.2
+      },
+      "composite": 8.03
+    },
+    {
+      "category": "voice",
+      "tool": "aria-voice",
+      "prompt_id": "voice-005",
+      "run_at": "2026-09-12T06:00:00+00:00",
+      "audio_url": "audio/demo/aria-voice.wav",
+      "transcript": null,
+      "ttft_ms": 215,
+      "latency_ms": 1088,
+      "scores": {
+        "accuracy": 9.8,
+        "naturalness": 8.3,
+        "adherence": 8.3,
+        "velocity": 7.7
+      },
+      "composite": 8.53
+    },
+    {
+      "category": "voice",
+      "tool": "aria-voice",
+      "prompt_id": "voice-006",
+      "run_at": "2026-09-12T06:00:00+00:00",
+      "audio_url": "audio/demo/aria-voice.wav",
+      "transcript": null,
+      "ttft_ms": 138,
+      "latency_ms": 1645,
+      "scores": {
+        "accuracy": 9.5,
+        "naturalness": 7.1,
+        "adherence": 5.6,
+        "velocity": 7.0
+      },
+      "composite": 7.3
+    },
+    {
+      "category": "voice",
+      "tool": "aria-voice",
+      "prompt_id": "voice-007",
+      "run_at": "2026-09-12T06:00:00+00:00",
+      "audio_url": "audio/demo/aria-voice.wav",
+      "transcript": null,
+      "ttft_ms": 176,
+      "latency_ms": 1317,
+      "scores": {
+        "accuracy": 9.6,
+        "naturalness": 7.4,
+        "adherence": 8.8,
+        "velocity": 6.6
+      },
+      "composite": 8.1
+    },
+    {
+      "category": "voice",
+      "tool": "aria-voice",
+      "prompt_id": "voice-008",
+      "run_at": "2026-09-12T06:00:00+00:00",
+      "audio_url": "audio/demo/aria-voice.wav",
+      "transcript": null,
+      "ttft_ms": 209,
+      "latency_ms": 1533,
+      "scores": {
+        "accuracy": 9.1,
+        "naturalness": 9.2,
+        "adherence": 8.6,
+        "velocity": 7.8
+      },
+      "composite": 8.67
+    },
+    {
+      "category": "voice",
+      "tool": "aria-voice",
+      "prompt_id": "voice-009",
+      "run_at": "2026-09-12T06:00:00+00:00",
+      "audio_url": "audio/demo/aria-voice.wav",
+      "transcript": null,
+      "ttft_ms": 168,
+      "latency_ms": 2054,
+      "scores": {
+        "accuracy": 8.4,
+        "naturalness": 7.9,
+        "adherence": 7.6,
+        "velocity": 7.9
+      },
+      "composite": 7.95
+    },
+    {
+      "category": "voice",
+      "tool": "aria-voice",
+      "prompt_id": "voice-010",
+      "run_at": "2026-09-12T06:00:00+00:00",
+      "audio_url": "audio/demo/aria-voice.wav",
+      "transcript": null,
+      "ttft_ms": 202,
+      "latency_ms": 1634,
+      "scores": {
+        "accuracy": 8.3,
+        "naturalness": 7.5,
+        "adherence": 8.7,
+        "velocity": 8.8
+      },
+      "composite": 8.32
+    },
+    {
+      "category": "voice",
+      "tool": "aria-voice",
+      "prompt_id": "voice-011",
+      "run_at": "2026-09-12T06:00:00+00:00",
+      "audio_url": "audio/demo/aria-voice.wav",
+      "transcript": null,
+      "ttft_ms": 222,
+      "latency_ms": 995,
+      "scores": {
+        "accuracy": 10.0,
+        "naturalness": 8.4,
+        "adherence": 6.7,
+        "velocity": 7.0
+      },
+      "composite": 8.02
+    },
+    {
+      "category": "voice",
+      "tool": "aria-voice",
+      "prompt_id": "voice-012",
+      "run_at": "2026-09-12T06:00:00+00:00",
+      "audio_url": "audio/demo/aria-voice.wav",
+      "transcript": null,
+      "ttft_ms": 206,
+      "latency_ms": 2049,
+      "scores": {
+        "accuracy": 9.0,
+        "naturalness": 8.7,
+        "adherence": 7.7,
+        "velocity": 8.2
+      },
+      "composite": 8.4
+    },
+    {
+      "category": "voice",
+      "tool": "aria-voice",
+      "prompt_id": "voice-013",
+      "run_at": "2026-09-12T06:00:00+00:00",
+      "audio_url": "audio/demo/aria-voice.wav",
+      "transcript": null,
+      "ttft_ms": 222,
+      "latency_ms": 1241,
+      "scores": {
+        "accuracy": 9.6,
+        "naturalness": 8.0,
+        "adherence": 7.5,
+        "velocity": 6.8
+      },
+      "composite": 7.98
+    },
+    {
+      "category": "voice",
+      "tool": "aria-voice",
+      "prompt_id": "voice-014",
+      "run_at": "2026-09-12T06:00:00+00:00",
+      "audio_url": "audio/demo/aria-voice.wav",
+      "transcript": null,
+      "ttft_ms": 97,
+      "latency_ms": 1096,
+      "scores": {
+        "accuracy": 8.9,
+        "naturalness": 9.2,
+        "adherence": 7.3,
+        "velocity": 7.2
+      },
+      "composite": 8.15
+    },
+    {
+      "category": "voice",
+      "tool": "aria-voice",
+      "prompt_id": "voice-015",
+      "run_at": "2026-09-12T06:00:00+00:00",
+      "audio_url": "audio/demo/aria-voice.wav",
+      "transcript": null,
+      "ttft_ms": 191,
+      "latency_ms": 1447,
+      "scores": {
+        "accuracy": 8.5,
+        "naturalness": 8.9,
+        "adherence": 9.1,
+        "velocity": 7.5
+      },
+      "composite": 8.5
+    },
+    {
+      "category": "voice",
+      "tool": "aria-voice",
+      "prompt_id": "voice-016",
+      "run_at": "2026-09-12T06:00:00+00:00",
+      "audio_url": "audio/demo/aria-voice.wav",
+      "transcript": null,
+      "ttft_ms": 220,
+      "latency_ms": 1506,
+      "scores": {
+        "accuracy": 10.0,
+        "naturalness": 9.3,
+        "adherence": 8.2,
+        "velocity": 6.6
+      },
+      "composite": 8.53
+    },
+    {
+      "category": "voice",
+      "tool": "aria-voice",
+      "prompt_id": "voice-017",
+      "run_at": "2026-09-12T06:00:00+00:00",
+      "audio_url": "audio/demo/aria-voice.wav",
+      "transcript": null,
+      "ttft_ms": 251,
+      "latency_ms": 1432,
+      "scores": {
+        "accuracy": 10.0,
+        "naturalness": 8.5,
+        "adherence": 9.8,
+        "velocity": 7.2
+      },
+      "composite": 8.88
+    },
+    {
+      "category": "voice",
+      "tool": "aria-voice",
+      "prompt_id": "voice-018",
+      "run_at": "2026-09-12T06:00:00+00:00",
+      "audio_url": "audio/demo/aria-voice.wav",
+      "transcript": null,
+      "ttft_ms": 216,
+      "latency_ms": 1592,
+      "scores": {
+        "accuracy": 8.5,
+        "naturalness": 7.5,
+        "adherence": 7.9,
+        "velocity": 8.8
+      },
+      "composite": 8.18
+    },
+    {
+      "category": "voice",
+      "tool": "aria-voice",
+      "prompt_id": "voice-019",
+      "run_at": "2026-09-12T06:00:00+00:00",
+      "audio_url": "audio/demo/aria-voice.wav",
+      "transcript": null,
+      "ttft_ms": 151,
+      "latency_ms": 1399,
+      "scores": {
+        "accuracy": 6.9,
+        "naturalness": 9.1,
+        "adherence": 8.5,
+        "velocity": 7.0
+      },
+      "composite": 7.88
+    },
+    {
+      "category": "voice",
+      "tool": "aria-voice",
+      "prompt_id": "voice-020",
+      "run_at": "2026-09-12T06:00:00+00:00",
+      "audio_url": "audio/demo/aria-voice.wav",
+      "transcript": null,
+      "ttft_ms": 159,
+      "latency_ms": 1298,
+      "scores": {
+        "accuracy": 10.0,
+        "naturalness": 7.6,
+        "adherence": 7.6,
+        "velocity": 8.7
+      },
+      "composite": 8.48
+    },
+    {
+      "category": "voice",
+      "tool": "aria-voice",
+      "prompt_id": "voice-021",
+      "run_at": "2026-09-12T06:00:00+00:00",
+      "audio_url": "audio/demo/aria-voice.wav",
+      "transcript": null,
+      "ttft_ms": 219,
+      "latency_ms": 1400,
+      "scores": {
+        "accuracy": 9.1,
+        "naturalness": 7.4,
+        "adherence": 8.2,
+        "velocity": 6.4
+      },
+      "composite": 7.78
+    },
+    {
+      "category": "voice",
+      "tool": "aria-voice",
+      "prompt_id": "voice-022",
+      "run_at": "2026-09-12T06:00:00+00:00",
+      "audio_url": "audio/demo/aria-voice.wav",
+      "transcript": null,
+      "ttft_ms": 174,
+      "latency_ms": 1490,
+      "scores": {
+        "accuracy": 10.0,
+        "naturalness": 8.8,
+        "adherence": 9.2,
+        "velocity": 6.3
+      },
+      "composite": 8.57
+    },
+    {
+      "category": "voice",
+      "tool": "aria-voice",
+      "prompt_id": "voice-023",
+      "run_at": "2026-09-12T06:00:00+00:00",
+      "audio_url": "audio/demo/aria-voice.wav",
+      "transcript": null,
+      "ttft_ms": 249,
+      "latency_ms": 1599,
+      "scores": {
+        "accuracy": 10.0,
+        "naturalness": 7.0,
+        "adherence": 8.9,
+        "velocity": 8.0
+      },
+      "composite": 8.47
+    },
+    {
+      "category": "voice",
+      "tool": "aria-voice",
+      "prompt_id": "voice-024",
+      "run_at": "2026-09-12T06:00:00+00:00",
+      "audio_url": "audio/demo/aria-voice.wav",
+      "transcript": null,
+      "ttft_ms": 171,
+      "latency_ms": 1965,
+      "scores": {
+        "accuracy": 9.0,
+        "naturalness": 8.0,
+        "adherence": 6.9,
+        "velocity": 7.7
+      },
+      "composite": 7.9
+    },
+    {
+      "category": "voice",
+      "tool": "aria-voice",
+      "prompt_id": "voice-025",
+      "run_at": "2026-09-12T06:00:00+00:00",
+      "audio_url": "audio/demo/aria-voice.wav",
+      "transcript": null,
+      "ttft_ms": 191,
+      "latency_ms": 1630,
+      "scores": {
+        "accuracy": 8.5,
+        "naturalness": 8.8,
+        "adherence": 6.6,
+        "velocity": 7.1
+      },
+      "composite": 7.75
+    },
+    {
+      "category": "voice",
+      "tool": "aria-voice",
+      "prompt_id": "voice-026",
+      "run_at": "2026-09-12T06:00:00+00:00",
+      "audio_url": "audio/demo/aria-voice.wav",
+      "transcript": null,
+      "ttft_ms": 203,
+      "latency_ms": 1537,
+      "scores": {
+        "accuracy": 10.0,
+        "naturalness": 8.5,
+        "adherence": 7.0,
+        "velocity": 7.9
+      },
+      "composite": 8.35
+    },
+    {
+      "category": "voice",
+      "tool": "aria-voice",
+      "prompt_id": "voice-027",
+      "run_at": "2026-09-12T06:00:00+00:00",
+      "audio_url": "audio/demo/aria-voice.wav",
+      "transcript": null,
+      "ttft_ms": 237,
+      "latency_ms": 1570,
+      "scores": {
+        "accuracy": 8.4,
+        "naturalness": 9.5,
+        "adherence": 8.1,
+        "velocity": 8.1
+      },
+      "composite": 8.53
+    },
+    {
+      "category": "voice",
+      "tool": "aria-voice",
+      "prompt_id": "voice-028",
+      "run_at": "2026-09-12T06:00:00+00:00",
+      "audio_url": "audio/demo/aria-voice.wav",
+      "transcript": null,
+      "ttft_ms": 185,
+      "latency_ms": 1815,
+      "scores": {
+        "accuracy": 9.3,
+        "naturalness": 10.0,
+        "adherence": 8.2,
+        "velocity": 7.2
+      },
+      "composite": 8.68
+    },
+    {
+      "category": "voice",
+      "tool": "aria-voice",
+      "prompt_id": "voice-029",
+      "run_at": "2026-09-12T06:00:00+00:00",
+      "audio_url": "audio/demo/aria-voice.wav",
+      "transcript": null,
+      "ttft_ms": 102,
+      "latency_ms": 1483,
+      "scores": {
+        "accuracy": 9.1,
+        "naturalness": 9.0,
+        "adherence": 9.1,
+        "velocity": 7.0
+      },
+      "composite": 8.55
+    },
+    {
+      "category": "voice",
+      "tool": "aria-voice",
+      "prompt_id": "voice-030",
+      "run_at": "2026-09-12T06:00:00+00:00",
+      "audio_url": "audio/demo/aria-voice.wav",
+      "transcript": null,
+      "ttft_ms": 135,
+      "latency_ms": 1545,
+      "scores": {
+        "accuracy": 9.2,
+        "naturalness": 8.0,
+        "adherence": 8.8,
+        "velocity": 8.0
+      },
+      "composite": 8.5
+    },
+    {
+      "category": "voice",
+      "tool": "cobalt-speech",
+      "prompt_id": "voice-001",
+      "run_at": "2026-09-12T06:00:00+00:00",
+      "audio_url": "audio/demo/cobalt-speech.wav",
+      "transcript": null,
+      "ttft_ms": 341,
+      "latency_ms": 2871,
+      "scores": {
+        "accuracy": 7.3,
+        "naturalness": 8.2,
+        "adherence": 8.2,
+        "velocity": 6.5
+      },
+      "composite": 7.55
+    },
+    {
+      "category": "voice",
+      "tool": "cobalt-speech",
+      "prompt_id": "voice-002",
+      "run_at": "2026-09-12T06:00:00+00:00",
+      "audio_url": "audio/demo/cobalt-speech.wav",
+      "transcript": null,
+      "ttft_ms": 345,
+      "latency_ms": 2798,
+      "scores": {
+        "accuracy": 7.9,
+        "naturalness": 9.0,
+        "adherence": 8.1,
+        "velocity": 7.4
+      },
+      "composite": 8.1
+    },
+    {
+      "category": "voice",
+      "tool": "cobalt-speech",
+      "prompt_id": "voice-003",
+      "run_at": "2026-09-12T06:00:00+00:00",
+      "audio_url": "audio/demo/cobalt-speech.wav",
+      "transcript": null,
+      "ttft_ms": 387,
+      "latency_ms": 2547,
+      "scores": {
+        "accuracy": 7.5,
+        "naturalness": 10.0,
+        "adherence": 6.1,
+        "velocity": 7.1
+      },
+      "composite": 7.68
+    },
+    {
+      "category": "voice",
+      "tool": "cobalt-speech",
+      "prompt_id": "voice-004",
+      "run_at": "2026-09-12T06:00:00+00:00",
+      "audio_url": "audio/demo/cobalt-speech.wav",
+      "transcript": null,
+      "ttft_ms": 456,
+      "latency_ms": 2344,
+      "scores": {
+        "accuracy": 9.2,
+        "naturalness": 9.5,
+        "adherence": 9.8,
+        "velocity": 6.1
+      },
+      "composite": 8.65
+    },
+    {
+      "category": "voice",
+      "tool": "cobalt-speech",
+      "prompt_id": "voice-005",
+      "run_at": "2026-09-12T06:00:00+00:00",
+      "audio_url": "audio/demo/cobalt-speech.wav",
+      "transcript": null,
+      "ttft_ms": 198,
+      "latency_ms": 3641,
+      "scores": {
+        "accuracy": 6.9,
+        "naturalness": 9.6,
+        "adherence": 7.5,
+        "velocity": 6.7
+      },
+      "composite": 7.67
+    },
+    {
+      "category": "voice",
+      "tool": "cobalt-speech",
+      "prompt_id": "voice-006",
+      "run_at": "2026-09-12T06:00:00+00:00",
+      "audio_url": "audio/demo/cobalt-speech.wav",
+      "transcript": null,
+      "ttft_ms": 752,
+      "latency_ms": 2147,
+      "scores": {
+        "accuracy": 7.3,
+        "naturalness": 10.0,
+        "adherence": 6.8,
+        "velocity": 6.8
+      },
+      "composite": 7.73
+    },
+    {
+      "category": "voice",
+      "tool": "cobalt-speech",
+      "prompt_id": "voice-007",
+      "run_at": "2026-09-12T06:00:00+00:00",
+      "audio_url": "audio/demo/cobalt-speech.wav",
+      "transcript": null,
+      "ttft_ms": 555,
+      "latency_ms": 2466,
+      "scores": {
+        "accuracy": 6.2,
+        "naturalness": 9.0,
+        "adherence": 8.2,
+        "velocity": 7.1
+      },
+      "composite": 7.62
+    },
+    {
+      "category": "voice",
+      "tool": "cobalt-speech",
+      "prompt_id": "voice-008",
+      "run_at": "2026-09-12T06:00:00+00:00",
+      "audio_url": "audio/demo/cobalt-speech.wav",
+      "transcript": null,
+      "ttft_ms": 214,
+      "latency_ms": 2581,
+      "scores": {
+        "accuracy": 6.1,
+        "naturalness": 9.1,
+        "adherence": 8.9,
+        "velocity": 6.9
+      },
+      "composite": 7.75
+    },
+    {
+      "category": "voice",
+      "tool": "cobalt-speech",
+      "prompt_id": "voice-009",
+      "run_at": "2026-09-12T06:00:00+00:00",
+      "audio_url": "audio/demo/cobalt-speech.wav",
+      "transcript": null,
+      "ttft_ms": 289,
+      "latency_ms": 2161,
+      "scores": {
+        "accuracy": 8.8,
+        "naturalness": 10.0,
+        "adherence": 8.3,
+        "velocity": 6.8
+      },
+      "composite": 8.47
+    },
+    {
+      "category": "voice",
+      "tool": "cobalt-speech",
+      "prompt_id": "voice-010",
+      "run_at": "2026-09-12T06:00:00+00:00",
+      "audio_url": "audio/demo/cobalt-speech.wav",
+      "transcript": null,
+      "ttft_ms": 299,
+      "latency_ms": 2195,
+      "scores": {
+        "accuracy": 7.5,
+        "naturalness": 10.0,
+        "adherence": 8.3,
+        "velocity": 6.1
+      },
+      "composite": 7.97
+    },
+    {
+      "category": "voice",
+      "tool": "cobalt-speech",
+      "prompt_id": "voice-011",
+      "run_at": "2026-09-12T06:00:00+00:00",
+      "audio_url": "audio/demo/cobalt-speech.wav",
+      "transcript": null,
+      "ttft_ms": 467,
+      "latency_ms": 3391,
+      "scores": {
+        "accuracy": 6.5,
+        "naturalness": 10.0,
+        "adherence": 5.7,
+        "velocity": 6.2
+      },
+      "composite": 7.1
+    },
+    {
+      "category": "voice",
+      "tool": "cobalt-speech",
+      "prompt_id": "voice-012",
+      "run_at": "2026-09-12T06:00:00+00:00",
+      "audio_url": "audio/demo/cobalt-speech.wav",
+      "transcript": null,
+      "ttft_ms": 349,
+      "latency_ms": 3394,
+      "scores": {
+        "accuracy": 7.6,
+        "naturalness": 10.0,
+        "adherence": 7.4,
+        "velocity": 5.8
+      },
+      "composite": 7.7
+    },
+    {
+      "category": "voice",
+      "tool": "cobalt-speech",
+      "prompt_id": "voice-013",
+      "run_at": "2026-09-12T06:00:00+00:00",
+      "audio_url": "audio/demo/cobalt-speech.wav",
+      "transcript": null,
+      "ttft_ms": 485,
+      "latency_ms": 2759,
+      "scores": {
+        "accuracy": 8.4,
+        "naturalness": 9.9,
+        "adherence": 10.0,
+        "velocity": 6.5
+      },
+      "composite": 8.7
+    },
+    {
+      "category": "voice",
+      "tool": "cobalt-speech",
+      "prompt_id": "voice-014",
+      "run_at": "2026-09-12T06:00:00+00:00",
+      "audio_url": "audio/demo/cobalt-speech.wav",
+      "transcript": null,
+      "ttft_ms": 378,
+      "latency_ms": 2822,
+      "scores": {
+        "accuracy": 7.3,
+        "naturalness": 10.0,
+        "adherence": 9.1,
+        "velocity": 5.2
+      },
+      "composite": 7.9
+    },
+    {
+      "category": "voice",
+      "tool": "cobalt-speech",
+      "prompt_id": "voice-015",
+      "run_at": "2026-09-12T06:00:00+00:00",
+      "audio_url": "audio/demo/cobalt-speech.wav",
+      "transcript": null,
+      "ttft_ms": 412,
+      "latency_ms": 2546,
+      "scores": {
+        "accuracy": 8.2,
+        "naturalness": 8.3,
+        "adherence": 5.7,
+        "velocity": 4.8
+      },
+      "composite": 6.75
+    },
+    {
+      "category": "voice",
+      "tool": "cobalt-speech",
+      "prompt_id": "voice-016",
+      "run_at": "2026-09-12T06:00:00+00:00",
+      "audio_url": "audio/demo/cobalt-speech.wav",
+      "transcript": null,
+      "ttft_ms": 454,
+      "latency_ms": 2792,
+      "scores": {
+        "accuracy": 7.8,
+        "naturalness": 8.8,
+        "adherence": 6.6,
+        "velocity": 4.7
+      },
+      "composite": 6.98
+    },
+    {
+      "category": "voice",
+      "tool": "cobalt-speech",
+      "prompt_id": "voice-017",
+      "run_at": "2026-09-12T06:00:00+00:00",
+      "audio_url": "audio/demo/cobalt-speech.wav",
+      "transcript": null,
+      "ttft_ms": 405,
+      "latency_ms": 2256,
+      "scores": {
+        "accuracy": 8.4,
+        "naturalness": 10.0,
+        "adherence": 7.6,
+        "velocity": 7.7
+      },
+      "composite": 8.43
+    },
+    {
+      "category": "voice",
+      "tool": "cobalt-speech",
+      "prompt_id": "voice-018",
+      "run_at": "2026-09-12T06:00:00+00:00",
+      "audio_url": "audio/demo/cobalt-speech.wav",
+      "transcript": null,
+      "ttft_ms": 446,
+      "latency_ms": 2411,
+      "scores": {
+        "accuracy": 7.0,
+        "naturalness": 9.0,
+        "adherence": 5.8,
+        "velocity": 6.6
+      },
+      "composite": 7.1
+    },
+    {
+      "category": "voice",
+      "tool": "cobalt-speech",
+      "prompt_id": "voice-019",
+      "run_at": "2026-09-12T06:00:00+00:00",
+      "audio_url": "audio/demo/cobalt-speech.wav",
+      "transcript": null,
+      "ttft_ms": 366,
+      "latency_ms": 2292,
+      "scores": {
+        "accuracy": 6.9,
+        "naturalness": 9.8,
+        "adherence": 9.3,
+        "velocity": 6.5
+      },
+      "composite": 8.12
+    },
+    {
+      "category": "voice",
+      "tool": "cobalt-speech",
+      "prompt_id": "voice-020",
+      "run_at": "2026-09-12T06:00:00+00:00",
+      "audio_url": "audio/demo/cobalt-speech.wav",
+      "transcript": null,
+      "ttft_ms": 613,
+      "latency_ms": 3090,
+      "scores": {
+        "accuracy": 7.4,
+        "naturalness": 8.4,
+        "adherence": 7.6,
+        "velocity": 6.6
+      },
+      "composite": 7.5
+    },
+    {
+      "category": "voice",
+      "tool": "cobalt-speech",
+      "prompt_id": "voice-021",
+      "run_at": "2026-09-12T06:00:00+00:00",
+      "audio_url": "audio/demo/cobalt-speech.wav",
+      "transcript": null,
+      "ttft_ms": 452,
+      "latency_ms": 2817,
+      "scores": {
+        "accuracy": 8.4,
+        "naturalness": 8.9,
+        "adherence": 8.4,
+        "velocity": 5.5
+      },
+      "composite": 7.8
+    },
+    {
+      "category": "voice",
+      "tool": "cobalt-speech",
+      "prompt_id": "voice-022",
+      "run_at": "2026-09-12T06:00:00+00:00",
+      "audio_url": "audio/demo/cobalt-speech.wav",
+      "transcript": null,
+      "ttft_ms": 478,
+      "latency_ms": 2388,
+      "scores": {
+        "accuracy": 6.8,
+        "naturalness": 10.0,
+        "adherence": 8.3,
+        "velocity": 4.8
+      },
+      "composite": 7.48
+    },
+    {
+      "category": "voice",
+      "tool": "cobalt-speech",
+      "prompt_id": "voice-023",
+      "run_at": "2026-09-12T06:00:00+00:00",
+      "audio_url": "audio/demo/cobalt-speech.wav",
+      "transcript": null,
+      "ttft_ms": 298,
+      "latency_ms": 3001,
+      "scores": {
+        "accuracy": 7.5,
+        "naturalness": 9.9,
+        "adherence": 8.1,
+        "velocity": 4.7
+      },
+      "composite": 7.55
+    },
+    {
+      "category": "voice",
+      "tool": "cobalt-speech",
+      "prompt_id": "voice-024",
+      "run_at": "2026-09-12T06:00:00+00:00",
+      "audio_url": "audio/demo/cobalt-speech.wav",
+      "transcript": null,
+      "ttft_ms": 500,
+      "latency_ms": 1603,
+      "scores": {
+        "accuracy": 8.7,
+        "naturalness": 10.0,
+        "adherence": 9.4,
+        "velocity": 4.7
+      },
+      "composite": 8.2
+    },
+    {
+      "category": "voice",
+      "tool": "cobalt-speech",
+      "prompt_id": "voice-025",
+      "run_at": "2026-09-12T06:00:00+00:00",
+      "audio_url": "audio/demo/cobalt-speech.wav",
+      "transcript": null,
+      "ttft_ms": 487,
+      "latency_ms": 1616,
+      "scores": {
+        "accuracy": 9.0,
+        "naturalness": 9.7,
+        "adherence": 6.7,
+        "velocity": 8.3
+      },
+      "composite": 8.43
+    },
+    {
+      "category": "voice",
+      "tool": "cobalt-speech",
+      "prompt_id": "voice-026",
+      "run_at": "2026-09-12T06:00:00+00:00",
+      "audio_url": "audio/demo/cobalt-speech.wav",
+      "transcript": null,
+      "ttft_ms": 564,
+      "latency_ms": 1859,
+      "scores": {
+        "accuracy": 7.8,
+        "naturalness": 8.8,
+        "adherence": 7.9,
+        "velocity": 6.1
+      },
+      "composite": 7.65
+    },
+    {
+      "category": "voice",
+      "tool": "cobalt-speech",
+      "prompt_id": "voice-027",
+      "run_at": "2026-09-12T06:00:00+00:00",
+      "audio_url": "audio/demo/cobalt-speech.wav",
+      "transcript": null,
+      "ttft_ms": 441,
+      "latency_ms": 2241,
+      "scores": {
+        "accuracy": 7.8,
+        "naturalness": 10.0,
+        "adherence": 7.0,
+        "velocity": 6.7
+      },
+      "composite": 7.88
+    },
+    {
+      "category": "voice",
+      "tool": "cobalt-speech",
+      "prompt_id": "voice-028",
+      "run_at": "2026-09-12T06:00:00+00:00",
+      "audio_url": "audio/demo/cobalt-speech.wav",
+      "transcript": null,
+      "ttft_ms": 503,
+      "latency_ms": 2513,
+      "scores": {
+        "accuracy": 8.1,
+        "naturalness": 9.6,
+        "adherence": 6.9,
+        "velocity": 8.1
+      },
+      "composite": 8.18
+    },
+    {
+      "category": "voice",
+      "tool": "cobalt-speech",
+      "prompt_id": "voice-029",
+      "run_at": "2026-09-12T06:00:00+00:00",
+      "audio_url": "audio/demo/cobalt-speech.wav",
+      "transcript": null,
+      "ttft_ms": 468,
+      "latency_ms": 2504,
+      "scores": {
+        "accuracy": 6.9,
+        "naturalness": 8.8,
+        "adherence": 8.9,
+        "velocity": 6.4
+      },
+      "composite": 7.75
+    },
+    {
+      "category": "voice",
+      "tool": "cobalt-speech",
+      "prompt_id": "voice-030",
+      "run_at": "2026-09-12T06:00:00+00:00",
+      "audio_url": "audio/demo/cobalt-speech.wav",
+      "transcript": null,
+      "ttft_ms": 507,
+      "latency_ms": 2949,
+      "scores": {
+        "accuracy": 8.1,
+        "naturalness": 9.4,
+        "adherence": 8.4,
+        "velocity": 6.3
+      },
+      "composite": 8.05
+    },
+    {
+      "category": "voice",
+      "tool": "meridian-tts",
+      "prompt_id": "voice-001",
+      "run_at": "2026-09-12T06:00:00+00:00",
+      "audio_url": "audio/demo/meridian-tts.wav",
+      "transcript": null,
+      "ttft_ms": 105,
+      "latency_ms": 1290,
+      "scores": {
+        "accuracy": 8.1,
+        "naturalness": 6.0,
+        "adherence": 7.9,
+        "velocity": 8.1
+      },
+      "composite": 7.53
+    },
+    {
+      "category": "voice",
+      "tool": "meridian-tts",
+      "prompt_id": "voice-002",
+      "run_at": "2026-09-12T06:00:00+00:00",
+      "audio_url": "audio/demo/meridian-tts.wav",
+      "transcript": null,
+      "ttft_ms": 85,
+      "latency_ms": 1016,
+      "scores": {
+        "accuracy": 8.2,
+        "naturalness": 8.2,
+        "adherence": 10.0,
+        "velocity": 8.8
+      },
+      "composite": 8.8
+    },
+    {
+      "category": "voice",
+      "tool": "meridian-tts",
+      "prompt_id": "voice-003",
+      "run_at": "2026-09-12T06:00:00+00:00",
+      "audio_url": "audio/demo/meridian-tts.wav",
+      "transcript": null,
+      "ttft_ms": 123,
+      "latency_ms": 930,
+      "scores": {
+        "accuracy": 8.2,
+        "naturalness": 5.4,
+        "adherence": 8.5,
+        "velocity": 9.0
+      },
+      "composite": 7.78
+    },
+    {
+      "category": "voice",
+      "tool": "meridian-tts",
+      "prompt_id": "voice-004",
+      "run_at": "2026-09-12T06:00:00+00:00",
+      "audio_url": "audio/demo/meridian-tts.wav",
+      "transcript": null,
+      "ttft_ms": 126,
+      "latency_ms": 1309,
+      "scores": {
+        "accuracy": 7.6,
+        "naturalness": 8.4,
+        "adherence": 8.6,
+        "velocity": 8.0
+      },
+      "composite": 8.15
+    },
+    {
+      "category": "voice",
+      "tool": "meridian-tts",
+      "prompt_id": "voice-005",
+      "run_at": "2026-09-12T06:00:00+00:00",
+      "audio_url": "audio/demo/meridian-tts.wav",
+      "transcript": null,
+      "ttft_ms": 188,
+      "latency_ms": 978,
+      "scores": {
+        "accuracy": 7.6,
+        "naturalness": 7.2,
+        "adherence": 9.4,
+        "velocity": 9.4
+      },
+      "composite": 8.4
+    },
+    {
+      "category": "voice",
+      "tool": "meridian-tts",
+      "prompt_id": "voice-006",
+      "run_at": "2026-09-12T06:00:00+00:00",
+      "audio_url": "audio/demo/meridian-tts.wav",
+      "transcript": null,
+      "ttft_ms": 168,
+      "latency_ms": 1100,
+      "scores": {
+        "accuracy": 9.3,
+        "naturalness": 6.0,
+        "adherence": 8.4,
+        "velocity": 9.8
+      },
+      "composite": 8.38
+    },
+    {
+      "category": "voice",
+      "tool": "meridian-tts",
+      "prompt_id": "voice-007",
+      "run_at": "2026-09-12T06:00:00+00:00",
+      "audio_url": "audio/demo/meridian-tts.wav",
+      "transcript": null,
+      "ttft_ms": 117,
+      "latency_ms": 1154,
+      "scores": {
+        "accuracy": 7.2,
+        "naturalness": 7.3,
+        "adherence": 8.2,
+        "velocity": 7.9
+      },
+      "composite": 7.65
+    },
+    {
+      "category": "voice",
+      "tool": "meridian-tts",
+      "prompt_id": "voice-008",
+      "run_at": "2026-09-12T06:00:00+00:00",
+      "audio_url": "audio/demo/meridian-tts.wav",
+      "transcript": null,
+      "ttft_ms": 176,
+      "latency_ms": 1234,
+      "scores": {
+        "accuracy": 6.3,
+        "naturalness": 7.1,
+        "adherence": 8.9,
+        "velocity": 8.2
+      },
+      "composite": 7.62
+    },
+    {
+      "category": "voice",
+      "tool": "meridian-tts",
+      "prompt_id": "voice-009",
+      "run_at": "2026-09-12T06:00:00+00:00",
+      "audio_url": "audio/demo/meridian-tts.wav",
+      "transcript": null,
+      "ttft_ms": 128,
+      "latency_ms": 961,
+      "scores": {
+        "accuracy": 7.7,
+        "naturalness": 6.1,
+        "adherence": 9.4,
+        "velocity": 7.4
+      },
+      "composite": 7.65
+    },
+    {
+      "category": "voice",
+      "tool": "meridian-tts",
+      "prompt_id": "voice-010",
+      "run_at": "2026-09-12T06:00:00+00:00",
+      "audio_url": "audio/demo/meridian-tts.wav",
+      "transcript": null,
+      "ttft_ms": 147,
+      "latency_ms": 1030,
+      "scores": {
+        "accuracy": 8.3,
+        "naturalness": 6.9,
+        "adherence": 8.8,
+        "velocity": 9.8
+      },
+      "composite": 8.45
+    },
+    {
+      "category": "voice",
+      "tool": "meridian-tts",
+      "prompt_id": "voice-011",
+      "run_at": "2026-09-12T06:00:00+00:00",
+      "audio_url": "audio/demo/meridian-tts.wav",
+      "transcript": null,
+      "ttft_ms": 113,
+      "latency_ms": 1105,
+      "scores": {
+        "accuracy": 7.2,
+        "naturalness": 7.4,
+        "adherence": 9.2,
+        "velocity": 10.0
+      },
+      "composite": 8.45
+    },
+    {
+      "category": "voice",
+      "tool": "meridian-tts",
+      "prompt_id": "voice-012",
+      "run_at": "2026-09-12T06:00:00+00:00",
+      "audio_url": "audio/demo/meridian-tts.wav",
+      "transcript": null,
+      "ttft_ms": 168,
+      "latency_ms": 1243,
+      "scores": {
+        "accuracy": 8.2,
+        "naturalness": 6.7,
+        "adherence": 8.8,
+        "velocity": 7.2
+      },
+      "composite": 7.72
+    },
+    {
+      "category": "voice",
+      "tool": "meridian-tts",
+      "prompt_id": "voice-013",
+      "run_at": "2026-09-12T06:00:00+00:00",
+      "audio_url": "audio/demo/meridian-tts.wav",
+      "transcript": null,
+      "ttft_ms": 140,
+      "latency_ms": 1527,
+      "scores": {
+        "accuracy": 9.3,
+        "naturalness": 8.8,
+        "adherence": 8.5,
+        "velocity": 8.7
+      },
+      "composite": 8.82
+    },
+    {
+      "category": "voice",
+      "tool": "meridian-tts",
+      "prompt_id": "voice-014",
+      "run_at": "2026-09-12T06:00:00+00:00",
+      "audio_url": "audio/demo/meridian-tts.wav",
+      "transcript": null,
+      "ttft_ms": 69,
+      "latency_ms": 796,
+      "scores": {
+        "accuracy": 6.7,
+        "naturalness": 7.2,
+        "adherence": 7.4,
+        "velocity": 6.4
+      },
+      "composite": 6.93
+    },
+    {
+      "category": "voice",
+      "tool": "meridian-tts",
+      "prompt_id": "voice-015",
+      "run_at": "2026-09-12T06:00:00+00:00",
+      "audio_url": "audio/demo/meridian-tts.wav",
+      "transcript": null,
+      "ttft_ms": 161,
+      "latency_ms": 857,
+      "scores": {
+        "accuracy": 9.2,
+        "naturalness": 6.0,
+        "adherence": 8.5,
+        "velocity": 7.7
+      },
+      "composite": 7.85
+    },
+    {
+      "category": "voice",
+      "tool": "meridian-tts",
+      "prompt_id": "voice-016",
+      "run_at": "2026-09-12T06:00:00+00:00",
+      "audio_url": "audio/demo/meridian-tts.wav",
+      "transcript": null,
+      "ttft_ms": 140,
+      "latency_ms": 1413,
+      "scores": {
+        "accuracy": 9.4,
+        "naturalness": 5.9,
+        "adherence": 8.1,
+        "velocity": 8.9
+      },
+      "composite": 8.07
+    },
+    {
+      "category": "voice",
+      "tool": "meridian-tts",
+      "prompt_id": "voice-017",
+      "run_at": "2026-09-12T06:00:00+00:00",
+      "audio_url": "audio/demo/meridian-tts.wav",
+      "transcript": null,
+      "ttft_ms": 165,
+      "latency_ms": 1184,
+      "scores": {
+        "accuracy": 8.4,
+        "naturalness": 5.7,
+        "adherence": 8.2,
+        "velocity": 8.2
+      },
+      "composite": 7.62
+    },
+    {
+      "category": "voice",
+      "tool": "meridian-tts",
+      "prompt_id": "voice-018",
+      "run_at": "2026-09-12T06:00:00+00:00",
+      "audio_url": "audio/demo/meridian-tts.wav",
+      "transcript": null,
+      "ttft_ms": 146,
+      "latency_ms": 1436,
+      "scores": {
+        "accuracy": 8.1,
+        "naturalness": 7.5,
+        "adherence": 8.3,
+        "velocity": 8.6
+      },
+      "composite": 8.12
+    },
+    {
+      "category": "voice",
+      "tool": "meridian-tts",
+      "prompt_id": "voice-019",
+      "run_at": "2026-09-12T06:00:00+00:00",
+      "audio_url": "audio/demo/meridian-tts.wav",
+      "transcript": null,
+      "ttft_ms": 119,
+      "latency_ms": 1175,
+      "scores": {
+        "accuracy": 8.2,
+        "naturalness": 6.4,
+        "adherence": 7.8,
+        "velocity": 9.4
+      },
+      "composite": 7.95
+    },
+    {
+      "category": "voice",
+      "tool": "meridian-tts",
+      "prompt_id": "voice-020",
+      "run_at": "2026-09-12T06:00:00+00:00",
+      "audio_url": "audio/demo/meridian-tts.wav",
+      "transcript": null,
+      "ttft_ms": 177,
+      "latency_ms": 806,
+      "scores": {
+        "accuracy": 6.5,
+        "naturalness": 7.7,
+        "adherence": 7.6,
+        "velocity": 8.1
+      },
+      "composite": 7.47
+    },
+    {
+      "category": "voice",
+      "tool": "meridian-tts",
+      "prompt_id": "voice-021",
+      "run_at": "2026-09-12T06:00:00+00:00",
+      "audio_url": "audio/demo/meridian-tts.wav",
+      "transcript": null,
+      "ttft_ms": 192,
+      "latency_ms": 666,
+      "scores": {
+        "accuracy": 8.2,
+        "naturalness": 6.8,
+        "adherence": 7.9,
+        "velocity": 10.0
+      },
+      "composite": 8.22
+    },
+    {
+      "category": "voice",
+      "tool": "meridian-tts",
+      "prompt_id": "voice-022",
+      "run_at": "2026-09-12T06:00:00+00:00",
+      "audio_url": "audio/demo/meridian-tts.wav",
+      "transcript": null,
+      "ttft_ms": 144,
+      "latency_ms": 1252,
+      "scores": {
+        "accuracy": 6.9,
+        "naturalness": 7.5,
+        "adherence": 7.6,
+        "velocity": 8.4
+      },
+      "composite": 7.6
+    },
+    {
+      "category": "voice",
+      "tool": "meridian-tts",
+      "prompt_id": "voice-023",
+      "run_at": "2026-09-12T06:00:00+00:00",
+      "audio_url": "audio/demo/meridian-tts.wav",
+      "transcript": null,
+      "ttft_ms": 122,
+      "latency_ms": 1174,
+      "scores": {
+        "accuracy": 8.0,
+        "naturalness": 6.8,
+        "adherence": 8.1,
+        "velocity": 9.9
+      },
+      "composite": 8.2
+    },
+    {
+      "category": "voice",
+      "tool": "meridian-tts",
+      "prompt_id": "voice-024",
+      "run_at": "2026-09-12T06:00:00+00:00",
+      "audio_url": "audio/demo/meridian-tts.wav",
+      "transcript": null,
+      "ttft_ms": 104,
+      "latency_ms": 1275,
+      "scores": {
+        "accuracy": 7.8,
+        "naturalness": 6.8,
+        "adherence": 8.6,
+        "velocity": 8.6
+      },
+      "composite": 7.95
+    },
+    {
+      "category": "voice",
+      "tool": "meridian-tts",
+      "prompt_id": "voice-025",
+      "run_at": "2026-09-12T06:00:00+00:00",
+      "audio_url": "audio/demo/meridian-tts.wav",
+      "transcript": null,
+      "ttft_ms": 172,
+      "latency_ms": 1166,
+      "scores": {
+        "accuracy": 9.5,
+        "naturalness": 7.0,
+        "adherence": 9.4,
+        "velocity": 9.5
+      },
+      "composite": 8.85
+    },
+    {
+      "category": "voice",
+      "tool": "meridian-tts",
+      "prompt_id": "voice-026",
+      "run_at": "2026-09-12T06:00:00+00:00",
+      "audio_url": "audio/demo/meridian-tts.wav",
+      "transcript": null,
+      "ttft_ms": 140,
+      "latency_ms": 684,
+      "scores": {
+        "accuracy": 8.4,
+        "naturalness": 7.5,
+        "adherence": 8.8,
+        "velocity": 7.9
+      },
+      "composite": 8.15
+    },
+    {
+      "category": "voice",
+      "tool": "meridian-tts",
+      "prompt_id": "voice-027",
+      "run_at": "2026-09-12T06:00:00+00:00",
+      "audio_url": "audio/demo/meridian-tts.wav",
+      "transcript": null,
+      "ttft_ms": 172,
+      "latency_ms": 1099,
+      "scores": {
+        "accuracy": 8.2,
+        "naturalness": 7.1,
+        "adherence": 9.9,
+        "velocity": 8.9
+      },
+      "composite": 8.53
+    },
+    {
+      "category": "voice",
+      "tool": "meridian-tts",
+      "prompt_id": "voice-028",
+      "run_at": "2026-09-12T06:00:00+00:00",
+      "audio_url": "audio/demo/meridian-tts.wav",
+      "transcript": null,
+      "ttft_ms": 162,
+      "latency_ms": 1054,
+      "scores": {
+        "accuracy": 7.3,
+        "naturalness": 5.5,
+        "adherence": 7.9,
+        "velocity": 7.5
+      },
+      "composite": 7.05
+    },
+    {
+      "category": "voice",
+      "tool": "meridian-tts",
+      "prompt_id": "voice-029",
+      "run_at": "2026-09-12T06:00:00+00:00",
+      "audio_url": "audio/demo/meridian-tts.wav",
+      "transcript": null,
+      "ttft_ms": 117,
+      "latency_ms": 1039,
+      "scores": {
+        "accuracy": 8.8,
+        "naturalness": 6.8,
+        "adherence": 9.7,
+        "velocity": 9.7
+      },
+      "composite": 8.75
+    },
+    {
+      "category": "voice",
+      "tool": "meridian-tts",
+      "prompt_id": "voice-030",
+      "run_at": "2026-09-12T06:00:00+00:00",
+      "audio_url": "audio/demo/meridian-tts.wav",
+      "transcript": null,
+      "ttft_ms": 139,
+      "latency_ms": 991,
+      "scores": {
+        "accuracy": 7.8,
+        "naturalness": 5.3,
+        "adherence": 9.4,
+        "velocity": 9.8
+      },
+      "composite": 8.07
+    },
+    {
+      "category": "voice",
+      "tool": "northwind-audio",
+      "prompt_id": "voice-001",
+      "run_at": "2026-09-12T06:00:00+00:00",
+      "audio_url": "audio/demo/northwind-audio.wav",
+      "transcript": null,
+      "ttft_ms": 77,
+      "latency_ms": 1022,
+      "scores": {
+        "accuracy": 7.5,
+        "naturalness": 5.1,
+        "adherence": 7.2,
+        "velocity": 9.6
+      },
+      "composite": 7.35
+    },
+    {
+      "category": "voice",
+      "tool": "northwind-audio",
+      "prompt_id": "voice-002",
+      "run_at": "2026-09-12T06:00:00+00:00",
+      "audio_url": "audio/demo/northwind-audio.wav",
+      "transcript": null,
+      "ttft_ms": 78,
+      "latency_ms": 590,
+      "scores": {
+        "accuracy": 7.4,
+        "naturalness": 7.0,
+        "adherence": 6.9,
+        "velocity": 9.2
+      },
+      "composite": 7.62
+    },
+    {
+      "category": "voice",
+      "tool": "northwind-audio",
+      "prompt_id": "voice-003",
+      "run_at": "2026-09-12T06:00:00+00:00",
+      "audio_url": "audio/demo/northwind-audio.wav",
+      "transcript": null,
+      "ttft_ms": 136,
+      "latency_ms": 1116,
+      "scores": {
+        "accuracy": 7.7,
+        "naturalness": 8.2,
+        "adherence": 7.7,
+        "velocity": 8.5
+      },
+      "composite": 8.02
+    },
+    {
+      "category": "voice",
+      "tool": "northwind-audio",
+      "prompt_id": "voice-004",
+      "run_at": "2026-09-12T06:00:00+00:00",
+      "audio_url": "audio/demo/northwind-audio.wav",
+      "transcript": null,
+      "ttft_ms": 69,
+      "latency_ms": 794,
+      "scores": {
+        "accuracy": 6.7,
+        "naturalness": 6.4,
+        "adherence": 6.2,
+        "velocity": 9.9
+      },
+      "composite": 7.3
+    },
+    {
+      "category": "voice",
+      "tool": "northwind-audio",
+      "prompt_id": "voice-005",
+      "run_at": "2026-09-12T06:00:00+00:00",
+      "audio_url": "audio/demo/northwind-audio.wav",
+      "transcript": null,
+      "ttft_ms": 62,
+      "latency_ms": 573,
+      "scores": {
+        "accuracy": 7.5,
+        "naturalness": 5.9,
+        "adherence": 8.8,
+        "velocity": 10.0
+      },
+      "composite": 8.05
+    },
+    {
+      "category": "voice",
+      "tool": "northwind-audio",
+      "prompt_id": "voice-006",
+      "run_at": "2026-09-12T06:00:00+00:00",
+      "audio_url": "audio/demo/northwind-audio.wav",
+      "transcript": null,
+      "ttft_ms": 84,
+      "latency_ms": 1088,
+      "scores": {
+        "accuracy": 6.2,
+        "naturalness": 6.3,
+        "adherence": 6.8,
+        "velocity": 7.2
+      },
+      "composite": 6.62
+    },
+    {
+      "category": "voice",
+      "tool": "northwind-audio",
+      "prompt_id": "voice-007",
+      "run_at": "2026-09-12T06:00:00+00:00",
+      "audio_url": "audio/demo/northwind-audio.wav",
+      "transcript": null,
+      "ttft_ms": 84,
+      "latency_ms": 1110,
+      "scores": {
+        "accuracy": 5.5,
+        "naturalness": 7.0,
+        "adherence": 5.7,
+        "velocity": 10.0
+      },
+      "composite": 7.05
+    },
+    {
+      "category": "voice",
+      "tool": "northwind-audio",
+      "prompt_id": "voice-008",
+      "run_at": "2026-09-12T06:00:00+00:00",
+      "audio_url": "audio/demo/northwind-audio.wav",
+      "transcript": null,
+      "ttft_ms": 59,
+      "latency_ms": 848,
+      "scores": {
+        "accuracy": 6.7,
+        "naturalness": 6.9,
+        "adherence": 7.5,
+        "velocity": 9.0
+      },
+      "composite": 7.53
+    },
+    {
+      "category": "voice",
+      "tool": "northwind-audio",
+      "prompt_id": "voice-009",
+      "run_at": "2026-09-12T06:00:00+00:00",
+      "audio_url": "audio/demo/northwind-audio.wav",
+      "transcript": null,
+      "ttft_ms": 99,
+      "latency_ms": 1078,
+      "scores": {
+        "accuracy": 6.3,
+        "naturalness": 7.4,
+        "adherence": 7.3,
+        "velocity": 9.0
+      },
+      "composite": 7.5
+    },
+    {
+      "category": "voice",
+      "tool": "northwind-audio",
+      "prompt_id": "voice-010",
+      "run_at": "2026-09-12T06:00:00+00:00",
+      "audio_url": "audio/demo/northwind-audio.wav",
+      "transcript": null,
+      "ttft_ms": 144,
+      "latency_ms": 824,
+      "scores": {
+        "accuracy": 5.5,
+        "naturalness": 8.8,
+        "adherence": 6.8,
+        "velocity": 8.8
+      },
+      "composite": 7.48
+    },
+    {
+      "category": "voice",
+      "tool": "northwind-audio",
+      "prompt_id": "voice-011",
+      "run_at": "2026-09-12T06:00:00+00:00",
+      "audio_url": "audio/demo/northwind-audio.wav",
+      "transcript": null,
+      "ttft_ms": 78,
+      "latency_ms": 585,
+      "scores": {
+        "accuracy": 7.7,
+        "naturalness": 8.0,
+        "adherence": 5.5,
+        "velocity": 9.6
+      },
+      "composite": 7.7
+    },
+    {
+      "category": "voice",
+      "tool": "northwind-audio",
+      "prompt_id": "voice-012",
+      "run_at": "2026-09-12T06:00:00+00:00",
+      "audio_url": "audio/demo/northwind-audio.wav",
+      "transcript": null,
+      "ttft_ms": 83,
+      "latency_ms": 672,
+      "scores": {
+        "accuracy": 4.9,
+        "naturalness": 7.3,
+        "adherence": 7.5,
+        "velocity": 9.9
+      },
+      "composite": 7.4
+    },
+    {
+      "category": "voice",
+      "tool": "northwind-audio",
+      "prompt_id": "voice-013",
+      "run_at": "2026-09-12T06:00:00+00:00",
+      "audio_url": "audio/demo/northwind-audio.wav",
+      "transcript": null,
+      "ttft_ms": 89,
+      "latency_ms": 656,
+      "scores": {
+        "accuracy": 5.6,
+        "naturalness": 6.8,
+        "adherence": 6.1,
+        "velocity": 9.3
+      },
+      "composite": 6.95
+    },
+    {
+      "category": "voice",
+      "tool": "northwind-audio",
+      "prompt_id": "voice-014",
+      "run_at": "2026-09-12T06:00:00+00:00",
+      "audio_url": "audio/demo/northwind-audio.wav",
+      "transcript": null,
+      "ttft_ms": 94,
+      "latency_ms": 875,
+      "scores": {
+        "accuracy": 6.3,
+        "naturalness": 6.6,
+        "adherence": 7.0,
+        "velocity": 10.0
+      },
+      "composite": 7.47
+    },
+    {
+      "category": "voice",
+      "tool": "northwind-audio",
+      "prompt_id": "voice-015",
+      "run_at": "2026-09-12T06:00:00+00:00",
+      "audio_url": "audio/demo/northwind-audio.wav",
+      "transcript": null,
+      "ttft_ms": 54,
+      "latency_ms": 825,
+      "scores": {
+        "accuracy": 5.0,
+        "naturalness": 6.9,
+        "adherence": 7.2,
+        "velocity": 10.0
+      },
+      "composite": 7.28
+    },
+    {
+      "category": "voice",
+      "tool": "northwind-audio",
+      "prompt_id": "voice-016",
+      "run_at": "2026-09-12T06:00:00+00:00",
+      "audio_url": "audio/demo/northwind-audio.wav",
+      "transcript": null,
+      "ttft_ms": 95,
+      "latency_ms": 907,
+      "scores": {
+        "accuracy": 7.6,
+        "naturalness": 7.1,
+        "adherence": 6.9,
+        "velocity": 9.9
+      },
+      "composite": 7.88
+    },
+    {
+      "category": "voice",
+      "tool": "northwind-audio",
+      "prompt_id": "voice-017",
+      "run_at": "2026-09-12T06:00:00+00:00",
+      "audio_url": "audio/demo/northwind-audio.wav",
+      "transcript": null,
+      "ttft_ms": 118,
+      "latency_ms": 767,
+      "scores": {
+        "accuracy": 6.6,
+        "naturalness": 7.4,
+        "adherence": 6.3,
+        "velocity": 9.3
+      },
+      "composite": 7.4
+    },
+    {
+      "category": "voice",
+      "tool": "northwind-audio",
+      "prompt_id": "voice-018",
+      "run_at": "2026-09-12T06:00:00+00:00",
+      "audio_url": "audio/demo/northwind-audio.wav",
+      "transcript": null,
+      "ttft_ms": 110,
+      "latency_ms": 650,
+      "scores": {
+        "accuracy": 6.3,
+        "naturalness": 6.8,
+        "adherence": 7.7,
+        "velocity": 8.7
+      },
+      "composite": 7.38
+    },
+    {
+      "category": "voice",
+      "tool": "northwind-audio",
+      "prompt_id": "voice-019",
+      "run_at": "2026-09-12T06:00:00+00:00",
+      "audio_url": "audio/demo/northwind-audio.wav",
+      "transcript": null,
+      "ttft_ms": 113,
+      "latency_ms": 734,
+      "scores": {
+        "accuracy": 5.5,
+        "naturalness": 7.4,
+        "adherence": 7.1,
+        "velocity": 9.8
+      },
+      "composite": 7.45
+    },
+    {
+      "category": "voice",
+      "tool": "northwind-audio",
+      "prompt_id": "voice-020",
+      "run_at": "2026-09-12T06:00:00+00:00",
+      "audio_url": "audio/demo/northwind-audio.wav",
+      "transcript": null,
+      "ttft_ms": 102,
+      "latency_ms": 830,
+      "scores": {
+        "accuracy": 6.9,
+        "naturalness": 6.4,
+        "adherence": 8.1,
+        "velocity": 10.0
+      },
+      "composite": 7.85
+    },
+    {
+      "category": "voice",
+      "tool": "northwind-audio",
+      "prompt_id": "voice-021",
+      "run_at": "2026-09-12T06:00:00+00:00",
+      "audio_url": "audio/demo/northwind-audio.wav",
+      "transcript": null,
+      "ttft_ms": 92,
+      "latency_ms": 582,
+      "scores": {
+        "accuracy": 5.8,
+        "naturalness": 7.0,
+        "adherence": 7.5,
+        "velocity": 9.5
+      },
+      "composite": 7.45
+    },
+    {
+      "category": "voice",
+      "tool": "northwind-audio",
+      "prompt_id": "voice-022",
+      "run_at": "2026-09-12T06:00:00+00:00",
+      "audio_url": "audio/demo/northwind-audio.wav",
+      "transcript": null,
+      "ttft_ms": 48,
+      "latency_ms": 911,
+      "scores": {
+        "accuracy": 6.7,
+        "naturalness": 6.6,
+        "adherence": 6.0,
+        "velocity": 9.4
+      },
+      "composite": 7.18
+    },
+    {
+      "category": "voice",
+      "tool": "northwind-audio",
+      "prompt_id": "voice-023",
+      "run_at": "2026-09-12T06:00:00+00:00",
+      "audio_url": "audio/demo/northwind-audio.wav",
+      "transcript": null,
+      "ttft_ms": 86,
+      "latency_ms": 412,
+      "scores": {
+        "accuracy": 7.3,
+        "naturalness": 7.2,
+        "adherence": 6.1,
+        "velocity": 8.6
+      },
+      "composite": 7.3
+    },
+    {
+      "category": "voice",
+      "tool": "northwind-audio",
+      "prompt_id": "voice-024",
+      "run_at": "2026-09-12T06:00:00+00:00",
+      "audio_url": "audio/demo/northwind-audio.wav",
+      "transcript": null,
+      "ttft_ms": 94,
+      "latency_ms": 856,
+      "scores": {
+        "accuracy": 6.7,
+        "naturalness": 7.8,
+        "adherence": 6.7,
+        "velocity": 9.1
+      },
+      "composite": 7.57
+    },
+    {
+      "category": "voice",
+      "tool": "northwind-audio",
+      "prompt_id": "voice-025",
+      "run_at": "2026-09-12T06:00:00+00:00",
+      "audio_url": "audio/demo/northwind-audio.wav",
+      "transcript": null,
+      "ttft_ms": 94,
+      "latency_ms": 1048,
+      "scores": {
+        "accuracy": 7.5,
+        "naturalness": 7.3,
+        "adherence": 6.4,
+        "velocity": 9.1
+      },
+      "composite": 7.58
+    },
+    {
+      "category": "voice",
+      "tool": "northwind-audio",
+      "prompt_id": "voice-026",
+      "run_at": "2026-09-12T06:00:00+00:00",
+      "audio_url": "audio/demo/northwind-audio.wav",
+      "transcript": null,
+      "ttft_ms": 97,
+      "latency_ms": 582,
+      "scores": {
+        "accuracy": 6.2,
+        "naturalness": 6.3,
+        "adherence": 6.2,
+        "velocity": 7.6
+      },
+      "composite": 6.57
+    },
+    {
+      "category": "voice",
+      "tool": "northwind-audio",
+      "prompt_id": "voice-027",
+      "run_at": "2026-09-12T06:00:00+00:00",
+      "audio_url": "audio/demo/northwind-audio.wav",
+      "transcript": null,
+      "ttft_ms": 60,
+      "latency_ms": 520,
+      "scores": {
+        "accuracy": 5.4,
+        "naturalness": 5.5,
+        "adherence": 6.0,
+        "velocity": 10.0
+      },
+      "composite": 6.72
+    },
+    {
+      "category": "voice",
+      "tool": "northwind-audio",
+      "prompt_id": "voice-028",
+      "run_at": "2026-09-12T06:00:00+00:00",
+      "audio_url": "audio/demo/northwind-audio.wav",
+      "transcript": null,
+      "ttft_ms": 89,
+      "latency_ms": 592,
+      "scores": {
+        "accuracy": 6.7,
+        "naturalness": 6.9,
+        "adherence": 7.4,
+        "velocity": 10.0
+      },
+      "composite": 7.75
+    },
+    {
+      "category": "voice",
+      "tool": "northwind-audio",
+      "prompt_id": "voice-029",
+      "run_at": "2026-09-12T06:00:00+00:00",
+      "audio_url": "audio/demo/northwind-audio.wav",
+      "transcript": null,
+      "ttft_ms": 114,
+      "latency_ms": 733,
+      "scores": {
+        "accuracy": 6.4,
+        "naturalness": 7.7,
+        "adherence": 6.5,
+        "velocity": 8.2
+      },
+      "composite": 7.2
+    },
+    {
+      "category": "voice",
+      "tool": "northwind-audio",
+      "prompt_id": "voice-030",
+      "run_at": "2026-09-12T06:00:00+00:00",
+      "audio_url": "audio/demo/northwind-audio.wav",
+      "transcript": null,
+      "ttft_ms": 82,
+      "latency_ms": 909,
+      "scores": {
+        "accuracy": 6.1,
+        "naturalness": 7.3,
+        "adherence": 7.9,
+        "velocity": 9.7
+      },
+      "composite": 7.75
+    },
+    {
+      "category": "voice",
+      "tool": "quill-voice",
+      "prompt_id": "voice-001",
+      "run_at": "2026-09-12T06:00:00+00:00",
+      "audio_url": "audio/demo/quill-voice.wav",
+      "transcript": null,
+      "ttft_ms": 581,
+      "latency_ms": 1520,
+      "scores": {
+        "accuracy": 9.7,
+        "naturalness": 9.2,
+        "adherence": 9.9,
+        "velocity": 6.0
+      },
+      "composite": 8.7
+    },
+    {
+      "category": "voice",
+      "tool": "quill-voice",
+      "prompt_id": "voice-002",
+      "run_at": "2026-09-12T06:00:00+00:00",
+      "audio_url": "audio/demo/quill-voice.wav",
+      "transcript": null,
+      "ttft_ms": 192,
+      "latency_ms": 2107,
+      "scores": {
+        "accuracy": 7.4,
+        "naturalness": 7.4,
+        "adherence": 10.0,
+        "velocity": 7.4
+      },
+      "composite": 8.05
+    },
+    {
+      "category": "voice",
+      "tool": "quill-voice",
+      "prompt_id": "voice-003",
+      "run_at": "2026-09-12T06:00:00+00:00",
+      "audio_url": "audio/demo/quill-voice.wav",
+      "transcript": null,
+      "ttft_ms": 267,
+      "latency_ms": 2009,
+      "scores": {
+        "accuracy": 8.2,
+        "naturalness": 7.7,
+        "adherence": 8.2,
+        "velocity": 6.3
+      },
+      "composite": 7.6
+    },
+    {
+      "category": "voice",
+      "tool": "quill-voice",
+      "prompt_id": "voice-004",
+      "run_at": "2026-09-12T06:00:00+00:00",
+      "audio_url": "audio/demo/quill-voice.wav",
+      "transcript": null,
+      "ttft_ms": 244,
+      "latency_ms": 2539,
+      "scores": {
+        "accuracy": 7.3,
+        "naturalness": 8.7,
+        "adherence": 8.4,
+        "velocity": 5.4
+      },
+      "composite": 7.45
+    },
+    {
+      "category": "voice",
+      "tool": "quill-voice",
+      "prompt_id": "voice-005",
+      "run_at": "2026-09-12T06:00:00+00:00",
+      "audio_url": "audio/demo/quill-voice.wav",
+      "transcript": null,
+      "ttft_ms": 237,
+      "latency_ms": 2097,
+      "scores": {
+        "accuracy": 7.2,
+        "naturalness": 10.0,
+        "adherence": 9.7,
+        "velocity": 6.0
+      },
+      "composite": 8.22
+    },
+    {
+      "category": "voice",
+      "tool": "quill-voice",
+      "prompt_id": "voice-006",
+      "run_at": "2026-09-12T06:00:00+00:00",
+      "audio_url": "audio/demo/quill-voice.wav",
+      "transcript": null,
+      "ttft_ms": 409,
+      "latency_ms": 1956,
+      "scores": {
+        "accuracy": 6.7,
+        "naturalness": 10.0,
+        "adherence": 8.4,
+        "velocity": 7.6
+      },
+      "composite": 8.18
+    },
+    {
+      "category": "voice",
+      "tool": "quill-voice",
+      "prompt_id": "voice-007",
+      "run_at": "2026-09-12T06:00:00+00:00",
+      "audio_url": "audio/demo/quill-voice.wav",
+      "transcript": null,
+      "ttft_ms": 304,
+      "latency_ms": 1439,
+      "scores": {
+        "accuracy": 6.9,
+        "naturalness": 7.8,
+        "adherence": 9.6,
+        "velocity": 7.8
+      },
+      "composite": 8.02
+    },
+    {
+      "category": "voice",
+      "tool": "quill-voice",
+      "prompt_id": "voice-008",
+      "run_at": "2026-09-12T06:00:00+00:00",
+      "audio_url": "audio/demo/quill-voice.wav",
+      "transcript": null,
+      "ttft_ms": 192,
+      "latency_ms": 2234,
+      "scores": {
+        "accuracy": 7.8,
+        "naturalness": 7.4,
+        "adherence": 7.3,
+        "velocity": 6.4
+      },
+      "composite": 7.22
+    },
+    {
+      "category": "voice",
+      "tool": "quill-voice",
+      "prompt_id": "voice-009",
+      "run_at": "2026-09-12T06:00:00+00:00",
+      "audio_url": "audio/demo/quill-voice.wav",
+      "transcript": null,
+      "ttft_ms": 351,
+      "latency_ms": 2424,
+      "scores": {
+        "accuracy": 9.5,
+        "naturalness": 9.7,
+        "adherence": 8.7,
+        "velocity": 6.6
+      },
+      "composite": 8.62
+    },
+    {
+      "category": "voice",
+      "tool": "quill-voice",
+      "prompt_id": "voice-010",
+      "run_at": "2026-09-12T06:00:00+00:00",
+      "audio_url": "audio/demo/quill-voice.wav",
+      "transcript": null,
+      "ttft_ms": 263,
+      "latency_ms": 2047,
+      "scores": {
+        "accuracy": 7.4,
+        "naturalness": 7.9,
+        "adherence": 10.0,
+        "velocity": 6.9
+      },
+      "composite": 8.05
+    },
+    {
+      "category": "voice",
+      "tool": "quill-voice",
+      "prompt_id": "voice-011",
+      "run_at": "2026-09-12T06:00:00+00:00",
+      "audio_url": "audio/demo/quill-voice.wav",
+      "transcript": null,
+      "ttft_ms": 279,
+      "latency_ms": 2750,
+      "scores": {
+        "accuracy": 8.3,
+        "naturalness": 7.1,
+        "adherence": 9.0,
+        "velocity": 6.0
+      },
+      "composite": 7.6
+    },
+    {
+      "category": "voice",
+      "tool": "quill-voice",
+      "prompt_id": "voice-012",
+      "run_at": "2026-09-12T06:00:00+00:00",
+      "audio_url": "audio/demo/quill-voice.wav",
+      "transcript": null,
+      "ttft_ms": 378,
+      "latency_ms": 1775,
+      "scores": {
+        "accuracy": 8.4,
+        "naturalness": 7.9,
+        "adherence": 8.4,
+        "velocity": 6.7
+      },
+      "composite": 7.85
+    },
+    {
+      "category": "voice",
+      "tool": "quill-voice",
+      "prompt_id": "voice-013",
+      "run_at": "2026-09-12T06:00:00+00:00",
+      "audio_url": "audio/demo/quill-voice.wav",
+      "transcript": null,
+      "ttft_ms": 149,
+      "latency_ms": 2475,
+      "scores": {
+        "accuracy": 9.1,
+        "naturalness": 6.8,
+        "adherence": 9.0,
+        "velocity": 8.6
+      },
+      "composite": 8.38
+    },
+    {
+      "category": "voice",
+      "tool": "quill-voice",
+      "prompt_id": "voice-014",
+      "run_at": "2026-09-12T06:00:00+00:00",
+      "audio_url": "audio/demo/quill-voice.wav",
+      "transcript": null,
+      "ttft_ms": 63,
+      "latency_ms": 1232,
+      "scores": {
+        "accuracy": 6.1,
+        "naturalness": 7.9,
+        "adherence": 9.1,
+        "velocity": 7.7
+      },
+      "composite": 7.7
+    },
+    {
+      "category": "voice",
+      "tool": "quill-voice",
+      "prompt_id": "voice-015",
+      "run_at": "2026-09-12T06:00:00+00:00",
+      "audio_url": "audio/demo/quill-voice.wav",
+      "transcript": null,
+      "ttft_ms": 211,
+      "latency_ms": 1839,
+      "scores": {
+        "accuracy": 7.2,
+        "naturalness": 8.0,
+        "adherence": 8.4,
+        "velocity": 6.8
+      },
+      "composite": 7.6
+    },
+    {
+      "category": "voice",
+      "tool": "quill-voice",
+      "prompt_id": "voice-016",
+      "run_at": "2026-09-12T06:00:00+00:00",
+      "audio_url": "audio/demo/quill-voice.wav",
+      "transcript": null,
+      "ttft_ms": 250,
+      "latency_ms": 1872,
+      "scores": {
+        "accuracy": 7.0,
+        "naturalness": 8.2,
+        "adherence": 9.8,
+        "velocity": 8.3
+      },
+      "composite": 8.32
+    },
+    {
+      "category": "voice",
+      "tool": "quill-voice",
+      "prompt_id": "voice-017",
+      "run_at": "2026-09-12T06:00:00+00:00",
+      "audio_url": "audio/demo/quill-voice.wav",
+      "transcript": null,
+      "ttft_ms": 327,
+      "latency_ms": 1633,
+      "scores": {
+        "accuracy": 7.8,
+        "naturalness": 7.7,
+        "adherence": 9.2,
+        "velocity": 5.6
+      },
+      "composite": 7.57
+    },
+    {
+      "category": "voice",
+      "tool": "quill-voice",
+      "prompt_id": "voice-018",
+      "run_at": "2026-09-12T06:00:00+00:00",
+      "audio_url": "audio/demo/quill-voice.wav",
+      "transcript": null,
+      "ttft_ms": 386,
+      "latency_ms": 2108,
+      "scores": {
+        "accuracy": 6.9,
+        "naturalness": 6.6,
+        "adherence": 10.0,
+        "velocity": 6.9
+      },
+      "composite": 7.6
+    },
+    {
+      "category": "voice",
+      "tool": "quill-voice",
+      "prompt_id": "voice-019",
+      "run_at": "2026-09-12T06:00:00+00:00",
+      "audio_url": "audio/demo/quill-voice.wav",
+      "transcript": null,
+      "ttft_ms": 218,
+      "latency_ms": 1928,
+      "scores": {
+        "accuracy": 6.2,
+        "naturalness": 7.0,
+        "adherence": 9.9,
+        "velocity": 6.3
+      },
+      "composite": 7.35
+    },
+    {
+      "category": "voice",
+      "tool": "quill-voice",
+      "prompt_id": "voice-020",
+      "run_at": "2026-09-12T06:00:00+00:00",
+      "audio_url": "audio/demo/quill-voice.wav",
+      "transcript": null,
+      "ttft_ms": 105,
+      "latency_ms": 2201,
+      "scores": {
+        "accuracy": 7.6,
+        "naturalness": 7.1,
+        "adherence": 9.0,
+        "velocity": 6.6
+      },
+      "composite": 7.57
+    },
+    {
+      "category": "voice",
+      "tool": "quill-voice",
+      "prompt_id": "voice-021",
+      "run_at": "2026-09-12T06:00:00+00:00",
+      "audio_url": "audio/demo/quill-voice.wav",
+      "transcript": null,
+      "ttft_ms": 389,
+      "latency_ms": 1365,
+      "scores": {
+        "accuracy": 7.0,
+        "naturalness": 9.2,
+        "adherence": 8.2,
+        "velocity": 5.6
+      },
+      "composite": 7.5
+    },
+    {
+      "category": "voice",
+      "tool": "quill-voice",
+      "prompt_id": "voice-022",
+      "run_at": "2026-09-12T06:00:00+00:00",
+      "audio_url": "audio/demo/quill-voice.wav",
+      "transcript": null,
+      "ttft_ms": 314,
+      "latency_ms": 1922,
+      "scores": {
+        "accuracy": 7.2,
+        "naturalness": 8.5,
+        "adherence": 9.0,
+        "velocity": 5.5
+      },
+      "composite": 7.55
+    },
+    {
+      "category": "voice",
+      "tool": "quill-voice",
+      "prompt_id": "voice-023",
+      "run_at": "2026-09-12T06:00:00+00:00",
+      "audio_url": "audio/demo/quill-voice.wav",
+      "transcript": null,
+      "ttft_ms": 298,
+      "latency_ms": 1573,
+      "scores": {
+        "accuracy": 8.9,
+        "naturalness": 8.5,
+        "adherence": 10.0,
+        "velocity": 5.5
+      },
+      "composite": 8.22
+    },
+    {
+      "category": "voice",
+      "tool": "quill-voice",
+      "prompt_id": "voice-024",
+      "run_at": "2026-09-12T06:00:00+00:00",
+      "audio_url": "audio/demo/quill-voice.wav",
+      "transcript": null,
+      "ttft_ms": 244,
+      "latency_ms": 1188,
+      "scores": {
+        "accuracy": 8.8,
+        "naturalness": 8.7,
+        "adherence": 9.9,
+        "velocity": 6.3
+      },
+      "composite": 8.42
+    },
+    {
+      "category": "voice",
+      "tool": "quill-voice",
+      "prompt_id": "voice-025",
+      "run_at": "2026-09-12T06:00:00+00:00",
+      "audio_url": "audio/demo/quill-voice.wav",
+      "transcript": null,
+      "ttft_ms": 356,
+      "latency_ms": 2390,
+      "scores": {
+        "accuracy": 9.3,
+        "naturalness": 8.5,
+        "adherence": 9.0,
+        "velocity": 7.8
+      },
+      "composite": 8.65
+    },
+    {
+      "category": "voice",
+      "tool": "quill-voice",
+      "prompt_id": "voice-026",
+      "run_at": "2026-09-12T06:00:00+00:00",
+      "audio_url": "audio/demo/quill-voice.wav",
+      "transcript": null,
+      "ttft_ms": 371,
+      "latency_ms": 1596,
+      "scores": {
+        "accuracy": 6.3,
+        "naturalness": 7.4,
+        "adherence": 9.4,
+        "velocity": 7.3
+      },
+      "composite": 7.6
+    },
+    {
+      "category": "voice",
+      "tool": "quill-voice",
+      "prompt_id": "voice-027",
+      "run_at": "2026-09-12T06:00:00+00:00",
+      "audio_url": "audio/demo/quill-voice.wav",
+      "transcript": null,
+      "ttft_ms": 298,
+      "latency_ms": 2307,
+      "scores": {
+        "accuracy": 7.9,
+        "naturalness": 10.0,
+        "adherence": 9.9,
+        "velocity": 7.8
+      },
+      "composite": 8.9
+    },
+    {
+      "category": "voice",
+      "tool": "quill-voice",
+      "prompt_id": "voice-028",
+      "run_at": "2026-09-12T06:00:00+00:00",
+      "audio_url": "audio/demo/quill-voice.wav",
+      "transcript": null,
+      "ttft_ms": 344,
+      "latency_ms": 2361,
+      "scores": {
+        "accuracy": 9.4,
+        "naturalness": 8.1,
+        "adherence": 10.0,
+        "velocity": 6.2
+      },
+      "composite": 8.43
+    },
+    {
+      "category": "voice",
+      "tool": "quill-voice",
+      "prompt_id": "voice-029",
+      "run_at": "2026-09-12T06:00:00+00:00",
+      "audio_url": "audio/demo/quill-voice.wav",
+      "transcript": null,
+      "ttft_ms": 299,
+      "latency_ms": 2772,
+      "scores": {
+        "accuracy": 7.1,
+        "naturalness": 9.0,
+        "adherence": 8.6,
+        "velocity": 6.3
+      },
+      "composite": 7.75
+    },
+    {
+      "category": "voice",
+      "tool": "quill-voice",
+      "prompt_id": "voice-030",
+      "run_at": "2026-09-12T06:00:00+00:00",
+      "audio_url": "audio/demo/quill-voice.wav",
+      "transcript": null,
+      "ttft_ms": 211,
+      "latency_ms": 1771,
+      "scores": {
+        "accuracy": 8.0,
+        "naturalness": 8.8,
+        "adherence": 8.6,
+        "velocity": 7.1
+      },
+      "composite": 8.12
+    }
+  ],
+  "ratings": [
+    {
+      "category": "voice",
+      "tool": "aria-voice",
+      "runs": 30,
+      "composite": 8.25,
+      "scores": {
+        "accuracy": 9.18,
+        "naturalness": 8.37,
+        "adherence": 8.01,
+        "velocity": 7.43
+      },
+      "median_ttft_ms": 191,
+      "median_latency_ms": 1537,
+      "rank": 1
+    },
+    {
+      "category": "voice",
+      "tool": "meridian-tts",
+      "runs": 30,
+      "composite": 8.02,
+      "scores": {
+        "accuracy": 8.02,
+        "naturalness": 6.83,
+        "adherence": 8.59,
+        "velocity": 8.66
+      },
+      "median_ttft_ms": 140,
+      "median_latency_ms": 1105,
+      "rank": 2
+    },
+    {
+      "category": "voice",
+      "tool": "quill-voice",
+      "runs": 30,
+      "composite": 7.96,
+      "scores": {
+        "accuracy": 7.75,
+        "naturalness": 8.23,
+        "adherence": 9.15,
+        "velocity": 6.71
+      },
+      "median_ttft_ms": 298,
+      "median_latency_ms": 2009,
+      "rank": 3
+    },
+    {
+      "category": "voice",
+      "tool": "cobalt-speech",
+      "runs": 30,
+      "composite": 7.81,
+      "scores": {
+        "accuracy": 7.64,
+        "naturalness": 9.46,
+        "adherence": 7.83,
+        "velocity": 6.32
+      },
+      "median_ttft_ms": 452,
+      "median_latency_ms": 2546,
+      "rank": 4
+    },
+    {
+      "category": "voice",
+      "tool": "northwind-audio",
+      "runs": 30,
+      "composite": 7.41,
+      "scores": {
+        "accuracy": 6.47,
+        "naturalness": 6.98,
+        "adherence": 6.9,
+        "velocity": 9.3
+      },
+      "median_ttft_ms": 89,
+      "median_latency_ms": 824,
+      "rank": 5
+    }
+  ],
+  "pairs": [
+    {
+      "category": "voice",
+      "slug": "aria-voice-vs-cobalt-speech",
+      "a": "aria-voice",
+      "b": "cobalt-speech",
+      "verdict": {
+        "headline": "Aria Voice leads Cobalt Speech 8.2 to 7.8 on the 30-prompt voice bank.",
+        "summary": "Aria Voice is ahead on transcript accuracy and speed. Cobalt Speech wins on naturalness. Median time to first byte: Aria Voice 191 ms, Cobalt Speech 452 ms."
+      }
+    },
+    {
+      "category": "voice",
+      "slug": "aria-voice-vs-meridian-tts",
+      "a": "aria-voice",
+      "b": "meridian-tts",
+      "verdict": {
+        "headline": "Aria Voice leads Meridian TTS 8.2 to 8.0 on the 30-prompt voice bank.",
+        "summary": "Aria Voice is ahead on naturalness and transcript accuracy. Meridian TTS wins on instruction following and speed. Median time to first byte: Aria Voice 191 ms, Meridian TTS 140 ms."
+      }
+    },
+    {
+      "category": "voice",
+      "slug": "aria-voice-vs-northwind-audio",
+      "a": "aria-voice",
+      "b": "northwind-audio",
+      "verdict": {
+        "headline": "Aria Voice leads Northwind Audio 8.2 to 7.4 on the 30-prompt voice bank.",
+        "summary": "Aria Voice is ahead on transcript accuracy and naturalness. Northwind Audio wins on speed. Median time to first byte: Aria Voice 191 ms, Northwind Audio 89 ms."
+      }
+    },
+    {
+      "category": "voice",
+      "slug": "aria-voice-vs-quill-voice",
+      "a": "aria-voice",
+      "b": "quill-voice",
+      "verdict": {
+        "headline": "Aria Voice leads Quill Voice 8.2 to 8.0 on the 30-prompt voice bank.",
+        "summary": "Aria Voice is ahead on transcript accuracy and speed. Quill Voice wins on instruction following. Median time to first byte: Aria Voice 191 ms, Quill Voice 298 ms."
+      }
+    },
+    {
+      "category": "voice",
+      "slug": "cobalt-speech-vs-meridian-tts",
+      "a": "cobalt-speech",
+      "b": "meridian-tts",
+      "verdict": {
+        "headline": "Meridian TTS leads Cobalt Speech 8.0 to 7.8 on the 30-prompt voice bank.",
+        "summary": "Meridian TTS is ahead on speed and instruction following. Cobalt Speech wins on naturalness. Median time to first byte: Cobalt Speech 452 ms, Meridian TTS 140 ms."
+      }
+    },
+    {
+      "category": "voice",
+      "slug": "cobalt-speech-vs-northwind-audio",
+      "a": "cobalt-speech",
+      "b": "northwind-audio",
+      "verdict": {
+        "headline": "Cobalt Speech leads Northwind Audio 7.8 to 7.4 on the 30-prompt voice bank.",
+        "summary": "Cobalt Speech is ahead on naturalness and transcript accuracy. Northwind Audio wins on speed. Median time to first byte: Cobalt Speech 452 ms, Northwind Audio 89 ms."
+      }
+    },
+    {
+      "category": "voice",
+      "slug": "cobalt-speech-vs-quill-voice",
+      "a": "cobalt-speech",
+      "b": "quill-voice",
+      "verdict": {
+        "headline": "Quill Voice leads Cobalt Speech 8.0 to 7.8 on the 30-prompt voice bank.",
+        "summary": "Quill Voice is ahead on instruction following and speed. Cobalt Speech wins on naturalness. Median time to first byte: Cobalt Speech 452 ms, Quill Voice 298 ms."
+      }
+    },
+    {
+      "category": "voice",
+      "slug": "meridian-tts-vs-northwind-audio",
+      "a": "meridian-tts",
+      "b": "northwind-audio",
+      "verdict": {
+        "headline": "Meridian TTS leads Northwind Audio 8.0 to 7.4 on the 30-prompt voice bank.",
+        "summary": "Meridian TTS is ahead on instruction following and transcript accuracy. Northwind Audio wins on speed. Median time to first byte: Meridian TTS 140 ms, Northwind Audio 89 ms."
+      }
+    },
+    {
+      "category": "voice",
+      "slug": "meridian-tts-vs-quill-voice",
+      "a": "meridian-tts",
+      "b": "quill-voice",
+      "verdict": {
+        "headline": "Meridian TTS leads Quill Voice 8.0 to 8.0 on the 30-prompt voice bank.",
+        "summary": "Meridian TTS is ahead on speed. Quill Voice wins on instruction following and naturalness. Median time to first byte: Meridian TTS 140 ms, Quill Voice 298 ms."
+      }
+    },
+    {
+      "category": "voice",
+      "slug": "northwind-audio-vs-quill-voice",
+      "a": "northwind-audio",
+      "b": "quill-voice",
+      "verdict": {
+        "headline": "Quill Voice leads Northwind Audio 8.0 to 7.4 on the 30-prompt voice bank.",
+        "summary": "Quill Voice is ahead on instruction following and transcript accuracy. Northwind Audio wins on speed. Median time to first byte: Northwind Audio 89 ms, Quill Voice 298 ms."
+      }
+    }
+  ]
+}

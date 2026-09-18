@@ -1,0 +1,38 @@
+---
+import type { Prompt, Run, Tool } from '../lib/snapshot';
+import { asset, fmtMs, fmtScore } from '../lib/site';
+
+interface Props { prompt: Prompt; a: Tool; b: Tool; runA: Run | null; runB: Run | null; }
+const { prompt, a, b, runA, runB } = Astro.props;
+const sides = [ { key: 'a', tool: a, run: runA }, { key: 'b', tool: b, run: runB } ];
+---
+<div class="prompt-row" id={prompt.id}>
+  <div class="head">
+    <strong>{prompt.rank}. {prompt.title}</strong>
+    <span class="chip">{prompt.language}</span>
+    {prompt.tags.map((t) => <span class="chip">{t}</span>)}
+  </div>
+  <div class="text">“{prompt.text}”</div>
+  {prompt.instructions && <div class="text small">Direction: {prompt.instructions}</div>}
+  <div class="sides">
+    {sides.map(({ key, tool, run }) => (
+      <div class={`side ${key}`}>
+        <div class="who"><span><span class="dot"></span>{tool.name}</span>{!run && <span class="chip pending">pending</span>}</div>
+        {run && run.audio_url ? (
+          <audio controls preload="none" src={asset(run.audio_url)}></audio>
+        ) : run ? (
+          <div class="muted small">Run recorded, audio not available.</div>
+        ) : (
+          <div class="muted small">No output yet. This slot fills in automatically when the benchmark runs.</div>
+        )}
+        {run && (
+          <div class="stats">
+            <span>TTFB <strong>{fmtMs(run.ttft_ms)}</strong></span>
+            <span>Total <strong>{fmtMs(run.latency_ms)}</strong></span>
+            <span>Score <strong>{fmtScore(run.composite)}</strong></span>
+          </div>
+        )}
+      </div>
+    ))}
+  </div>
+</div>

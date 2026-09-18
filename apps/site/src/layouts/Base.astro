@@ -1,0 +1,57 @@
+---
+import '../styles/global.css';
+import { SITE_NAME, href } from '../lib/site';
+import { loadSnapshot } from '../lib/snapshot';
+
+interface Props {
+  title: string;
+  description: string;
+  canonicalPath?: string;
+}
+
+const { title, description, canonicalPath } = Astro.props;
+const snap = loadSnapshot();
+const canonical = canonicalPath ? new URL(href(canonicalPath), Astro.site).toString() : Astro.url.toString();
+const fullTitle = title.includes(SITE_NAME) ? title : `${title} · ${SITE_NAME}`;
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta name="twitter:card" content="summary" />
+    {snap.demo && <meta name="robots" content="noindex" />}
+    <link rel="sitemap" href={href('sitemap-index.xml').replace(/\/$/, '')} />
+  </head>
+  <body>
+    {snap.demo && (
+      <div class="banner demo"><div class="wrap">Demo data. Every tool, score and audio clip on this build is fictional and exists only to preview the layout.</div></div>
+    )}
+    <nav class="nav">
+      <div class="wrap">
+        <a class="brand" href={href('/')}>{SITE_NAME}</a>
+        <ul>
+          {snap.categories.map((c) => <li><a href={href(`/${c.slug}/`)}>{c.name.replace(/\s*\(.*\)$/, '')}</a></li>)}
+          <li><a href={href('/methodology/')}>Methodology</a></li>
+        </ul>
+      </div>
+    </nav>
+    <main><div class="wrap"><slot /></div></main>
+    <footer>
+      <div class="wrap">
+        <p>
+          {SITE_NAME} runs the same prompts through each tool's public API and publishes the outputs. No vendor pays for placement and
+          no score can be bought. Product names and logos belong to their respective owners; we are not affiliated with any vendor listed.
+        </p>
+        <p>Snapshot generated {new Date(snap.generated_at).toUTCString()} · source: {snap.source}</p>
+      </div>
+    </footer>
+  </body>
+</html>

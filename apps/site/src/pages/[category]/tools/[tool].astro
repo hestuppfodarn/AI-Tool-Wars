@@ -1,0 +1,68 @@
+---
+import Base from '../../../layouts/Base.astro';
+import StatusChip from '../../../components/StatusChip.astro';
+import ClaimCta from '../../../components/ClaimCta.astro';
+import { loadSnapshot, categoryBySlug, toolBySlug, pairsFor, ratingFor, promptsIn, runFor } from '../../../lib/snapshot';
+import { href, fmtScore, fmtMs, asset } from '../../../lib/site';
+
+export function getStaticPaths() {
+  return loadSnapshot().tools.map((t) => ({ params: { category: t.category, tool: t.slug } }));
+}
+const snap = loadSnapshot();
+const category = categoryBySlug(snap, Astro.params.category!);
+const tool = toolBySlug(snap, Astro.params.tool!);
+const rating = ratingFor(snap, category.slug, tool.slug);
+const pairs = pairsFor(snap, category.slug, tool.slug);
+const prompts = promptsIn(snap, category.slug);
+const runs = prompts.map((p) => ({ p, run: runFor(snap, category.slug, tool.slug, p.id) }));
+---
+<Base title={`${tool.name} review: ${category.name.replace(/\s*\(.*\)$/, '')} benchmark`} description={`${tool.name} by ${tool.vendor} on the ${category.name} benchmark: outputs on ${prompts.length} public prompts, speed, and scores versus every competitor.`} canonicalPath={`/${category.slug}/tools/${tool.slug}/`}>
+  <p class="small muted"><a href={href(`/${category.slug}/`)}>{category.name}</a> · tool</p>
+  <h1>{tool.name} <StatusChip status={tool.status} /></h1>
+  <p class="lede">{tool.description}</p>
+  <p class="small muted">By {tool.vendor} · <a href={tool.website} rel="nofollow noopener">{tool.website.replace(/^https?:\/\//, '')}</a></p>
+
+  <h2>Score</h2>
+  {rating ? (
+    <div class="card">
+      <div class="table-wrap"><table>
+        <thead><tr><th>Rank</th>{category.metrics.map((m) => <th class="num">{m.label}</th>)}<th class="num">Composite</th><th class="num">Median TTFB</th><th class="num">Median total</th></tr></thead>
+        <tbody><tr>
+          <td class="num">#{rating.rank}</td>
+          {category.metrics.map((m) => <td class="num">{fmtScore(rating.scores[m.key])}</td>)}
+          <td class="num"><strong>{fmtScore(rating.composite)}</strong></td>
+          <td class="num">{fmtMs(rating.median_ttft_ms)}</td>
+          <td class="num">{fmtMs(rating.median_latency_ms)}</td>
+        </tr></tbody>
+      </table></div>
+    </div>
+  ) : (
+    <div class="pending-box"><strong>Benchmark not yet run.</strong> {tool.name} is in the {category.name} bank and will be scored on the same {prompts.length} prompts as every other tool.</div>
+  )}
+
+  <h2>Head to head</h2>
+  <ul class="list-tight">
+    {pairs.map((p) => { const other = toolBySlug(snap, p.a === tool.slug ? p.b : p.a); return <li><a href={href(`/${category.slug}/${p.slug}/`)}>{tool.name} vs {other.name}</a></li>; })}
+  </ul>
+
+  <h2>Outputs</h2>
+  <div class="table-wrap card" style="padding:0">
+    <table>
+      <thead><tr><th>#</th><th>Prompt</th><th>Output</th><th class="num">TTFB</th><th class="num">Total</th><th class="num">Score</th></tr></thead>
+      <tbody>
+        {runs.map(({ p, run }) => (
+          <tr>
+            <td class="num">{p.rank}</td>
+            <td><strong>{p.title}</strong><div class="small muted">{p.language}</div></td>
+            <td>{run && run.audio_url ? <audio controls preload="none" src={asset(run.audio_url)} style="width:220px;height:32px"></audio> : <span class="chip pending">pending</span>}</td>
+            <td class="num">{run ? fmtMs(run.ttft_ms) : '–'}</td>
+            <td class="num">{run ? fmtMs(run.latency_ms) : '–'}</td>
+            <td class="num">{run ? fmtScore(run.composite) : '–'}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+
+  <ClaimCta tools={[tool]} category={category} />
+</Base>

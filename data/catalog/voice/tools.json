@@ -1,0 +1,47 @@
+[
+  {
+    "slug": "elevenlabs",
+    "name": "ElevenLabs",
+    "vendor": "ElevenLabs",
+    "website": "https://elevenlabs.io",
+    "description": "Multilingual text-to-speech and voice cloning API, widely used for narration, dubbing and conversational agents.",
+    "adapter": "http_json",
+    "model_hint": "eleven_multilingual_v2"
+  },
+  {
+    "slug": "openai-tts",
+    "name": "OpenAI TTS",
+    "vendor": "OpenAI",
+    "website": "https://openai.com",
+    "description": "OpenAI's speech synthesis endpoint with steerable delivery via natural-language instructions.",
+    "adapter": "openai_audio_speech",
+    "model_hint": "gpt-4o-mini-tts"
+  },
+  {
+    "slug": "google-cloud-tts",
+    "name": "Google Cloud Text-to-Speech",
+    "vendor": "Google Cloud",
+    "website": "https://cloud.google.com/text-to-speech",
+    "description": "Google's managed TTS with Neural2, Studio and Chirp voices across many languages.",
+    "adapter": "http_json",
+    "model_hint": "chirp3-hd"
+  },
+  {
+    "slug": "cartesia",
+    "name": "Cartesia Sonic",
+    "vendor": "Cartesia",
+    "website": "https://cartesia.ai",
+    "description": "Low-latency streaming text-to-speech built for real-time voice agents.",
+    "adapter": "http_json",
+    "model_hint": "sonic-2"
+  },
+  {
+    "slug": "amazon-polly",
+    "name": "Amazon Polly",
+    "vendor": "Amazon Web Services",
+    "website": "https://aws.amazon.com/polly",
+    "description": "AWS text-to-speech with standard, neural and generative voices and SSML control.",
+    "adapter": "aws_polly",
+    "model_hint": "generative"
+  }
+]

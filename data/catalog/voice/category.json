@@ -1,0 +1,28 @@
+{
+  "slug": "voice",
+  "name": "AI Voice (Text to Speech)",
+  "description": "Text-to-speech APIs compared on the same 30 prompts: transcript accuracy, naturalness, instruction following, and speed.",
+  "output_modality": "audio",
+  "metrics": [
+    {
+      "key": "accuracy",
+      "label": "Transcript accuracy",
+      "description": "The audio is transcribed by an independent speech-recognition model and compared word-for-word with the prompt. 10 = zero word errors."
+    },
+    {
+      "key": "naturalness",
+      "label": "Naturalness",
+      "description": "Predicted mean opinion score from a reference-free speech quality model (UTMOS / NISQA), rescaled to 1-10."
+    },
+    {
+      "key": "adherence",
+      "label": "Instruction following",
+      "description": "An LLM jury checks the transcript and audio metadata against the prompt's explicit constraints: language, pauses, digit-by-digit numbers, pronunciation notes, tone."
+    },
+    {
+      "key": "velocity",
+      "label": "Speed",
+      "description": "Time to first audio byte and total generation time, ranked against every other run in the category. 10 = fastest decile."
+    }
+  ]
+}

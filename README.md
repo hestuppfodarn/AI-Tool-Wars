@@ -1,28 +1,48 @@
-# AI Software Arena
+# AI Tool Wars
 
-Execution-driven comparison platform and Elo leaderboard for finished AI software and SaaS
-tools. Blind A/B battles (LMSYS-style) applied to the B2B application layer: a user submits a
-prompt, sees two anonymous outputs side by side, votes, and then gets the reveal, the Elo
-delta and a 5-model LLM jury scorecard.
+AI software compared on what it actually produces. Every tool in a category runs the same
+public prompt set; the outputs are published side by side and scored the same way. No paid
+placement. Vendors can claim a listing by supplying an API key and get a verified mark and an
+embeddable badge.
 
-## What's here
+First category: **AI voice (text to speech)**. See `docs/roadmap.md` for the plan and the
+day-60 success test.
+
+## Layout
 
 | Path | Contents |
 |---|---|
-| `db/migrations/0001_initial_schema.sql` | Core PostgreSQL schema: tools, categories, prompts, executions, battles, votes, jury evaluations, encrypted vendor API keys, ratings, leaderboard views, Elo trigger, DB roles. |
-| `db/migrations/0002_prompt_embeddings.sql` | Optional pgvector migration for snapping paraphrased custom prompts onto golden prompts. |
-| `db/tests/0001_smoke.sql` | Rolled-back smoke test covering the Elo trigger, vote guards, cache uniqueness, role grants and the leaderboard view. |
-| `docs/schema.md` | Entity map, table-by-table rationale, Elo rules, security boundaries. |
-| `docs/api-proxy.md` | Route list, two-tier cache decision flow, live execution proxy, SSE stream, vote/reveal, jury worker, security checklist. |
+| `data/catalog/voice/` | The category definition (metrics), five tools, thirty golden prompts. Editing these is how you change what gets benchmarked. |
+| `data/snapshot.json` | Generated. The single input the site renders from. Today built from the catalog with no runs, so every tool is "benchmark pending". |
+| `data/fixtures/demo-snapshot.json` | Generated. A fictional dataset for previewing the populated layout. Never deployed as real data. |
+| `apps/site/` | Astro static site: home, category leaderboard, `X vs Y` pages, tool pages, methodology, sitemap. |
+| `scripts/export-snapshot.mjs` | Catalog → snapshot. Grows a Postgres path in the runner phase. |
+| `scripts/make-demo-fixtures.py` | Fictional snapshot + tone audio for `SNAPSHOT=demo`. |
+| `db/` | PostgreSQL schema, optional pgvector migration, smoke test. |
+| `docs/` | `schema.md`, `api-proxy.md`, `roadmap.md`. |
+| `.github/workflows/site.yml` | Build + deploy to GitHub Pages. |
 
-## Running the schema locally
+## Site
+
+```sh
+npm install
+npm run build          # regenerates data/snapshot.json from the catalog, builds apps/site/dist
+npm run dev            # local dev server, pending state
+npm run build:demo     # fictional data, for layout work
+npm run dev:demo
+npm run check          # astro check (types)
+```
+
+Build-time environment: `SITE_URL` (canonical origin), `BASE_PATH` (for GitHub Pages
+project sites), `SITE_NAME`, `PUBLIC_CONTACT_EMAIL` (claim CTA address), `SNAPSHOT=demo`.
+
+## Database
 
 ```sh
 createdb arena
 psql -d arena -v ON_ERROR_STOP=1 -f db/migrations/0001_initial_schema.sql
 psql -d arena -v ON_ERROR_STOP=1 -f db/tests/0001_smoke.sql     # prints "smoke test passed"
-# optional, needs pgvector:
-psql -d arena -v ON_ERROR_STOP=1 -f db/migrations/0002_prompt_embeddings.sql
+psql -d arena -v ON_ERROR_STOP=1 -f db/migrations/0002_prompt_embeddings.sql   # optional, needs pgvector
 ```
 
 Requires PostgreSQL 14+. Tested on 16.

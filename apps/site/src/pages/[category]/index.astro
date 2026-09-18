@@ -1,0 +1,84 @@
+---
+import Base from '../../layouts/Base.astro';
+import StatusChip from '../../components/StatusChip.astro';
+import ClaimCta from '../../components/ClaimCta.astro';
+import { loadSnapshot, categoryBySlug, toolsIn, pairsIn, promptsIn, ratingsIn, toolBySlug, lastRunAt } from '../../lib/snapshot';
+import { href, fmtScore, fmtMs, fmtDate } from '../../lib/site';
+
+export function getStaticPaths() {
+  return loadSnapshot().categories.map((c) => ({ params: { category: c.slug } }));
+}
+const snap = loadSnapshot();
+const category = categoryBySlug(snap, Astro.params.category!);
+const tools = toolsIn(snap, category.slug);
+const pairs = pairsIn(snap, category.slug);
+const prompts = promptsIn(snap, category.slug);
+const ratings = ratingsIn(snap, category.slug);
+const ranked = ratings.length > 0;
+const last = lastRunAt(snap, category.slug, tools.map((t) => t.slug));
+---
+<Base title={`${category.name}: leaderboard and comparisons`} description={category.description} canonicalPath={`/${category.slug}/`}>
+  <h1>{category.name}</h1>
+  <p class="lede">{category.description}</p>
+
+  <h2>Leaderboard</h2>
+  {ranked ? <p class="small muted">Last run {fmtDate(last)}. Ranked by composite score across {prompts.length} prompts.</p>
+          : <p class="small muted">No benchmark has run yet. Tools are listed alphabetically; the ranking appears automatically after the first run.</p>}
+  <div class="table-wrap card" style="padding:0">
+    <table>
+      <thead>
+        <tr>
+          <th>#</th><th>Tool</th><th>Status</th>
+          {category.metrics.map((m) => <th class="num">{m.label}</th>)}
+          <th class="num">Composite</th><th class="num">Median TTFB</th>
+        </tr>
+      </thead>
+      <tbody>
+        {(ranked ? ratings.map((r) => ({ t: toolBySlug(snap, r.tool), r })) : [...tools].sort((x, y) => x.name.localeCompare(y.name)).map((t) => ({ t, r: null })))
+          .map(({ t, r }, i) => (
+          <tr>
+            <td class="num">{r ? r.rank : '–'}</td>
+            <td><a href={href(`/${category.slug}/tools/${t.slug}/`)}>{t.name}</a><div class="small muted">{t.vendor}</div></td>
+            <td><StatusChip status={t.status} /></td>
+            {category.metrics.map((m) => <td class="num">{r ? fmtScore(r.scores[m.key]) : '–'}</td>)}
+            <td class="num"><strong>{r ? fmtScore(r.composite) : '–'}</strong></td>
+            <td class="num">{r ? fmtMs(r.median_ttft_ms) : '–'}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+
+  <h2>Head-to-head comparisons</h2>
+  <div class="grid">
+    {pairs.map((p) => {
+      const a = toolBySlug(snap, p.a); const b = toolBySlug(snap, p.b);
+      return (
+        <a class="card" href={href(`/${category.slug}/${p.slug}/`)} style="color:inherit">
+          <strong>{a.name} vs {b.name}</strong>
+          <div class="small muted" style="margin-top:4px">{p.verdict ? p.verdict.headline : `${prompts.length} prompts, side by side`}</div>
+        </a>
+      );
+    })}
+  </div>
+
+  <h2>The prompt bank</h2>
+  <p class="muted">Every tool above is run on exactly these {prompts.length} prompts. Published before any run, so the test is the same for everyone.</p>
+  <div class="table-wrap card" style="padding:0">
+    <table>
+      <thead><tr><th>#</th><th>Prompt</th><th>Language</th><th>Checks</th></tr></thead>
+      <tbody>
+        {prompts.map((p) => (
+          <tr>
+            <td class="num">{p.rank}</td>
+            <td><strong>{p.title}</strong><div class="small muted">“{p.text}”</div></td>
+            <td><span class="chip">{p.language}</span></td>
+            <td class="small">{p.constraints.join(' · ')}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+
+  <ClaimCta tools={tools} category={category} />
+</Base>

@@ -201,6 +201,14 @@ which simply makes the battle unscorable): sets `revealed_at`, returns
 
 ## Jury worker
 
+> **Modality note (voice-first pivot).** For audio categories the jury is a pipeline, not five
+> text judges. Transcript accuracy comes from an ASR model and word error rate against the
+> prompt; naturalness from a reference-free MOS predictor (UTMOS / NISQA); instruction following
+> from an LLM jury over the transcript plus audio metadata; speed from latency percentiles. Only
+> that third metric uses the LLM judges described below. Metric keys are defined per category in
+> `data/catalog/<category>/category.json`, and Phase 2 of `docs/roadmap.md` generalises
+> `jury_evaluations` to a `scores jsonb` column keyed the same way.
+
 - Consumes `exec.id` jobs. For each of the 5 judge models, one call with the category's
   `jury_rubric`, the prompt's `constraints` and `reference`, and the output. Judges return
   three 1–10 scores + rationale as JSON; the worker validates the shape and writes

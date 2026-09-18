@@ -1,0 +1,63 @@
+name: site
+
+# Builds the static site from data/catalog (pending state) and deploys it to
+# GitHub Pages. Every push to the default branch republishes; the runner phase
+# adds a scheduled job that regenerates data/snapshot.json from Postgres first.
+#
+# GitHub Pages on a private repository needs GitHub Pro/Team. Either make the
+# repo public or swap the deploy step for Cloudflare Pages / Vercel.
+
+on:
+  push:
+    branches: [claude/saas-arena-schema-proxy-tclrjm, main]
+    paths:
+      - 'apps/site/**'
+      - 'data/**'
+      - 'scripts/**'
+      - 'package.json'
+      - 'package-lock.json'
+      - '.github/workflows/site.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci --no-audit --no-fund
+      - name: Regenerate snapshot from catalog
+        run: npm run snapshot
+      - name: Typecheck
+        run: npm run check
+      - name: Build
+        env:
+          SITE_URL: https://${{ github.repository_owner }}.github.io
+          BASE_PATH: /${{ github.event.repository.name }}
+          SITE_NAME: AI Tool Wars
+        run: npm run build -w apps/site
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: apps/site/dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

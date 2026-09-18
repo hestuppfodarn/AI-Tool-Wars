@@ -1,0 +1,34 @@
+---
+import Base from '../layouts/Base.astro';
+import { loadSnapshot } from '../lib/snapshot';
+const snap = loadSnapshot();
+---
+<Base title="Methodology" description="How comparisons are produced: fixed public prompts, identical execution, automated scoring, and vendor-verified keys." canonicalPath="/methodology/">
+  <h1>Methodology</h1>
+  <p class="lede">The whole point is that a score cannot be bought, argued, or hand-tuned. Here is exactly how one is produced.</p>
+
+  <h2>1. A fixed, public prompt set per category</h2>
+  <p>Each category has a bank of golden prompts covering the cases buyers actually care about. They are published on the category page before any tool is run, so vendors and readers see the same test. Prompts change rarely, and a change is versioned and re-run across every tool.</p>
+
+  <h2>2. Identical execution</h2>
+  <p>Every tool receives the same prompt text and the same direction through its public API with default settings, from the same region, in the same run window. Time to first byte and total generation time are measured server-side by us, not reported by the vendor.</p>
+
+  <h2>3. Automated scoring</h2>
+  {snap.categories.map((c) => (
+    <div>
+      <h3>{c.name}</h3>
+      <ul class="list-tight">{c.metrics.map((m) => <li><strong>{m.label}.</strong> {m.description}</li>)}</ul>
+      <p class="small muted">Composite = mean of the four metrics. Where an LLM jury is involved, several judge models score independently and their mean is used; the jury never sees which tool produced the output.</p>
+    </div>
+  ))}
+
+  <h2>4. Where the keys come from</h2>
+  <p>Initial runs use our own accounts. A vendor can claim a listing and supply an API key; from then on their runs execute on their account, the listing is marked <em>vendor verified</em>, and they can embed a live badge. Keys are encrypted at rest and used only to execute the published prompt set. A claimed listing gets no scoring advantage of any kind.</p>
+
+  <h2>5. What we do not do</h2>
+  <ul class="list-tight">
+    <li>No paid placement, sponsored ranks, or "featured" slots.</li>
+    <li>No estimated or hand-entered scores. An empty scorecard means the benchmark has not run.</li>
+    <li>No cherry-picking runs. Every prompt in the bank is published for every tool, including failures.</li>
+  </ul>
+</Base>

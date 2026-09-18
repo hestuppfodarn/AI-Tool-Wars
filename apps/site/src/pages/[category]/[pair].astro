@@ -1,0 +1,65 @@
+---
+import Base from '../../layouts/Base.astro';
+import StatusChip from '../../components/StatusChip.astro';
+import Scorecard from '../../components/Scorecard.astro';
+import PromptRow from '../../components/PromptRow.astro';
+import ClaimCta from '../../components/ClaimCta.astro';
+import { loadSnapshot, categoryBySlug, toolBySlug, promptsIn, ratingFor, runFor, lastRunAt } from '../../lib/snapshot';
+import { href, fmtDate } from '../../lib/site';
+
+export function getStaticPaths() {
+  const s = loadSnapshot();
+  return s.pairs.map((p) => ({ params: { category: p.category, pair: p.slug }, props: { pair: p } }));
+}
+const { pair } = Astro.props;
+const snap = loadSnapshot();
+const category = categoryBySlug(snap, pair.category);
+const a = toolBySlug(snap, pair.a);
+const b = toolBySlug(snap, pair.b);
+const prompts = promptsIn(snap, category.slug);
+const ra = ratingFor(snap, category.slug, a.slug);
+const rb = ratingFor(snap, category.slug, b.slug);
+const last = lastRunAt(snap, category.slug, [a.slug, b.slug]);
+const ready = !!(ra && rb);
+const title = `${a.name} vs ${b.name}`;
+const description = ready && pair.verdict
+  ? pair.verdict.headline
+  : `${a.name} and ${b.name} compared on the same ${prompts.length} ${category.name.toLowerCase()} prompts: outputs, speed and scores side by side.`;
+---
+<Base title={`${title} (${category.name.replace(/\s*\(.*\)$/, '')})`} description={description} canonicalPath={`/${category.slug}/${pair.slug}/`}>
+  <p class="small muted"><a href={href(`/${category.slug}/`)}>{category.name}</a> · head to head</p>
+  <h1>{a.name} vs {b.name}</h1>
+  <p class="lede">The same {prompts.length} prompts, run through both APIs, scored the same way. Listen to every output below.</p>
+  <p>
+    <a href={href(`/${category.slug}/tools/${a.slug}/`)}>{a.name}</a> <StatusChip status={a.status} />
+    &nbsp;&nbsp;
+    <a href={href(`/${category.slug}/tools/${b.slug}/`)}>{b.name}</a> <StatusChip status={b.status} />
+    {last && <span class="small muted">&nbsp;&nbsp;Last run {fmtDate(last)}</span>}
+  </p>
+
+  {ready && pair.verdict && (
+    <div class="card" style="border-left:4px solid var(--accent)">
+      <h3 style="margin-top:0">{pair.verdict.headline}</h3>
+      <p style="margin:0">{pair.verdict.summary}</p>
+    </div>
+  )}
+
+  <h2>Scorecard</h2>
+  <Scorecard category={category} a={a} b={b} ra={ra} rb={rb} />
+
+  <h2>Every prompt, both outputs</h2>
+  <p class="muted small">Nothing is cherry-picked: all {prompts.length} prompts in the {category.name.replace(/\s*\(.*\)$/, '').toLowerCase()} bank appear here for both tools, including failures.</p>
+  <div>
+    {prompts.map((p) => (
+      <PromptRow prompt={p} a={a} b={b} runA={runFor(snap, category.slug, a.slug, p.id)} runB={runFor(snap, category.slug, b.slug, p.id)} />
+    ))}
+  </div>
+
+  <h2>How this was scored</h2>
+  <ul class="list-tight">
+    {category.metrics.map((m) => <li><strong>{m.label}.</strong> {m.description}</li>)}
+  </ul>
+  <p class="small muted">Full details in the <a href={href('/methodology/')}>methodology</a>.</p>
+
+  <ClaimCta tools={[a, b]} category={category} />
+</Base>
