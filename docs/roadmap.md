@@ -37,6 +37,14 @@ Otherwise stop. The kill decision is made by a job, not a person (see Phase 4).
 
 - [x] Minimal runner (`scripts/run-voice.mjs`) with an Inworld adapter: streams audio, records TTFB and total latency, idempotent, publishes failures. Tested against a local mock; first real run needs egress to `api.inworld.ai` (blocked in the current Claude Code environment's network policy).
 - [x] Exporter merges `data/runs/` into the snapshot; site renders outputs with the scorecard pending.
+- [x] Adapters for OpenAI, ElevenLabs, Cartesia (untested live). Google and Polly still need signed-auth adapters.
+- [x] `benchmark.yml`: runs on GitHub-hosted runners from repository secrets, commits runs, scores, redeploys. Weekly schedule.
+- [x] Scorer (`scripts/score-voice.mjs`): Whisper transcript → WER → accuracy; LLM judge → adherence; naturalness left null until a MOS predictor backend exists.
+- [x] Exporter computes velocity as a cross-tool rank per prompt, aggregates ratings and ranks, and writes a templated verdict per pair.
+- [x] Embeddable SVG badge per tool at `/badge/<category>/<tool>.svg`, with the embed snippet on the tool page.
+- [ ] Naturalness backend (UTMOS/NISQA in a Python step on the runner).
+- [ ] Multi-judge jury (the original five-model spec); today a single judge model, averaged later.
+- [ ] Postgres. The catalog + `data/runs/` + snapshot in git is the system of record until there is interactive traffic (the arena UI); the schema in `db/` is kept for that phase.
 
 - Generalise `jury_evaluations` from four fixed text columns to `scores jsonb` keyed by
   `categories.metrics`, so audio metrics (accuracy, naturalness, adherence, velocity) fit the
@@ -69,9 +77,10 @@ Keys live in `.env` only. A key pasted into a chat should be rotated after the r
 
 ### Phase 4 — Measure and decide
 
-- Search Console API → clicks per page per day into a `page_metrics` table.
-- Day-60 job evaluates the success test above, writes a verdict file to the repo and opens an
-  issue titled "Continue" or "Stop" with the numbers. That issue is the decision.
+- Search Console API → clicks per page per day into `data/metrics/clicks.json`.
+- [x] `scripts/verdict.mjs` evaluates the success test from `data/metrics/clicks.json` and the
+  vendor-key state in the catalog, and prints CONTINUE or STOP with the numbers. The day-60
+  workflow will run it and open an issue with the output. That issue is the decision.
 
 ## What stays human
 

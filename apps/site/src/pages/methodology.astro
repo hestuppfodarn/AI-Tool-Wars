@@ -18,7 +18,7 @@ const snap = loadSnapshot();
     <div>
       <h3>{c.name}</h3>
       <ul class="list-tight">{c.metrics.map((m) => <li><strong>{m.label}.</strong> {m.description}</li>)}</ul>
-      <p class="small muted">Composite = mean of the four metrics. Where an LLM jury is involved, several judge models score independently and their mean is used; the jury never sees which tool produced the output.</p>
+      <p class="small muted">Composite = mean of the metrics that have been computed for a run. Transcript accuracy maps word error rate to a score linearly: 0% → 10, 50% or worse → 1, after lowercasing, removing punctuation and stripping bracketed stage directions. Speed is a rank across tools on the same prompt: fastest 10, slowest 1, averaged over time to first byte and total time. Where an LLM jury is involved, several judge models score independently and their mean is used; the jury never sees which tool produced the output.</p>
     </div>
   ))}
 

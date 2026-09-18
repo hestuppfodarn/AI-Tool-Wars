@@ -19,7 +19,10 @@ day-60 success test.
 | `scripts/export-snapshot.mjs` | Catalog + recorded runs → snapshot. Copies run audio into the site. Grows a Postgres path later. |
 | `scripts/run-voice.mjs` | Runner: executes the prompt bank against one tool, records audio and timings under `data/runs/`. Adapters: `inworld`, `openai`, `elevenlabs`, `cartesia`. |
 | `.github/workflows/benchmark.yml` | Runs the bank on a GitHub runner from repository secrets, commits `data/runs/`, redeploys the site. Manual trigger or weekly. |
-| `scripts/mock-tts-server.mjs` | Local stand-in for a vendor TTS API to test the pipeline offline. |
+| `scripts/score-voice.mjs` | Scorer: ASR transcript → word error rate → accuracy; LLM judge → instruction following. Writes scores into `runs.json`. |
+| `scripts/verdict.mjs` | Day-60 continue/stop check from click metrics and vendor-key state. |
+| `scripts/mock-tts-server.mjs` | Local stand-in for a vendor TTS API and the OpenAI ASR/chat endpoints, to test the pipeline offline. |
+| `docs/outreach/` | Vendor outreach email templates. |
 | `scripts/make-demo-fixtures.py` | Fictional snapshot + tone audio for `SNAPSHOT=demo`. |
 | `db/` | PostgreSQL schema, optional pgvector migration, smoke test. |
 | `docs/` | `schema.md`, `api-proxy.md`, `roadmap.md`. |
@@ -49,8 +52,15 @@ npm run build                                                # snapshot picks up
 ```
 
 Runs are idempotent (successful prompts are skipped unless `--force`). Failures are recorded and
-published, never hidden. There is no scoring yet, so tools with outputs show as
-"outputs recorded, scoring pending".
+published, never hidden. Scoring needs `OPENAI_API_KEY` (Whisper transcripts and the judge):
+
+```sh
+node scripts/score-voice.mjs --tool inworld-tts      # writes scores into data/runs/voice/inworld-tts/runs.json
+npm run build                                         # ratings, ranks, verdicts and badges update
+```
+
+Speed is computed at export time as a rank across tools, so it appears once two tools have runs
+on the same prompt. Naturalness has no backend yet and stays blank.
 
 ### Running from GitHub Actions (no local machine needed)
 

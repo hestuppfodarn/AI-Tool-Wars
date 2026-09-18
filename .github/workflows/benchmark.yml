@@ -8,6 +8,8 @@ name: benchmark
 # Actions). Names must match the adapter's env var in scripts/run-voice.mjs:
 #   INWORLD_API_KEY, OPENAI_API_KEY, ELEVENLABS_API_KEY, CARTESIA_API_KEY
 # A tool whose secret is missing is skipped with a note, never failed.
+# OPENAI_API_KEY also powers scoring (Whisper transcripts + judge); without it
+# runs are recorded but stay unscored.
 
 on:
   workflow_dispatch:
@@ -79,6 +81,21 @@ jobs:
             echo "::endgroup::"
           done
           exit 0   # partial failures are recorded in runs.json and published; the job stays green so the site still deploys
+
+      - name: Score runs
+        if: env.OPENAI_API_KEY != ''
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          TOOLS: ${{ github.event.inputs.tools || 'inworld-tts,openai-tts,elevenlabs,cartesia' }}
+        run: |
+          IFS=',' read -ra TOOL_LIST <<< "$TOOLS"
+          for tool in "${TOOL_LIST[@]}"; do
+            tool="$(echo "$tool" | xargs)"
+            [ -f "data/runs/voice/$tool/runs.json" ] || continue
+            echo "::group::score $tool"
+            node scripts/score-voice.mjs --tool "$tool" --asr openai --judge openai || echo "::warning::scoring $tool had failures"
+            echo "::endgroup::"
+          done
 
       - name: Commit recorded runs
         id: commit

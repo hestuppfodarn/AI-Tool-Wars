@@ -3,7 +3,7 @@ import Base from '../../../layouts/Base.astro';
 import StatusChip from '../../../components/StatusChip.astro';
 import ClaimCta from '../../../components/ClaimCta.astro';
 import { loadSnapshot, categoryBySlug, toolBySlug, pairsFor, ratingFor, promptsIn, runFor } from '../../../lib/snapshot';
-import { href, fmtScore, fmtMs, asset } from '../../../lib/site';
+import { href, fmtScore, fmtMs, asset, absolute } from '../../../lib/site';
 
 export function getStaticPaths() {
   return loadSnapshot().tools.map((t) => ({ params: { category: t.category, tool: t.slug } }));
@@ -39,6 +39,13 @@ const runs = prompts.map((p) => ({ p, run: runFor(snap, category.slug, tool.slug
   ) : (
     <div class="pending-box"><strong>Benchmark not yet run.</strong> {tool.name} is in the {category.name} bank and will be scored on the same {prompts.length} prompts as every other tool.</div>
   )}
+
+  <h2>Badge</h2>
+  <p class="muted small">A live badge with this tool's rank and score, regenerated on every benchmark run. Embed it anywhere; it links back to this page.</p>
+  <div class="card" style="display:grid;gap:12px">
+    <img src={asset(`/badge/${category.slug}/${tool.slug}.svg`)} alt={`${tool.name} on the ${category.name} benchmark`} width="260" height="56" />
+    <pre style="margin:0;white-space:pre-wrap;font-size:0.8rem"><code>{`<a href="${absolute(Astro.site, `/${category.slug}/tools/${tool.slug}/`)}"><img src="${absolute(Astro.site, `/badge/${category.slug}/${tool.slug}.svg`)}" alt="${tool.name} on ${category.name}" width="260" height="56"></a>`}</code></pre>
+  </div>
 
   <h2>Head to head</h2>
   <ul class="list-tight">

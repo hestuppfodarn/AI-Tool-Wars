@@ -19,6 +19,12 @@ export function asset(path: string): string {
   return `${base}/${path.replace(/^\/+/, '')}`;
 }
 
+/** Absolute URL for embeds, honouring site + base. */
+export function absolute(site: URL | undefined, path: string): string {
+  const origin = site ? site.origin : '';
+  return origin + asset(path) + (path.endsWith('/') ? '' : '');
+}
+
 export function fmtDate(iso: string | null): string {
   if (!iso) return '';
   return new Date(iso).toLocaleDateString('en-GB', { year: 'numeric', month: 'short', day: 'numeric' });

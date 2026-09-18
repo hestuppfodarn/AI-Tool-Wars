@@ -21,8 +21,9 @@ function wavTone(hz = 440, seconds = 0.6, rate = 8000) {
 const port = Number(process.env.PORT ?? 9999);
 createServer(async (req, res) => {
   let body = ''; for await (const c of req) body += c;
-  if (!req.headers.authorization?.startsWith('Basic ')) { res.writeHead(401); return res.end('{"error":"unauthorized"}'); }
-  const { text = '' } = JSON.parse(body || '{}');
+  if (!/^(Basic|Bearer) /.test(req.headers.authorization ?? '')) { res.writeHead(401); return res.end('{"error":"unauthorized"}'); }
+  let text = '';
+  try { ({ text = '' } = JSON.parse(body || '{}')); } catch { /* multipart (ASR upload) or non-JSON body */ }
   const wav = wavTone(300 + (text.length % 300));
   if (req.url === '/tts/v1/voice:stream') {
     res.writeHead(200, { 'Content-Type': 'application/x-ndjson' });
@@ -31,5 +32,16 @@ createServer(async (req, res) => {
     setTimeout(() => { res.write(JSON.stringify({ result: { audioContent: wav.subarray(half).toString('base64') } }) + '\n'); res.end(); }, 200 + text.length);
   } else if (req.url === '/tts/v1/voice') {
     setTimeout(() => { res.writeHead(200, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ audioContent: wav.toString('base64') })); }, 150 + text.length);
+  } else if (req.url === '/v1/audio/speech') {
+    // OpenAI-shaped binary speech response.
+    setTimeout(() => { res.writeHead(200, { 'Content-Type': 'audio/mpeg' }); res.end(wav); }, 120 + text.length / 2);
+  } else if (req.url === '/v1/audio/transcriptions') {
+    // Mock ASR: echoes back the prompt text embedded in the multipart filename lookup
+    // is impossible, so return a canned transcript with a deliberate 1-word error.
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({ text: process.env.MOCK_TRANSCRIPT ?? 'mock transcript' }));
+  } else if (req.url === '/v1/chat/completions') {
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({ choices: [{ message: { content: JSON.stringify({ score: 7.5, rationale: 'Mock judge: constraints mostly followed.' }) } }] }));
   } else { res.writeHead(404); res.end('not found'); }
 }).listen(port, () => console.log(`mock tts on http://localhost:${port}`));

@@ -56,6 +56,8 @@ export const RunSchema = z.object({
   composite: z.number().nullable(),   // null until the scorer has run
   status: z.enum(['success', 'error']).default('success'),
   error: z.string().nullable().optional(),
+  wer: z.number().nullable().optional(),
+  judge_rationale: z.string().nullable().optional(),
 });
 
 export const RatingSchema = z.object({

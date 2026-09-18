@@ -32,7 +32,15 @@ const sides = [ { key: 'a', tool: a, run: runA }, { key: 'b', tool: b, run: runB
             <span>TTFB <strong>{fmtMs(run.ttft_ms)}</strong></span>
             <span>Total <strong>{fmtMs(run.latency_ms)}</strong></span>
             {run.composite != null ? <span>Score <strong>{fmtScore(run.composite)}</strong></span> : <span>Score <strong>pending</strong></span>}
+            {run.wer != null && <span>WER <strong>{(run.wer * 100).toFixed(0)}%</strong></span>}
           </div>
+        )}
+        {run && run.status === 'success' && (run.transcript || run.judge_rationale) && (
+          <details class="small">
+            <summary class="muted">Transcript and judge note</summary>
+            {run.transcript && <p style="margin:6px 0 4px"><span class="muted">Heard:</span> “{run.transcript}”</p>}
+            {run.judge_rationale && <p class="muted" style="margin:0">{run.judge_rationale}</p>}
+          </details>
         )}
       </div>
     ))}
