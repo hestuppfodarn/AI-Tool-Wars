@@ -1,0 +1,59 @@
+---
+// The front line between two tools: one tile per prompt, coloured for A, B or contested.
+import type { Category, Snapshot, Tool } from '../lib/snapshot';
+import { promptsIn } from '../lib/snapshot';
+import { frontLine, CONTESTED_BAND } from '../lib/front';
+import { fmtScore } from '../lib/site';
+
+interface Props { snapshot: Snapshot; category: Category; a: Tool; b: Tool; }
+const { snapshot, category, a, b } = Astro.props;
+const prompts = promptsIn(snapshot, category.slug);
+const line = frontLine(snapshot, category.slug, a.slug, b.slug);
+const { counts } = line;
+const scored = counts.a + counts.b + counts.contested;
+const parts = [
+  `${a.name} holds ${counts.a}`,
+  `${b.name} holds ${counts.b}`,
+  `${counts.contested} contested`,
+  counts.unclaimed ? `${counts.unclaimed} unclaimed` : '',
+].filter(Boolean);
+---
+{scored > 0 ? (
+  <p class="frontline-summary">
+    <span class="a"><span class="dot"></span>{a.name} holds <strong>{counts.a}</strong></span>
+    <span class="b"><span class="dot"></span>{b.name} holds <strong>{counts.b}</strong></span>
+    <span class="c"><span class="dot"></span><strong>{counts.contested}</strong> contested</span>
+    {counts.unclaimed > 0 && <span class="u"><span class="dot"></span><strong>{counts.unclaimed}</strong> unclaimed</span>}
+  </p>
+) : (
+  <p class="small muted">Neither tool has a scored run yet. Every prompt is unclaimed; the line is drawn after the first benchmark.</p>
+)}
+<div class="front frontline" role="list" aria-label={parts.join(', ')}>
+  {prompts.map((p, i) => {
+    const t = line.tiles[i];
+    const state = t.holder ?? 'unclaimed';
+    const label = t.holder === 'a' ? a.name : t.holder === 'b' ? b.name : state;
+    const title = `${p.rank}. ${p.title}: ${
+      t.holder === 'contested' ? `contested, ${a.name} ${fmtScore(t.a)} to ${b.name} ${fmtScore(t.b)}`
+      : t.holder ? `${label} holds${t.delta != null ? `, +${Math.abs(t.delta).toFixed(1)}` : ' unopposed'}`
+      : 'unclaimed'}`;
+    return (
+      <div class={`tile ${state}`} role="listitem" tabindex="0" aria-label={title}>
+        <span class="n">{p.rank}</span>
+        <span class="who">{label}</span>
+        {t.delta != null && t.holder !== 'contested' && <span class="margin">+{Math.abs(t.delta).toFixed(1)}</span>}
+        <div class="detail" aria-hidden="true">
+          <strong>{p.rank}. {p.title}</strong>
+          <ol>
+            <li><span>{a.name}</span><span class="v">{fmtScore(t.a)}</span></li>
+            <li><span>{b.name}</span><span class="v">{fmtScore(t.b)}</span></li>
+          </ol>
+          {t.holder === 'contested' && <span class="muted">Within {CONTESTED_BAND} of each other.</span>}
+        </div>
+      </div>
+    );
+  })}
+</div>
+{scored > 0 && (
+  <p class="small muted" style="margin-top:10px">A prompt is contested when the two composites are within {CONTESTED_BAND} of each other. Hover or tap a tile for both scores.</p>
+)}

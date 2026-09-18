@@ -4,6 +4,7 @@ import StatusChip from '../../components/StatusChip.astro';
 import Scorecard from '../../components/Scorecard.astro';
 import PromptRow from '../../components/PromptRow.astro';
 import ClaimCta from '../../components/ClaimCta.astro';
+import FrontLine from '../../components/FrontLine.astro';
 import { loadSnapshot, categoryBySlug, toolBySlug, promptsIn, ratingFor, runFor, lastRunAt } from '../../lib/snapshot';
 import { href, fmtDate } from '../../lib/site';
 
@@ -44,6 +45,9 @@ const description = ready && pair.verdict
       <p style="margin:0">{pair.verdict.summary}</p>
     </div>
   )}
+
+  <h2>The front line</h2>
+  <FrontLine snapshot={snap} category={category} a={a} b={b} />
 
   <h2>Scorecard</h2>
   <Scorecard category={category} a={a} b={b} ra={ra} rb={rb} hasOutputs={hasOutputs} />

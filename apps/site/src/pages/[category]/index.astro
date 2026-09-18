@@ -2,7 +2,11 @@
 import Base from '../../layouts/Base.astro';
 import StatusChip from '../../components/StatusChip.astro';
 import ClaimCta from '../../components/ClaimCta.astro';
+import Front from '../../components/Front.astro';
+import Territory from '../../components/Territory.astro';
+import Movements from '../../components/Movements.astro';
 import { loadSnapshot, categoryBySlug, toolsIn, pairsIn, promptsIn, ratingsIn, toolBySlug, lastRunAt } from '../../lib/snapshot';
+import { territory } from '../../lib/front';
 import { href, fmtScore, fmtMs, fmtDate } from '../../lib/site';
 
 export function getStaticPaths() {
@@ -16,10 +20,21 @@ const prompts = promptsIn(snap, category.slug);
 const ratings = ratingsIn(snap, category.slug);
 const ranked = ratings.length > 0;
 const last = lastRunAt(snap, category.slug, tools.map((t) => t.slug));
+const held = new Map(territory(snap, category.slug).map((r) => [r.tool, r.held]));
+const previous = snap.previous_holders?.[category.slug] ?? null;
 ---
 <Base title={`${category.name}: leaderboard and comparisons`} description={category.description} canonicalPath={`/${category.slug}/`}>
   <h1>{category.name}</h1>
   <p class="lede">{category.description}</p>
+
+  <h2>The front</h2>
+  <p class="small muted">Each of the {prompts.length} prompts is a piece of territory. The tool with the highest composite on a prompt holds it; the number is its margin over the runner-up. Hover or tap a tile for the top three.</p>
+  <Front snapshot={snap} category={category} />
+
+  <h2>Territory</h2>
+  <Territory snapshot={snap} category={category} />
+
+  <Movements snapshot={snap} category={category} previous={previous} />
 
   <h2>Leaderboard</h2>
   {ranked ? <p class="small muted">Last run {fmtDate(last)}. Ranked by composite score across {prompts.length} prompts.</p>
@@ -30,7 +45,7 @@ const last = lastRunAt(snap, category.slug, tools.map((t) => t.slug));
         <tr>
           <th>#</th><th>Tool</th><th>Status</th>
           {category.metrics.map((m) => <th class="num">{m.label}</th>)}
-          <th class="num">Composite</th><th class="num">Median TTFB</th>
+          <th class="num">Composite</th><th class="num">Territory</th><th class="num">Median TTFB</th>
         </tr>
       </thead>
       <tbody>
@@ -42,6 +57,7 @@ const last = lastRunAt(snap, category.slug, tools.map((t) => t.slug));
             <td><StatusChip status={t.status} /></td>
             {category.metrics.map((m) => <td class="num">{r ? fmtScore(r.scores[m.key]) : '–'}</td>)}
             <td class="num"><strong>{r ? fmtScore(r.composite) : '–'}</strong></td>
+            <td class="num terr">{r ? <span>{held.get(t.slug) ?? 0}<span class="muted"> / {prompts.length}</span></span> : '–'}</td>
             <td class="num">{r ? fmtMs(r.median_ttft_ms) : '–'}</td>
           </tr>
         ))}

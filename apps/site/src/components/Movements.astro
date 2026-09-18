@@ -1,0 +1,48 @@
+---
+// Recent movements: prompts whose holder changed between the previous export and this one.
+// Renders nothing when the snapshot carries no previous_holders for the category.
+import type { Category, Snapshot } from '../lib/snapshot';
+import { promptsIn, toolBySlug } from '../lib/snapshot';
+import { holders, movements, colourSlots } from '../lib/front';
+import { fmtDate } from '../lib/site';
+
+interface Props {
+  snapshot: Snapshot;
+  category: Category;
+  previous?: { run_at: string; holders: Record<string, string | null> } | null;
+}
+const { snapshot, category, previous } = Astro.props;
+const list = previous ? movements(holders(snapshot, category.slug), previous.holders) : [];
+const prompts = new Map(promptsIn(snapshot, category.slug).map((p) => [p.id, p]));
+const slots = colourSlots(snapshot, category.slug);
+const name = (slug: string | null) => (slug ? toolBySlug(snapshot, slug).name : null);
+const sorted = [...list].sort((x, y) => (prompts.get(x.prompt_id)?.rank ?? 0) - (prompts.get(y.prompt_id)?.rank ?? 0));
+---
+{previous && (
+  <>
+    <h2>Movements</h2>
+    {sorted.length ? (
+      <>
+        <p class="small muted">Prompts whose holder changed since the run of {fmtDate(previous.run_at)}.</p>
+        <ul class="movements">
+          {sorted.map((m) => {
+            const p = prompts.get(m.prompt_id);
+            const from = name(m.from); const to = name(m.to);
+            return (
+              <li>
+                <span class="prompt">{p ? `${p.rank}. ${p.title}` : m.prompt_id}</span>
+                <span class="change">
+                  {from ? <span class="tool" style={`--c: var(--front-${slots.get(m.from!) ?? 1})`}><span class="swatch"></span>{from}</span> : <span class="muted">unclaimed or contested</span>}
+                  <span class="arrow" aria-hidden="true">→</span>
+                  {to ? <span class="tool" style={`--c: var(--front-${slots.get(m.to!) ?? 1})`}><span class="swatch"></span>{to}</span> : <span class="muted">unclaimed or contested</span>}
+                </span>
+              </li>
+            );
+          })}
+        </ul>
+      </>
+    ) : (
+      <p class="muted">No movements since the run of {fmtDate(previous.run_at)}. Every prompt kept its holder.</p>
+    )}
+  </>
+)}
