@@ -1,0 +1,47 @@
+---
+// The front: one tile per prompt, coloured by the tool that holds it.
+import type { Category, Snapshot } from '../lib/snapshot';
+import { promptsIn, toolBySlug } from '../lib/snapshot';
+import { holders, colourSlots, fmtMargin } from '../lib/front';
+import { fmtScore } from '../lib/site';
+
+interface Props { snapshot: Snapshot; category: Category; }
+const { snapshot, category } = Astro.props;
+const prompts = promptsIn(snapshot, category.slug);
+const fronts = holders(snapshot, category.slug);
+const slots = colourSlots(snapshot, category.slug);
+const name = (slug: string) => toolBySlug(snapshot, slug).name;
+const anyScored = [...fronts.values()].some((f) => f.scored > 0);
+---
+<div class="front" role="list" aria-label={`The ${category.name} front, one tile per prompt`}>
+  {prompts.map((p) => {
+    const f = fronts.get(p.id)!;
+    const state = f.holder ? 'held' : f.contested.length ? 'contested' : 'unclaimed';
+    const label = f.holder ? name(f.holder) : state;
+    const title = f.holder
+      ? `${p.rank}. ${p.title}: ${name(f.holder)} holds${f.margin != null ? `, ${fmtMargin(f.margin)} over the runner-up` : ''}`
+      : f.contested.length ? `${p.rank}. ${p.title}: contested between ${f.contested.map(name).join(' and ')}`
+      : `${p.rank}. ${p.title}: unclaimed`;
+    return (
+      <div class={`tile ${state}`} style={f.holder ? `--c: var(--front-${slots.get(f.holder) ?? 1})` : undefined} role="listitem" tabindex="0" aria-label={title}>
+        <span class="n">{p.rank}</span>
+        <span class="who">{label}</span>
+        {f.margin != null && <span class="margin">{fmtMargin(f.margin)}</span>}
+        <div class="detail" aria-hidden="true">
+          <strong>{p.rank}. {p.title}</strong>
+          {f.top.length ? (
+            <ol>
+              {f.top.map((t) => <li><span>{name(t.tool)}</span><span class="v">{fmtScore(t.composite)}</span></li>)}
+            </ol>
+          ) : (
+            <span class="muted">No scored run yet.</span>
+          )}
+          {f.contested.length > 0 && <span class="muted">Tied at the top: contested.</span>}
+        </div>
+      </div>
+    );
+  })}
+</div>
+{!anyScored && (
+  <p class="small muted" style="margin-top:10px">Every prompt is unclaimed until the first scored run. A tile takes the colour of the tool with the highest composite on that prompt.</p>
+)}

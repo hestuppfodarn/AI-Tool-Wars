@@ -1,0 +1,50 @@
+---
+// Territory: tools ranked by prompts held, then composite. Doubles as the legend for the front.
+import type { Category, Snapshot } from '../lib/snapshot';
+import { promptsIn, toolBySlug } from '../lib/snapshot';
+import { territory, holders, colourSlots } from '../lib/front';
+import { href, fmtScore } from '../lib/site';
+
+interface Props { snapshot: Snapshot; category: Category; }
+const { snapshot, category } = Astro.props;
+const rows = territory(snapshot, category.slug);
+const slots = colourSlots(snapshot, category.slug);
+const total = promptsIn(snapshot, category.slug).length;
+const fronts = [...holders(snapshot, category.slug).values()];
+const claimed = fronts.filter((f) => f.holder).length;
+const contested = fronts.filter((f) => f.contested.length > 0).length;
+const summary = [
+  `${claimed} of ${total} prompts held`,
+  contested ? `${contested} contested` : '',
+  total - claimed - contested ? `${total - claimed - contested} unclaimed` : '',
+].filter(Boolean).join(', ');
+---
+{claimed > 0 || contested > 0 ? (
+  <div class="table-wrap card" style="padding:0">
+    <table class="territory">
+      <thead>
+        <tr><th>#</th><th>Tool</th><th class="num">Holds</th><th class="num">Contested</th><th class="num">Composite</th><th>Share of the front</th></tr>
+      </thead>
+      <tbody>
+        {rows.map((r, i) => {
+          const t = toolBySlug(snapshot, r.tool);
+          const pct = total ? (r.held / total) * 100 : 0;
+          const c = `--c: var(--front-${slots.get(r.tool) ?? 1})`;
+          return (
+            <tr>
+              <td class="num">{i + 1}</td>
+              <td><span class="swatch" style={c}></span><a href={href(`/${category.slug}/tools/${t.slug}/`)}>{t.name}</a></td>
+              <td class="num"><strong>{r.held}</strong><span class="muted"> / {total}</span></td>
+              <td class="num">{r.contested || '–'}</td>
+              <td class="num">{fmtScore(r.composite)}</td>
+              <td><div class="share"><div class="fill" style={`width:${pct}%; ${c}`}></div></div></td>
+            </tr>
+          );
+        })}
+      </tbody>
+    </table>
+    <p class="small muted" style="margin:0;padding:10px 8px">{summary}. A tool holds a prompt when its composite on that prompt is the highest of every tool run on it.</p>
+  </div>
+) : (
+  <p class="muted">Nothing is held yet. The table of who holds what appears after the first scored run.</p>
+)}

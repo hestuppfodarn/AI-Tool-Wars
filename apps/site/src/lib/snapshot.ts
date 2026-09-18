@@ -92,6 +92,14 @@ export const SnapshotSchema = z.object({
   runs: z.array(RunSchema),
   ratings: z.array(RatingSchema),
   pairs: z.array(PairSchema),
+  // Optional, per category: who held each prompt in the previous export. Feeds the
+  // "movements" list on the category page. Contract documented in lib/front.ts.
+  previous_holders: z
+    .record(
+      z.string(),
+      z.object({ run_at: z.string(), holders: z.record(z.string(), z.string().nullable()) }),
+    )
+    .optional(),
 });
 
 export type Snapshot = z.infer<typeof SnapshotSchema>;
