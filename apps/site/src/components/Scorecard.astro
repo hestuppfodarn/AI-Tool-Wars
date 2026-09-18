@@ -6,8 +6,9 @@ interface Props {
   category: Category;
   a: Tool; b: Tool;
   ra: Rating | null; rb: Rating | null;
+  hasOutputs?: boolean;
 }
-const { category, a, b, ra, rb } = Astro.props;
+const { category, a, b, ra, rb, hasOutputs = false } = Astro.props;
 const ready = ra && rb;
 const pct = (n: number | undefined) => `${Math.max(0, Math.min(100, ((n ?? 0) / 10) * 100))}%`;
 ---
@@ -38,7 +39,7 @@ const pct = (n: number | undefined) => `${Math.max(0, Math.min(100, ((n ?? 0) / 
   </div>
 ) : (
   <div class="pending-box">
-    <strong>Benchmark not yet run.</strong> When it runs, this card shows {a.name} and {b.name} scored 1–10 on
+    <strong>{hasOutputs ? 'Outputs recorded, scoring not yet run.' : 'Benchmark not yet run.'}</strong> When scoring runs, this card shows {a.name} and {b.name} scored 1–10 on
     {category.metrics.map((m, i) => <span>{i > 0 ? ', ' : ' '}{m.label.toLowerCase()}</span>)}, computed from the outputs listed below.
     Scores are never estimated or hand-entered; an empty card means we have not executed the prompts yet.
   </div>

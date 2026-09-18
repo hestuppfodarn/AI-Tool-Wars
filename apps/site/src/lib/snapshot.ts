@@ -28,7 +28,7 @@ export const ToolSchema = z.object({
   website: z.string().url(),
   description: z.string(),
   category: z.string(),
-  status: z.enum(['pending', 'benchmarked', 'verified']),
+  status: z.enum(['pending', 'executed', 'benchmarked', 'verified']),
 });
 
 export const PromptSchema = z.object({
@@ -53,7 +53,9 @@ export const RunSchema = z.object({
   ttft_ms: z.number().nullable(),
   latency_ms: z.number().nullable(),
   scores: z.record(z.string(), z.number()),
-  composite: z.number(),
+  composite: z.number().nullable(),   // null until the scorer has run
+  status: z.enum(['success', 'error']).default('success'),
+  error: z.string().nullable().optional(),
 });
 
 export const RatingSchema = z.object({

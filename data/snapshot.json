@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-09-18T02:15:13.919Z",
+  "generated_at": "2026-09-18T02:20:59.888Z",
   "source": "catalog",
   "demo": false,
   "categories": [
@@ -76,6 +76,15 @@
       "vendor": "Amazon Web Services",
       "website": "https://aws.amazon.com/polly",
       "description": "AWS text-to-speech with standard, neural and generative voices and SSML control.",
+      "category": "voice",
+      "status": "pending"
+    },
+    {
+      "slug": "inworld-tts",
+      "name": "Inworld TTS",
+      "vendor": "Inworld AI",
+      "website": "https://inworld.ai",
+      "description": "Inworld's text-to-speech API, built for real-time character and agent voices with low latency and expressive delivery.",
       "category": "voice",
       "status": "pending"
     }
@@ -627,6 +636,13 @@
     },
     {
       "category": "voice",
+      "slug": "elevenlabs-vs-inworld-tts",
+      "a": "elevenlabs",
+      "b": "inworld-tts",
+      "verdict": null
+    },
+    {
+      "category": "voice",
       "slug": "openai-tts-vs-google-cloud-tts",
       "a": "openai-tts",
       "b": "google-cloud-tts",
@@ -648,6 +664,13 @@
     },
     {
       "category": "voice",
+      "slug": "openai-tts-vs-inworld-tts",
+      "a": "openai-tts",
+      "b": "inworld-tts",
+      "verdict": null
+    },
+    {
+      "category": "voice",
       "slug": "google-cloud-tts-vs-cartesia",
       "a": "google-cloud-tts",
       "b": "cartesia",
@@ -662,9 +685,30 @@
     },
     {
       "category": "voice",
+      "slug": "google-cloud-tts-vs-inworld-tts",
+      "a": "google-cloud-tts",
+      "b": "inworld-tts",
+      "verdict": null
+    },
+    {
+      "category": "voice",
       "slug": "cartesia-vs-amazon-polly",
       "a": "cartesia",
       "b": "amazon-polly",
+      "verdict": null
+    },
+    {
+      "category": "voice",
+      "slug": "cartesia-vs-inworld-tts",
+      "a": "cartesia",
+      "b": "inworld-tts",
+      "verdict": null
+    },
+    {
+      "category": "voice",
+      "slug": "amazon-polly-vs-inworld-tts",
+      "a": "amazon-polly",
+      "b": "inworld-tts",
       "verdict": null
     }
   ]

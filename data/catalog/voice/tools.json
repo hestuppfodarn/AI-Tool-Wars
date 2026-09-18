@@ -43,5 +43,21 @@
     "description": "AWS text-to-speech with standard, neural and generative voices and SSML control.",
     "adapter": "aws_polly",
     "model_hint": "generative"
+  },
+  {
+    "slug": "inworld-tts",
+    "name": "Inworld TTS",
+    "vendor": "Inworld AI",
+    "website": "https://inworld.ai",
+    "description": "Inworld's text-to-speech API, built for real-time character and agent voices with low latency and expressive delivery.",
+    "adapter": "inworld",
+    "model_hint": "inworld-tts-1",
+    "run": {
+      "model_id": "inworld-tts-1",
+      "voice_by_language": {
+        "default": "Ashley"
+      },
+      "audio_encoding": "MP3"
+    }
   }
 ]

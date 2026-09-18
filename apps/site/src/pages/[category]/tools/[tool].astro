@@ -54,10 +54,10 @@ const runs = prompts.map((p) => ({ p, run: runFor(snap, category.slug, tool.slug
           <tr>
             <td class="num">{p.rank}</td>
             <td><strong>{p.title}</strong><div class="small muted">{p.language}</div></td>
-            <td>{run && run.audio_url ? <audio controls preload="none" src={asset(run.audio_url)} style="width:220px;height:32px"></audio> : <span class="chip pending">pending</span>}</td>
-            <td class="num">{run ? fmtMs(run.ttft_ms) : '–'}</td>
-            <td class="num">{run ? fmtMs(run.latency_ms) : '–'}</td>
-            <td class="num">{run ? fmtScore(run.composite) : '–'}</td>
+            <td>{run && run.status === 'error' ? <span class="chip pending" title={run.error ?? ''}>failed</span> : run && run.audio_url ? <audio controls preload="none" src={asset(run.audio_url)} style="width:220px;height:32px"></audio> : <span class="chip pending">pending</span>}</td>
+            <td class="num">{run?.status === 'success' ? fmtMs(run.ttft_ms) : '–'}</td>
+            <td class="num">{run?.status === 'success' ? fmtMs(run.latency_ms) : '–'}</td>
+            <td class="num">{run?.composite != null ? fmtScore(run.composite) : '–'}</td>
           </tr>
         ))}
       </tbody>

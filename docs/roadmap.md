@@ -35,6 +35,9 @@ Otherwise stop. The kill decision is made by a job, not a person (see Phase 4).
 
 ### Phase 2 — Runner and scorer
 
+- [x] Minimal runner (`scripts/run-voice.mjs`) with an Inworld adapter: streams audio, records TTFB and total latency, idempotent, publishes failures. Tested against a local mock; first real run needs egress to `api.inworld.ai` (blocked in the current Claude Code environment's network policy).
+- [x] Exporter merges `data/runs/` into the snapshot; site renders outputs with the scorecard pending.
+
 - Generalise `jury_evaluations` from four fixed text columns to `scores jsonb` keyed by
   `categories.metrics`, so audio metrics (accuracy, naturalness, adherence, velocity) fit the
   same table. Amend `leaderboard_jury_scores` and the smoke test accordingly.
@@ -50,7 +53,9 @@ Otherwise stop. The kill decision is made by a job, not a person (see Phase 4).
   from a fixed template, regenerated on every export so it never drifts from the numbers.
 - Scheduled workflow: weekly run → score → export → build → deploy.
 
-Human touchpoints in this phase: create the five vendor accounts and pay for the first keys.
+Human touchpoints in this phase: create the vendor accounts and pay for the first keys, and
+allow the vendor API hosts in the environment's network policy (or run the runner locally).
+Keys live in `.env` only. A key pasted into a chat should be rotated after the run.
 
 ### Phase 3 — Vendor loop
 

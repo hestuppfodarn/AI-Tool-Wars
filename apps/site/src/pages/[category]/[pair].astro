@@ -21,6 +21,7 @@ const ra = ratingFor(snap, category.slug, a.slug);
 const rb = ratingFor(snap, category.slug, b.slug);
 const last = lastRunAt(snap, category.slug, [a.slug, b.slug]);
 const ready = !!(ra && rb);
+const hasOutputs = snap.runs.some((r) => r.category === category.slug && (r.tool === a.slug || r.tool === b.slug) && r.status === 'success');
 const title = `${a.name} vs ${b.name}`;
 const description = ready && pair.verdict
   ? pair.verdict.headline
@@ -45,7 +46,7 @@ const description = ready && pair.verdict
   )}
 
   <h2>Scorecard</h2>
-  <Scorecard category={category} a={a} b={b} ra={ra} rb={rb} />
+  <Scorecard category={category} a={a} b={b} ra={ra} rb={rb} hasOutputs={hasOutputs} />
 
   <h2>Every prompt, both outputs</h2>
   <p class="muted small">Nothing is cherry-picked: all {prompts.length} prompts in the {category.name.replace(/\s*\(.*\)$/, '').toLowerCase()} bank appear here for both tools, including failures.</p>

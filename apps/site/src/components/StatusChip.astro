@@ -1,7 +1,7 @@
 ---
-interface Props { status: 'pending' | 'benchmarked' | 'verified'; }
+interface Props { status: 'pending' | 'executed' | 'benchmarked' | 'verified'; }
 const { status } = Astro.props;
-const label = { pending: 'Benchmark pending', benchmarked: 'Benchmarked', verified: 'Vendor verified' }[status];
-const cls = { pending: 'pending', benchmarked: 'ok', verified: 'verified' }[status];
+const label = { pending: 'Benchmark pending', executed: 'Outputs recorded, scoring pending', benchmarked: 'Benchmarked', verified: 'Vendor verified' }[status];
+const cls = { pending: 'pending', executed: 'pending', benchmarked: 'ok', verified: 'verified' }[status];
 ---
 <span class={`chip ${cls}`}>{label}</span>

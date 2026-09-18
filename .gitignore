@@ -5,3 +5,5 @@ apps/site/public/audio/demo/
 *.log
 .env
 .env.*
+apps/site/public/runs/
+!.env.example

@@ -16,7 +16,9 @@ day-60 success test.
 | `data/snapshot.json` | Generated. The single input the site renders from. Today built from the catalog with no runs, so every tool is "benchmark pending". |
 | `data/fixtures/demo-snapshot.json` | Generated. A fictional dataset for previewing the populated layout. Never deployed as real data. |
 | `apps/site/` | Astro static site: home, category leaderboard, `X vs Y` pages, tool pages, methodology, sitemap. |
-| `scripts/export-snapshot.mjs` | Catalog → snapshot. Grows a Postgres path in the runner phase. |
+| `scripts/export-snapshot.mjs` | Catalog + recorded runs → snapshot. Copies run audio into the site. Grows a Postgres path later. |
+| `scripts/run-voice.mjs` | Runner: executes the prompt bank against one tool, records audio and timings under `data/runs/`. Adapters: `inworld`. |
+| `scripts/mock-tts-server.mjs` | Local stand-in for a vendor TTS API to test the pipeline offline. |
 | `scripts/make-demo-fixtures.py` | Fictional snapshot + tone audio for `SNAPSHOT=demo`. |
 | `db/` | PostgreSQL schema, optional pgvector migration, smoke test. |
 | `docs/` | `schema.md`, `api-proxy.md`, `roadmap.md`. |
@@ -35,6 +37,22 @@ npm run check          # astro check (types)
 
 Build-time environment: `SITE_URL` (canonical origin), `BASE_PATH` (for GitHub Pages
 project sites), `SITE_NAME`, `PUBLIC_CONTACT_EMAIL` (claim CTA address), `SNAPSHOT=demo`.
+
+## Running a tool
+
+```sh
+cp .env.example .env            # then fill in the vendor key(s); .env is gitignored
+node scripts/run-voice.mjs --tool inworld-tts --limit 3      # smoke
+node scripts/run-voice.mjs --tool inworld-tts                # full 30-prompt bank
+npm run build                                                # snapshot picks up data/runs/, site shows outputs
+```
+
+Runs are idempotent (successful prompts are skipped unless `--force`). Failures are recorded and
+published, never hidden. There is no scoring yet, so tools with outputs show as
+"outputs recorded, scoring pending".
+
+To test the pipeline without network access: `node scripts/mock-tts-server.mjs &` then add
+`--base-url http://localhost:9999` to the runner.
 
 ## Database
 
