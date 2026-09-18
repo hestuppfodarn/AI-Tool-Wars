@@ -1,0 +1,443 @@
+name: benchmark-open
+
+# Runs the open-weight voice models (catalog entries whose "adapter" starts
+# with "open:") on GitHub-hosted runners. No vendor keys, no secrets: the
+# models are downloaded from Hugging Face, synthesised on CPU, scored locally
+# (faster-whisper transcript -> WER, DNSMOS -> naturalness), compressed to
+# Opus, committed under data/runs/voice/<slug>/ and published.
+#
+# Job graph:  plan -> run (matrix, one job per model) -> collect -> publish
+#
+# Contract with the scripts (written separately; see docs/roadmap.md):
+#   python3 scripts/run-open-tts.py --tool <slug> [--limit N] [--force]
+#       -> data/runs/voice/<slug>/{<prompt-id>.wav, runs.json}
+#       adapters:      scripts/open_tts_adapters/<slug>.py
+#       requirements:  requirements/open-tts/base.txt + requirements/open-tts/<slug>.txt
+#   python3 scripts/score-open.py --tool <slug>
+#       -> fills "scores" (and transcript/wer) in the same runs.json
+#       requirements:  requirements/scoring.txt
+# Both scripts must be idempotent: prompts already marked "success" (audio may
+# already be .ogg from a previous run) are skipped unless --force.
+
+on:
+  workflow_dispatch:
+    inputs:
+      tools:
+        description: 'Comma-separated tool slugs (empty = every open model in the catalog)'
+        required: false
+        default: ''
+      limit:
+        description: 'Only the first N prompts (smoke test). Empty = full bank.'
+        required: false
+        default: ''
+      force:
+        description: 'Re-run prompts that already succeeded'
+        type: boolean
+        default: false
+  # Push-triggered requests: commit .github/benchmark-open-request.json with
+  # {"tools": "", "limit": "3", "force": false} to start a run from a session
+  # that cannot call the dispatch API. Empty "tools" means every open model.
+  push:
+    paths: ['.github/benchmark-open-request.json']
+  schedule:
+    - cron: '41 6 * * 0'   # weekly, Sunday 06:41 UTC (benchmark.yml runs Monday)
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: benchmark-open
+  cancel-in-progress: false
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  # ---------------------------------------------------------------------------
+  # plan: resolve the request and turn the catalog into a job matrix.
+  # ---------------------------------------------------------------------------
+  plan:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.matrix.outputs.matrix }}
+      count: ${{ steps.matrix.outputs.count }}
+      tools: ${{ steps.req.outputs.tools }}
+      limit: ${{ steps.req.outputs.limit }}
+      force: ${{ steps.req.outputs.force }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref }}
+
+      - name: Resolve request
+        id: req
+        env:
+          IN_TOOLS: ${{ inputs.tools }}
+          IN_LIMIT: ${{ inputs.limit }}
+          IN_FORCE: ${{ inputs.force || 'false' }}
+        run: |
+          if [ "${{ github.event_name }}" = "push" ] && [ -f .github/benchmark-open-request.json ]; then
+            echo "tools=$(jq -r '.tools // ""' .github/benchmark-open-request.json)" >> "$GITHUB_OUTPUT"
+            echo "limit=$(jq -r '.limit // ""' .github/benchmark-open-request.json)" >> "$GITHUB_OUTPUT"
+            echo "force=$(jq -r '.force // false' .github/benchmark-open-request.json)" >> "$GITHUB_OUTPUT"
+          else
+            # workflow_dispatch inputs, or the defaults (all open models, full bank) on schedule
+            echo "tools=$IN_TOOLS" >> "$GITHUB_OUTPUT"
+            echo "limit=$IN_LIMIT" >> "$GITHUB_OUTPUT"
+            echo "force=$IN_FORCE" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Build matrix from catalog
+        id: matrix
+        env:
+          TOOLS: ${{ steps.req.outputs.tools }}
+        run: |
+          # Every catalog tool with adapter "open:<slug>", optionally
+          # intersected with the requested slugs, cheapest (cpu_minutes_estimate)
+          # first so smoke results and failures show up early. Tools without an
+          # estimate sort last.
+          matrix=$(jq -c --arg req "$TOOLS" '
+            ($req | split(",") | map(gsub("^\\s+|\\s+$"; "")) | map(select(length > 0))) as $want
+            | map(select((.adapter // "") | startswith("open:")))
+            | map(select(($want | length) == 0 or (.slug as $s | $want | index($s) != null)))
+            | sort_by(.cpu_minutes_estimate // 1e9, .slug)
+            | map({
+                slug: .slug,
+                adapter: (.adapter | sub("^open:"; "")),
+                cpu_minutes: (.cpu_minutes_estimate // 0)
+              })
+            | {include: .}
+          ' data/catalog/voice/tools.json)
+          count=$(echo "$matrix" | jq '.include | length')
+          echo "matrix=$matrix" >> "$GITHUB_OUTPUT"
+          echo "count=$count" >> "$GITHUB_OUTPUT"
+          {
+            echo "## Plan"
+            echo ""
+            echo "- request: tools=\`${TOOLS:-<all open>}\` limit=\`${{ steps.req.outputs.limit }}\` force=\`${{ steps.req.outputs.force }}\` (${{ github.event_name }})"
+            echo "- selected $count open model(s):"
+            echo "$matrix" | jq -r '.include[] | "  - `\(.slug)` (adapter `\(.adapter)`, ~\(.cpu_minutes) cpu-min)"'
+            if [ "$count" = "0" ]; then
+              echo ""
+              echo "> Nothing to run: no catalog tool has an \`open:\` adapter matching the request."
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"
+          if [ "$count" = "0" ]; then
+            unknown=$(jq -r --arg req "$TOOLS" '
+              ($req | split(",") | map(gsub("^\\s+|\\s+$"; "")) | map(select(length > 0))) as $want
+              | [.[].slug] as $have
+              | $want | map(select(. as $s | $have | index($s) == null)) | join(", ")
+            ' data/catalog/voice/tools.json)
+            [ -n "$unknown" ] && echo "::warning::requested slugs not in the catalog: $unknown"
+            echo "::notice::no open models selected; nothing to run"
+          fi
+
+  # ---------------------------------------------------------------------------
+  # run: one job per model. Synthesise, score, compress, upload as an artifact.
+  # Every step that can fail is continue-on-error so the summary and the
+  # artifact upload still happen; the job itself is continue-on-error so one
+  # heavy model cannot sink the rest.
+  # ---------------------------------------------------------------------------
+  run:
+    needs: plan
+    if: needs.plan.outputs.count != '0'
+    runs-on: ubuntu-latest
+    name: run (${{ matrix.slug }})
+    timeout-minutes: 60
+    continue-on-error: true
+    strategy:
+      fail-fast: false
+      max-parallel: 4
+      matrix: ${{ fromJson(needs.plan.outputs.matrix) }}
+    env:
+      SLUG: ${{ matrix.slug }}
+      ADAPTER: ${{ matrix.adapter }}
+      LIMIT: ${{ needs.plan.outputs.limit }}
+      FORCE: ${{ needs.plan.outputs.force }}
+      PIP_DISABLE_PIP_VERSION_CHECK: '1'
+      # Safety net: prefer CPU-only torch wheels (2.x+cpu satisfies "torch==2.x"
+      # and sorts above the multi-GB CUDA wheel on PyPI). The per-model
+      # requirements file should pin CPU wheels itself; this stops a stray
+      # unpinned "torch" line from filling the runner's disk.
+      PIP_EXTRA_INDEX_URL: https://download.pytorch.org/whl/cpu
+      # ubuntu-latest has no GPU; make that explicit for every library.
+      CUDA_VISIBLE_DEVICES: ''
+      TOKENIZERS_PARALLELISM: 'false'
+      HF_HUB_DISABLE_TELEMETRY: '1'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref }}
+
+      - name: Check script contract
+        run: |
+          missing=0
+          for f in scripts/run-open-tts.py requirements/open-tts/base.txt; do
+            [ -f "$f" ] || { echo "::error::$f is missing (required by benchmark-open.yml)"; missing=1; }
+          done
+          [ -f scripts/score-open.py ] || echo "::warning::scripts/score-open.py is missing; runs will be recorded but stay unscored"
+          [ -f requirements/scoring.txt ] || echo "::warning::requirements/scoring.txt is missing; scoring step will be skipped"
+          exit $missing
+
+      - name: Resolve per-model requirements file
+        id: reqs
+        run: |
+          # The catalog slug and the adapter slug ("open:<slug>") normally match;
+          # try the tool slug first, then the adapter slug.
+          file=""
+          for f in "requirements/open-tts/$SLUG.txt" "requirements/open-tts/$ADAPTER.txt"; do
+            if [ -f "$f" ]; then file="$f"; break; fi
+          done
+          [ -n "$file" ] || echo "::warning::no requirements/open-tts/{$SLUG,$ADAPTER}.txt; installing base.txt only"
+          echo "file=$file" >> "$GITHUB_OUTPUT"
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+          # Pip's wheel cache, keyed on this model's requirements (+ base and
+          # scoring). Patterns that match nothing are ignored as long as one matches.
+          cache-dependency-path: |
+            requirements/open-tts/base.txt
+            requirements/open-tts/${{ matrix.slug }}.txt
+            requirements/open-tts/${{ matrix.adapter }}.txt
+            requirements/scoring.txt
+
+      - name: Install system packages
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq --no-install-recommends ffmpeg espeak-ng libsndfile1
+          ffmpeg -version | head -1
+
+      - name: Install model requirements
+        env:
+          REQ_FILE: ${{ steps.reqs.outputs.file }}
+        run: |
+          python -m pip install --upgrade pip wheel
+          python -m pip install -r requirements/open-tts/base.txt
+          if [ -n "$REQ_FILE" ]; then python -m pip install -r "$REQ_FILE"; fi
+          python -m pip list --format=freeze | grep -iE '^(torch|torchaudio|numpy|transformers|kokoro|piper|TTS|f5-tts|chatterbox)' || true
+
+      - name: Cache model weights
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cache/huggingface
+            ~/.cache/kokoro
+            ~/.cache/torch
+          key: weights-${{ matrix.slug }}-${{ hashFiles(format('requirements/open-tts/{0}.txt', matrix.slug), format('requirements/open-tts/{0}.txt', matrix.adapter), 'requirements/open-tts/base.txt') }}
+          restore-keys: |
+            weights-${{ matrix.slug }}-
+
+      - name: Synthesise prompts
+        id: run
+        continue-on-error: true
+        run: |
+          args=(--tool "$SLUG")
+          [ -n "${LIMIT:-}" ] && args+=(--limit "$LIMIT")
+          [ "${FORCE:-false}" = "true" ] && args+=(--force)
+          echo "::group::python3 scripts/run-open-tts.py ${args[*]}"
+          python3 scripts/run-open-tts.py "${args[@]}"
+          echo "::endgroup::"
+
+      # Scoring gets its own cache so the ASR + DNSMOS weights are stored once
+      # instead of once per model. XDG_CACHE_HOME redirects huggingface_hub,
+      # torch hub and anything XDG-aware into it; the scorer must either honour
+      # that or ship its weights inside the repo.
+      - name: Locate scoring cache
+        id: scoring-cache
+        if: hashFiles('scripts/score-open.py', 'requirements/scoring.txt') != ''
+        run: echo "dir=$HOME/.cache/ai-tool-wars-scoring" >> "$GITHUB_OUTPUT"
+
+      - name: Cache scoring models
+        if: steps.scoring-cache.outputs.dir != ''
+        uses: actions/cache@v4
+        with:
+          path: ${{ steps.scoring-cache.outputs.dir }}
+          key: scoring-${{ hashFiles('requirements/scoring.txt', 'scripts/score-open.py') }}
+          restore-keys: |
+            scoring-
+
+      - name: Install scoring requirements
+        id: scoring-install
+        if: steps.scoring-cache.outputs.dir != ''
+        continue-on-error: true
+        run: python -m pip install -r requirements/scoring.txt
+
+      - name: Score runs
+        id: score
+        if: steps.scoring-install.outcome == 'success' && hashFiles(format('data/runs/voice/{0}/runs.json', matrix.slug)) != ''
+        continue-on-error: true
+        env:
+          XDG_CACHE_HOME: ${{ steps.scoring-cache.outputs.dir }}
+          HF_HOME: ${{ steps.scoring-cache.outputs.dir }}/huggingface
+          TORCH_HOME: ${{ steps.scoring-cache.outputs.dir }}/torch
+        run: |
+          echo "::group::python3 scripts/score-open.py --tool $SLUG"
+          python3 scripts/score-open.py --tool "$SLUG"
+          echo "::endgroup::"
+
+      - name: Compress audio to Opus
+        id: compress
+        if: always() && hashFiles(format('data/runs/voice/{0}/runs.json', matrix.slug)) != ''
+        continue-on-error: true
+        run: |
+          # Every referenced audio file that is not already .ogg becomes
+          # <prompt-id>.ogg (Opus, 48 kbps, mono); runs.json is updated and the
+          # source deleted so the repository stays small. Orphan .wav files are
+          # removed too.
+          rc=0
+          python3 - "data/runs/voice/$SLUG" <<'PY' || rc=$?
+          import json, pathlib, subprocess, sys
+          d = pathlib.Path(sys.argv[1]); f = d / "runs.json"
+          runs = json.loads(f.read_text()); keep = set(); failed = 0
+          for r in runs:
+              src = r.get("audio")
+              if not src: continue
+              if src.endswith(".ogg") or not (d / src).exists(): keep.add(src); continue
+              out = f"{r['prompt_id']}.ogg"
+              cmd = ["ffmpeg", "-y", "-nostdin", "-loglevel", "error", "-i", str(d / src),
+                     "-c:a", "libopus", "-b:a", "48k", "-ac", "1", "-vbr", "on", str(d / out)]
+              if subprocess.run(cmd).returncode == 0:
+                  (d / src).unlink(); r["audio"] = out; keep.add(out)
+              else:
+                  failed += 1; keep.add(src); print(f"::warning::ffmpeg failed on {src}; kept as is")
+          f.write_text(json.dumps(runs, indent=2) + "\n")
+          for w in d.glob("*.wav"):
+              if w.name not in keep: w.unlink()
+          print(f"compressed {sum(1 for r in runs if str(r.get('audio', '')).endswith('.ogg'))} file(s), {failed} failure(s)")
+          sys.exit(1 if failed else 0)
+          PY
+          du -sh "data/runs/voice/$SLUG"
+          exit $rc
+
+      - name: Upload runs
+        if: always() && hashFiles(format('data/runs/voice/{0}/runs.json', matrix.slug)) != ''
+        uses: actions/upload-artifact@v4
+        with:
+          name: runs-${{ matrix.slug }}
+          path: data/runs/voice/${{ matrix.slug }}
+          if-no-files-found: ignore
+          retention-days: 7
+
+      - name: Summary
+        if: always()
+        env:
+          RUN_OUTCOME: ${{ steps.run.outcome }}
+          SCORE_OUTCOME: ${{ steps.score.outcome }}
+          COMPRESS_OUTCOME: ${{ steps.compress.outcome }}
+          CPU_MIN: ${{ matrix.cpu_minutes }}
+        run: |
+          f="data/runs/voice/$SLUG/runs.json"
+          if [ -f "$f" ]; then
+            total=$(jq 'length' "$f")
+            ok=$(jq '[.[] | select(.status == "success")] | length' "$f")
+            scored=$(jq '[.[] | select(.status == "success" and ((.scores // {}) | [.[] | numbers] | length > 0))] | length' "$f")
+          else
+            total=0; ok=0; scored=0
+          fi
+          failed=$((total - ok))
+          mark() { case "$1" in success) echo "ok";; failure) echo "**failed**";; skipped) echo "skipped";; *) echo "$1";; esac; }
+          {
+            echo "### $SLUG"
+            echo ""
+            echo "| model | runner | scorer | compress | ok | failed | scored | total | est. cpu-min |"
+            echo "|---|---|---|---|---:|---:|---:|---:|---:|"
+            echo "| \`$SLUG\` | $(mark "$RUN_OUTCOME") | $(mark "$SCORE_OUTCOME") | $(mark "$COMPRESS_OUTCOME") | $ok | $failed | $scored | $total | $CPU_MIN |"
+            if [ -f "$f" ] && [ "$failed" -gt 0 ]; then
+              echo ""
+              echo "<details><summary>$failed failed prompt(s)</summary>"
+              echo ""
+              jq -r '.[] | select(.status != "success") | "- `\(.prompt_id)`: \(.error // "unknown error")"' "$f"
+              echo ""
+              echo "</details>"
+            fi
+            echo ""
+          } >> "$GITHUB_STEP_SUMMARY"
+          if [ "$RUN_OUTCOME" = "failure" ]; then echo "::warning::$SLUG: runner failed ($ok ok, $failed failed)"; fi
+          if [ "$SCORE_OUTCOME" = "failure" ]; then echo "::warning::$SLUG: scorer failed ($scored of $ok scored)"; fi
+          if [ "$COMPRESS_OUTCOME" = "failure" ]; then echo "::warning::$SLUG: audio compression had failures"; fi
+
+  # ---------------------------------------------------------------------------
+  # collect: merge every model's artifact back into data/runs/voice and commit.
+  # ---------------------------------------------------------------------------
+  collect:
+    needs: [plan, run]
+    if: ${{ !cancelled() && needs.plan.result == 'success' && needs.plan.outputs.count != '0' }}
+    runs-on: ubuntu-latest
+    outputs:
+      changed: ${{ steps.commit.outputs.changed }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref }}
+
+      - name: Download run artifacts
+        id: download
+        continue-on-error: true
+        uses: actions/download-artifact@v4
+        with:
+          pattern: runs-*
+          path: .artifacts
+          merge-multiple: false   # each artifact lands in .artifacts/runs-<slug>/, renamed below
+
+      - name: Merge artifacts into data/runs/voice
+        run: |
+          shopt -s nullglob
+          mkdir -p data/runs/voice
+          n=0
+          for d in .artifacts/runs-*/; do
+            d="${d%/}"
+            slug="${d#.artifacts/runs-}"
+            [ -f "$d/runs.json" ] || { echo "::warning::$d has no runs.json; skipped"; continue; }
+            rm -rf "data/runs/voice/$slug"
+            mkdir -p "data/runs/voice/$slug"
+            cp -R "$d/." "data/runs/voice/$slug/"
+            n=$((n + 1))
+            echo "merged $slug: $(ls "data/runs/voice/$slug" | wc -l) file(s)"
+          done
+          rm -rf .artifacts
+          echo "merged $n artifact(s)"
+          if find data/runs -name '*.wav' | grep -q .; then
+            echo "::warning::uncompressed .wav files are being committed:"; find data/runs -name '*.wav'
+          fi
+
+      - name: Commit recorded runs
+        id: commit
+        run: |
+          git config user.name "arena-bot"
+          git config user.email "arena-bot@users.noreply.github.com"
+          mkdir -p data/runs/voice
+          git add -A data/runs
+          if git diff --cached --quiet; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            echo "no new runs"
+            echo "### Collect" >> "$GITHUB_STEP_SUMMARY"
+            echo "" >> "$GITHUB_STEP_SUMMARY"
+            echo "No changes under data/runs; nothing committed." >> "$GITHUB_STEP_SUMMARY"
+          else
+            git commit -m "Record open-model runs ($(date -u +%Y-%m-%d))"
+            git pull --rebase origin "${GITHUB_REF_NAME}"
+            git push origin "HEAD:${GITHUB_REF_NAME}"
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+            {
+              echo "### Collect"
+              echo ""
+              echo "Committed $(git rev-parse --short HEAD) to \`${GITHUB_REF_NAME}\`:"
+              echo ""
+              echo '```'
+              git show --stat --format= HEAD | tail -n 20
+              echo '```'
+            } >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+  # ---------------------------------------------------------------------------
+  # publish: rebuild and deploy the site when new runs were committed.
+  # ---------------------------------------------------------------------------
+  publish:
+    needs: collect
+    if: needs.collect.outputs.changed == 'true'
+    uses: ./.github/workflows/site.yml

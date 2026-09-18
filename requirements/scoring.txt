@@ -1,0 +1,28 @@
+# Keyless scoring stack for scripts/score-open.py (CPU only, no API keys).
+#   pip install -r requirements/scoring.txt
+# Tested on Python 3.11, ubuntu, x86_64.
+
+# ASR: CTranslate2 Whisper. Weights come from huggingface.co (Systran/faster-whisper-*),
+# cached under $HF_HOME/hub. int8 "small" is ~484 MB, "base" ~145 MB, "tiny" ~75 MB.
+faster-whisper==1.2.1
+ctranslate2>=4.5,<5
+
+# Naturalness: DNSMOS P.835 via speechmos. The ONNX weights ship inside the wheel (~5 MB),
+# so this needs no network at run time. speechmos does not declare its own deps.
+speechmos==0.0.1.1
+onnxruntime>=1.17,<2
+librosa>=0.10,<0.12
+requests>=2.31
+
+# Audio decoding (libsndfile >= 1.1 decodes mp3; PyAV via faster-whisper is the fallback).
+soundfile>=0.12,<0.15
+numpy>=1.26,<3
+
+# Tests: python3 -m pytest scripts/tests
+pytest>=8
+
+# ---- optional backends, not installed by default ----------------------------------
+# --asr whisper (openai-whisper, weights from openaipublic.azureedge.net, ~/.cache/whisper)
+# and --mos squim (torchaudio SQUIM, weights from download.pytorch.org) both need CPU torch:
+#   pip install torch torchaudio --index-url https://download.pytorch.org/whl/cpu
+#   pip install openai-whisper==20250625

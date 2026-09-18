@@ -1,0 +1,6 @@
+{
+  "tools": "",
+  "limit": "3",
+  "force": false,
+  "note": "Commit a change to this file to start an open-model benchmark run (benchmark-open.yml). Empty tools = every catalog tool with an open:<slug> adapter; limit 3 = smoke test on the first three prompts. Requested 2026-09-18T00:00:00Z"
+}
