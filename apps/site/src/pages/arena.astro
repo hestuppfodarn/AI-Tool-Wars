@@ -11,7 +11,7 @@ import { asset, SITE_NAME } from '../lib/site';
 
 const snap = loadSnapshot();
 const runs = snap.runs.filter((r) => r.status === 'success' && r.audio_url).map((r) => ({
-  tool: r.tool, prompt_id: r.prompt_id, status: 'success', audio_url: asset(r.audio_url), ttft_ms: r.ttft_ms, latency_ms: r.latency_ms, scores: r.scores, composite: r.composite,
+  tool: r.tool, prompt_id: r.prompt_id, status: 'success', audio_url: asset(r.audio_url as string), ttft_ms: r.ttft_ms, latency_ms: r.latency_ms, scores: r.scores, composite: r.composite,
 }));
 const toolSlugs = new Set(runs.map((r) => r.tool));
 const data = {
