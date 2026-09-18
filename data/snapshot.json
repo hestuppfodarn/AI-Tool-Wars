@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-09-18T03:38:46.832Z",
+  "generated_at": "2026-09-18T03:57:06.440Z",
   "source": "catalog",
   "demo": false,
   "categories": [
@@ -122,7 +122,7 @@
       "website": "https://huggingface.co/microsoft/speecht5_tts",
       "description": "Microsoft's unified speech-text transformer fine-tuned for English TTS, voiced through a HiFi-GAN vocoder and a CMU ARCTIC speaker embedding.",
       "category": "voice",
-      "status": "pending"
+      "status": "benchmarked"
     },
     {
       "slug": "melotts",
@@ -140,7 +140,7 @@
       "website": "https://huggingface.co/coqui/XTTS-v2",
       "description": "Coqui's 17-language voice-cloning TTS, now maintained by Idiap as coqui-tts; used here with a built-in studio speaker. Non-commercial licence (CPML).",
       "category": "voice",
-      "status": "pending"
+      "status": "benchmarked"
     },
     {
       "slug": "parler-tts-mini",
@@ -363,9 +363,9 @@
       "scores": {
         "accuracy": 9.3,
         "naturalness": 7.4,
-        "velocity": 1
+        "velocity": 5.5
       },
-      "composite": 5.9,
+      "composite": 7.4,
       "wer": 0.04,
       "judge_rationale": null,
       "status": "success",
@@ -383,9 +383,9 @@
       "scores": {
         "accuracy": 9.3,
         "naturalness": 7.3,
-        "velocity": 1
+        "velocity": 5.5
       },
-      "composite": 5.87,
+      "composite": 7.37,
       "wer": 0.04,
       "judge_rationale": null,
       "status": "success",
@@ -403,10 +403,150 @@
       "scores": {
         "accuracy": 6.6,
         "naturalness": 7.2,
-        "velocity": 5.5
+        "velocity": 7.8
       },
-      "composite": 6.43,
+      "composite": 7.2,
       "wer": 0.19,
+      "judge_rationale": null,
+      "status": "success",
+      "error": null
+    },
+    {
+      "category": "voice",
+      "tool": "kittentts",
+      "prompt_id": "voice-004",
+      "run_at": "2026-09-18T03:21:27.919Z",
+      "audio_url": "runs/voice/kittentts/voice-004.ogg",
+      "transcript": "Our office is at 14 A. Clerkinwell Road, London, Eck 1 and 5 Paw. The entrance is on Terminal Street.",
+      "ttft_ms": 4566,
+      "latency_ms": 4566,
+      "scores": {
+        "accuracy": 1,
+        "naturalness": 7.3,
+        "velocity": 7.8
+      },
+      "composite": 5.37,
+      "wer": 0.563,
+      "judge_rationale": null,
+      "status": "success",
+      "error": null
+    },
+    {
+      "category": "voice",
+      "tool": "kittentts",
+      "prompt_id": "voice-005",
+      "run_at": "2026-09-18T03:21:35.974Z",
+      "audio_url": "runs/voice/kittentts/voice-005.ogg",
+      "transcript": "The house had been empty for eleven years, and it showed, paint curled from the porch rails in long grey ribbons, and the swing, still hanging by one chain, moved when there was no wind, Mara set her bag down on the step and did not go in.",
+      "ttft_ms": 7642,
+      "latency_ms": 7642,
+      "scores": {
+        "accuracy": 10,
+        "naturalness": 7.4,
+        "velocity": 7.8
+      },
+      "composite": 8.4,
+      "wer": 0,
+      "judge_rationale": null,
+      "status": "success",
+      "error": null
+    },
+    {
+      "category": "voice",
+      "tool": "kittentts",
+      "prompt_id": "voice-006",
+      "run_at": "2026-09-18T03:21:43.632Z",
+      "audio_url": "runs/voice/kittentts/voice-006.ogg",
+      "transcript": "This weekend only, everything at Summit Outdoor is 30% off, tents, boots, bikes, all of it. Doors open Saturday at 8, don't miss it.",
+      "ttft_ms": 5511,
+      "latency_ms": 5511,
+      "scores": {
+        "accuracy": 7.9,
+        "naturalness": 7.2,
+        "velocity": 7.8
+      },
+      "composite": 7.63,
+      "wer": 0.115,
+      "judge_rationale": null,
+      "status": "success",
+      "error": null
+    },
+    {
+      "category": "voice",
+      "tool": "kittentts",
+      "prompt_id": "voice-007",
+      "run_at": "2026-09-18T03:21:49.167Z",
+      "audio_url": "runs/voice/kittentts/voice-007.ogg",
+      "transcript": "Offer valid for new customers only, terms and conditions apply, rates subject to change without notice. See website for details, lending criteria apply, credit provided by Summit Finance Limited.",
+      "ttft_ms": 7220,
+      "latency_ms": 7220,
+      "scores": {
+        "accuracy": 10,
+        "naturalness": 7.4,
+        "velocity": 7.8
+      },
+      "composite": 8.4,
+      "wer": 0,
+      "judge_rationale": null,
+      "status": "success",
+      "error": null
+    },
+    {
+      "category": "voice",
+      "tool": "kittentts",
+      "prompt_id": "voice-008",
+      "run_at": "2026-09-18T03:21:56.404Z",
+      "audio_url": "runs/voice/kittentts/voice-008.ogg",
+      "transcript": "Hedge din beställning har skickats och beräknas anlända på torsdag. Du kan följa paketet via linken i dit medel. Tack för att du handlar hos oss.",
+      "ttft_ms": 5901,
+      "latency_ms": 5901,
+      "scores": {
+        "accuracy": 7.2,
+        "naturalness": 7.3,
+        "velocity": 7
+      },
+      "composite": 7.17,
+      "wer": 0.154,
+      "judge_rationale": null,
+      "status": "success",
+      "error": null
+    },
+    {
+      "category": "voice",
+      "tool": "kittentts",
+      "prompt_id": "voice-009",
+      "run_at": "2026-09-18T03:22:02.318Z",
+      "audio_url": "runs/voice/kittentts/voice-009.ogg",
+      "transcript": "Bola la Recordemos Sucida con la Doctora Ruiz L. Martz, 14, Dimeo a los 10, 30, C. Nesucida Canbeirla, Lane L. 9155-0123.",
+      "ttft_ms": 6731,
+      "latency_ms": 6731,
+      "scores": {
+        "accuracy": 1,
+        "naturalness": 7.5,
+        "velocity": 7.8
+      },
+      "composite": 5.43,
+      "wer": 0.704,
+      "judge_rationale": null,
+      "status": "success",
+      "error": null
+    },
+    {
+      "category": "voice",
+      "tool": "kittentts",
+      "prompt_id": "voice-010",
+      "run_at": "2026-09-18T03:22:09.066Z",
+      "audio_url": "runs/voice/kittentts/voice-010.ogg",
+      "transcript": "Beshtung, Bithalten, Sajib Stanzerbonstekanke, der Nächste Zagnak Munchen Hoppanha Fahed, Indri Mayutin, Nvan Gleys, Sevin Am.",
+      "ttft_ms": 5588,
+      "latency_ms": 5588,
+      "scores": {
+        "accuracy": 1,
+        "naturalness": 7.1,
+        "velocity": 7.8
+      },
+      "composite": 5.3,
+      "wer": 0.905,
       "judge_rationale": null,
       "status": "success",
       "error": null
@@ -423,9 +563,9 @@
       "scores": {
         "accuracy": 10,
         "naturalness": 7.5,
-        "velocity": 5.5
+        "velocity": 7.8
       },
-      "composite": 7.67,
+      "composite": 8.43,
       "wer": 0,
       "judge_rationale": null,
       "status": "success",
@@ -443,9 +583,9 @@
       "scores": {
         "accuracy": 9.3,
         "naturalness": 7.4,
-        "velocity": 5.5
+        "velocity": 7.8
       },
-      "composite": 7.4,
+      "composite": 8.17,
       "wer": 0.04,
       "judge_rationale": null,
       "status": "success",
@@ -463,13 +603,185 @@
       "scores": {
         "accuracy": 8.3,
         "naturalness": 7.3,
-        "velocity": 1
+        "velocity": 5.5
       },
-      "composite": 5.53,
+      "composite": 7.03,
       "wer": 0.095,
       "judge_rationale": null,
       "status": "success",
       "error": null
+    },
+    {
+      "category": "voice",
+      "tool": "kokoro",
+      "prompt_id": "voice-004",
+      "run_at": "2026-09-18T03:21:21.674Z",
+      "audio_url": "runs/voice/kokoro/voice-004.ogg",
+      "transcript": "Our office is at 14A Clurkenwell Road London, Ek-1 M5 Par. The entrance is on Turnmel Street.",
+      "ttft_ms": 4803,
+      "latency_ms": 4803,
+      "scores": {
+        "accuracy": 3.3,
+        "naturalness": 7.5,
+        "velocity": 5.5
+      },
+      "composite": 5.43,
+      "wer": 0.375,
+      "judge_rationale": null,
+      "status": "success",
+      "error": null
+    },
+    {
+      "category": "voice",
+      "tool": "kokoro",
+      "prompt_id": "voice-005",
+      "run_at": "2026-09-18T03:21:34.213Z",
+      "audio_url": "runs/voice/kokoro/voice-005.ogg",
+      "transcript": "The house had been empty for 11 years and it showed. Paint curled from the porch rails in long gray ribbons and the swing, still hanging by one chain, moved when there was no wind. Mara set her bag down on the step and did not go in.",
+      "ttft_ms": 9892,
+      "latency_ms": 9892,
+      "scores": {
+        "accuracy": 9.2,
+        "naturalness": 7.2,
+        "velocity": 5.5
+      },
+      "composite": 7.3,
+      "wer": 0.042,
+      "judge_rationale": null,
+      "status": "success",
+      "error": null
+    },
+    {
+      "category": "voice",
+      "tool": "kokoro",
+      "prompt_id": "voice-006",
+      "run_at": "2026-09-18T03:21:44.124Z",
+      "audio_url": "runs/voice/kokoro/voice-006.ogg",
+      "transcript": "This weekend only, everything at Summit Outdoor is 30% off. Tents, boots, bikes, all of it. Doors open Saturday at 8, don't miss it.",
+      "ttft_ms": 6486,
+      "latency_ms": 6486,
+      "scores": {
+        "accuracy": 7.9,
+        "naturalness": 7.6,
+        "velocity": 5.5
+      },
+      "composite": 7,
+      "wer": 0.115,
+      "judge_rationale": null,
+      "status": "success",
+      "error": null
+    },
+    {
+      "category": "voice",
+      "tool": "kokoro",
+      "prompt_id": "voice-007",
+      "run_at": "2026-09-18T03:21:50.614Z",
+      "audio_url": "runs/voice/kokoro/voice-007.ogg",
+      "transcript": "Offer valid for new customers only. Terms and conditions apply. Rates subject to change without notice. See website for details. Lending criteria apply. Credit provided by Summit Finance Limited.",
+      "ttft_ms": 9512,
+      "latency_ms": 9512,
+      "scores": {
+        "accuracy": 10,
+        "naturalness": 7.6,
+        "velocity": 5.5
+      },
+      "composite": 7.7,
+      "wer": 0,
+      "judge_rationale": null,
+      "status": "success",
+      "error": null
+    },
+    {
+      "category": "voice",
+      "tool": "kokoro",
+      "prompt_id": "voice-008",
+      "run_at": "2026-09-18T03:22:00.132Z",
+      "audio_url": "runs/voice/kokoro/voice-008.ogg",
+      "transcript": "Hej, din beställning har skickats och beräknas anlanda på tussdag. Du kan följa paketet via länken i ditt mail. Tack för att handla hushåll.",
+      "ttft_ms": 6641,
+      "latency_ms": 6641,
+      "scores": {
+        "accuracy": 5.2,
+        "naturalness": 7.4,
+        "velocity": 4
+      },
+      "composite": 5.53,
+      "wer": 0.269,
+      "judge_rationale": null,
+      "status": "success",
+      "error": null
+    },
+    {
+      "category": "voice",
+      "tool": "kokoro",
+      "prompt_id": "voice-009",
+      "run_at": "2026-09-18T03:22:06.777Z",
+      "audio_url": "runs/voice/kokoro/voice-009.ogg",
+      "transcript": "Hola, le recordamos su cita con la doctora Ruiz el martes 14 de mayo a las 10 a 30. Si necesita cambiarla, llame al 91-555-0193.",
+      "ttft_ms": 7483,
+      "latency_ms": 7483,
+      "scores": {
+        "accuracy": 8,
+        "naturalness": 7.4,
+        "velocity": 5.5
+      },
+      "composite": 6.97,
+      "wer": 0.111,
+      "judge_rationale": null,
+      "status": "success",
+      "error": null
+    },
+    {
+      "category": "voice",
+      "tool": "kokoro",
+      "prompt_id": "voice-010",
+      "run_at": "2026-09-18T03:22:14.265Z",
+      "audio_url": "runs/voice/kokoro/voice-010.ogg",
+      "transcript": "Achtung, bitte halten Sie Abstand zur Bahnsteigkante. Der nächste Zug nach München-Hauptbahnhof fährt in drei Minuten von Gleis-Sieben-App.",
+      "ttft_ms": 6623,
+      "latency_ms": 6623,
+      "scores": {
+        "accuracy": 8.3,
+        "naturalness": 7.2,
+        "velocity": 5.5
+      },
+      "composite": 7,
+      "wer": 0.095,
+      "judge_rationale": null,
+      "status": "success",
+      "error": null
+    },
+    {
+      "category": "voice",
+      "tool": "melotts",
+      "prompt_id": "voice-001",
+      "run_at": "2026-09-18T03:29:32.600Z",
+      "audio_url": null,
+      "transcript": null,
+      "ttft_ms": null,
+      "latency_ms": null,
+      "scores": {},
+      "composite": null,
+      "wer": null,
+      "judge_rationale": null,
+      "status": "error",
+      "error": "RuntimeError: "
+    },
+    {
+      "category": "voice",
+      "tool": "melotts",
+      "prompt_id": "voice-002",
+      "run_at": "2026-09-18T03:29:38.643Z",
+      "audio_url": null,
+      "transcript": null,
+      "ttft_ms": null,
+      "latency_ms": null,
+      "scores": {},
+      "composite": null,
+      "wer": null,
+      "judge_rationale": null,
+      "status": "error",
+      "error": "RuntimeError: "
     },
     {
       "category": "voice",
@@ -533,25 +845,489 @@
     },
     {
       "category": "voice",
+      "tool": "piper",
+      "prompt_id": "voice-004",
+      "run_at": "2026-09-18T03:21:21.173Z",
+      "audio_url": "runs/voice/piper/voice-004.ogg",
+      "transcript": "Our office is at 14A Clerkenwell Road, London, Ek-1M5 Par. The entrance is on Terminal Street.",
+      "ttft_ms": 509,
+      "latency_ms": 762,
+      "scores": {
+        "accuracy": 5.5,
+        "naturalness": 7.3,
+        "velocity": 10
+      },
+      "composite": 7.6,
+      "wer": 0.25,
+      "judge_rationale": null,
+      "status": "success",
+      "error": null
+    },
+    {
+      "category": "voice",
+      "tool": "piper",
+      "prompt_id": "voice-005",
+      "run_at": "2026-09-18T03:21:39.012Z",
+      "audio_url": "runs/voice/piper/voice-005.ogg",
+      "transcript": "The house had been empty for eleven years and it showed, paint curled from the porch rails in long grey ribbons, and the swing, still hanging by one chain, moved when there was no wind. Mara set her bag down on the step and did not go in.",
+      "ttft_ms": 313,
+      "latency_ms": 1268,
+      "scores": {
+        "accuracy": 10,
+        "naturalness": 7.4,
+        "velocity": 10
+      },
+      "composite": 9.13,
+      "wer": 0,
+      "judge_rationale": null,
+      "status": "success",
+      "error": null
+    },
+    {
+      "category": "voice",
+      "tool": "piper",
+      "prompt_id": "voice-006",
+      "run_at": "2026-09-18T03:21:40.287Z",
+      "audio_url": "runs/voice/piper/voice-006.ogg",
+      "transcript": "This weekend only, everything at Summit Outdoor is 30% off, tents, boots, bikes, all of it. Door is open Saturday at 8, don't miss it.",
+      "ttft_ms": 356,
+      "latency_ms": 847,
+      "scores": {
+        "accuracy": 6.5,
+        "naturalness": 7.2,
+        "velocity": 10
+      },
+      "composite": 7.9,
+      "wer": 0.192,
+      "judge_rationale": null,
+      "status": "success",
+      "error": null
+    },
+    {
+      "category": "voice",
+      "tool": "piper",
+      "prompt_id": "voice-007",
+      "run_at": "2026-09-18T03:21:41.139Z",
+      "audio_url": "runs/voice/piper/voice-007.ogg",
+      "transcript": "Offer valid for new customers only Terms and conditions apply Rate subject to change without notice See website for details Lending criteria apply Credit provided by Summit Finance Ltd",
+      "ttft_ms": 220,
+      "latency_ms": 1186,
+      "scores": {
+        "accuracy": 8.8,
+        "naturalness": 7,
+        "velocity": 10
+      },
+      "composite": 8.6,
+      "wer": 0.069,
+      "judge_rationale": null,
+      "status": "success",
+      "error": null
+    },
+    {
+      "category": "voice",
+      "tool": "piper",
+      "prompt_id": "voice-008",
+      "run_at": "2026-09-18T03:21:42.332Z",
+      "audio_url": "runs/voice/piper/voice-008.ogg",
+      "transcript": "Hej, din beställning har ickeats och beräknas anlända på torsdag. Du kan följa paketet vita länken i ditt mel, tack för att du handlar hos OSU.",
+      "ttft_ms": 83,
+      "latency_ms": 986,
+      "scores": {
+        "accuracy": 7.2,
+        "naturalness": 5.2,
+        "velocity": 10
+      },
+      "composite": 7.47,
+      "wer": 0.154,
+      "judge_rationale": null,
+      "status": "success",
+      "error": null
+    },
+    {
+      "category": "voice",
+      "tool": "piper",
+      "prompt_id": "voice-009",
+      "run_at": "2026-09-18T03:21:43.323Z",
+      "audio_url": "runs/voice/piper/voice-009.ogg",
+      "transcript": "Hola, le recordamos su cita con la doctora Ruiz el martes 14 de mayo a las 10.30. Si necesita cambiarla, llame al 91 notimientos 550193.",
+      "ttft_ms": 499,
+      "latency_ms": 965,
+      "scores": {
+        "accuracy": 8,
+        "naturalness": 6.6,
+        "velocity": 10
+      },
+      "composite": 8.2,
+      "wer": 0.111,
+      "judge_rationale": null,
+      "status": "success",
+      "error": null
+    },
+    {
+      "category": "voice",
+      "tool": "piper",
+      "prompt_id": "voice-010",
+      "run_at": "2026-09-18T03:21:44.294Z",
+      "audio_url": "runs/voice/piper/voice-010.ogg",
+      "transcript": "Achtung, bitte halten Sie Abstand zur Bahnsteigkante. Der nächste Zug nach München Hauptbahnhof fährt in 3 Minuten von Gleis 7 ab.",
+      "ttft_ms": 310,
+      "latency_ms": 740,
+      "scores": {
+        "accuracy": 9.1,
+        "naturalness": 7,
+        "velocity": 10
+      },
+      "composite": 8.7,
+      "wer": 0.048,
+      "judge_rationale": null,
+      "status": "success",
+      "error": null
+    },
+    {
+      "category": "voice",
       "tool": "speecht5",
       "prompt_id": "voice-001",
-      "run_at": "2026-09-18T03:15:38.494Z",
-      "audio_url": null,
-      "transcript": null,
-      "ttft_ms": null,
-      "latency_ms": null,
-      "scores": {},
-      "composite": null,
-      "wer": null,
+      "run_at": "2026-09-18T03:21:56.253Z",
+      "audio_url": "runs/voice/speecht5/voice-001.ogg",
+      "transcript": "Meet Ledger, the invoicing tool that gets you paid in days not weeks. Send an invoice, track it and let automatic reminders do the chasing.",
+      "ttft_ms": 7566,
+      "latency_ms": 7566,
+      "scores": {
+        "accuracy": 10,
+        "naturalness": 7.3,
+        "velocity": 3.3
+      },
+      "composite": 6.87,
+      "wer": 0,
       "judge_rationale": null,
-      "status": "error",
-      "error": "RuntimeError: Dataset scripts are no longer supported, but found cmu-arctic-xvectors.py"
+      "status": "success",
+      "error": null
     },
     {
       "category": "voice",
       "tool": "speecht5",
       "prompt_id": "voice-002",
-      "run_at": "2026-09-18T03:16:02.405Z",
+      "run_at": "2026-09-18T03:22:27.231Z",
+      "audio_url": "runs/voice/speecht5/voice-002.ogg",
+      "transcript": "Thank you for calling Northgate Dental. For appointments, press one. For billing, press two. For all other inquiries, press three or stay on the line.",
+      "ttft_ms": 7925,
+      "latency_ms": 7925,
+      "scores": {
+        "accuracy": 7.1,
+        "naturalness": 7.4,
+        "velocity": 3.3
+      },
+      "composite": 5.93,
+      "wer": 0.16,
+      "judge_rationale": null,
+      "status": "success",
+      "error": null
+    },
+    {
+      "category": "voice",
+      "tool": "speecht5",
+      "prompt_id": "voice-003",
+      "run_at": "2026-09-18T03:22:35.172Z",
+      "audio_url": "runs/voice/speecht5/voice-003.ogg",
+      "transcript": "You can reach our support team at 800-550-5199 that's 800-550-5199 Monday to Friday 9 to 5.",
+      "ttft_ms": 13741,
+      "latency_ms": 13741,
+      "scores": {
+        "accuracy": 3.1,
+        "naturalness": 6.6,
+        "velocity": 3.3
+      },
+      "composite": 4.33,
+      "wer": 0.381,
+      "judge_rationale": null,
+      "status": "success",
+      "error": null
+    },
+    {
+      "category": "voice",
+      "tool": "speecht5",
+      "prompt_id": "voice-004",
+      "run_at": "2026-09-18T03:22:48.922Z",
+      "audio_url": "runs/voice/speecht5/voice-004.ogg",
+      "transcript": "Our office is at 14. A Clerkinwell Road London Eq1-M5 PA, the entrance is on Turn Mill Street.",
+      "ttft_ms": 6444,
+      "latency_ms": 6444,
+      "scores": {
+        "accuracy": 1,
+        "naturalness": 7.3,
+        "velocity": 3.3
+      },
+      "composite": 3.87,
+      "wer": 0.5,
+      "judge_rationale": null,
+      "status": "success",
+      "error": null
+    },
+    {
+      "category": "voice",
+      "tool": "speecht5",
+      "prompt_id": "voice-005",
+      "run_at": "2026-09-18T03:22:55.559Z",
+      "audio_url": "runs/voice/speecht5/voice-005.ogg",
+      "transcript": "The house had been empty for eleven years and it showed. Paint curled from the porch rails and long gray ribbons, and the swing still hanging by one chain moved when there was no wind. Mara set her bag down on the step and did not go in.",
+      "ttft_ms": 13641,
+      "latency_ms": 13641,
+      "scores": {
+        "accuracy": 9.2,
+        "naturalness": 7.2,
+        "velocity": 3.3
+      },
+      "composite": 6.57,
+      "wer": 0.042,
+      "judge_rationale": null,
+      "status": "success",
+      "error": null
+    },
+    {
+      "category": "voice",
+      "tool": "speecht5",
+      "prompt_id": "voice-006",
+      "run_at": "2026-09-18T03:23:09.226Z",
+      "audio_url": "runs/voice/speecht5/voice-006.ogg",
+      "transcript": "This weekend only everything at Summit Outdoor is 30 person off, tents, boots, bikes, all of it. Doors open Saturday at 8, don't miss it.",
+      "ttft_ms": 7770,
+      "latency_ms": 7770,
+      "scores": {
+        "accuracy": 7.9,
+        "naturalness": 7.3,
+        "velocity": 3.3
+      },
+      "composite": 6.17,
+      "wer": 0.115,
+      "judge_rationale": null,
+      "status": "success",
+      "error": null
+    },
+    {
+      "category": "voice",
+      "tool": "speecht5",
+      "prompt_id": "voice-007",
+      "run_at": "2026-09-18T03:23:17.010Z",
+      "audio_url": "runs/voice/speecht5/voice-007.ogg",
+      "transcript": "Offer valid for new customers only. Terms and conditions apply. Rates subject to change without notice. See website for details. Lending criteria apply. Credit provided by Summit Finance Limited.",
+      "ttft_ms": 13865,
+      "latency_ms": 13865,
+      "scores": {
+        "accuracy": 10,
+        "naturalness": 7.5,
+        "velocity": 3.3
+      },
+      "composite": 6.93,
+      "wer": 0,
+      "judge_rationale": null,
+      "status": "success",
+      "error": null
+    },
+    {
+      "category": "voice",
+      "tool": "speecht5",
+      "prompt_id": "voice-008",
+      "run_at": "2026-09-18T03:23:30.896Z",
+      "audio_url": "runs/voice/speecht5/voice-008.ogg",
+      "transcript": "Hej, din bäst, olning har skickats uppe er, ness eln, depi, torsdag, du kan af, lija pakatet vil, en kanaj dit medjel, tack farat, du handler hos os.",
+      "ttft_ms": 10726,
+      "latency_ms": 10726,
+      "scores": {
+        "accuracy": 1,
+        "naturalness": 7.4,
+        "velocity": 1
+      },
+      "composite": 3.13,
+      "wer": 0.731,
+      "judge_rationale": null,
+      "status": "success",
+      "error": null
+    },
+    {
+      "category": "voice",
+      "tool": "speecht5",
+      "prompt_id": "voice-009",
+      "run_at": "2026-09-18T03:23:41.645Z",
+      "audio_url": "runs/voice/speecht5/voice-009.ogg",
+      "transcript": "Jola, Lyricordama, Susita, Conla, Doctora, Rui, Elmarts, 14 de Mayo, alas 10. 30. Cina, Cisita, Cambiarla, Lame, Al-90, 1-550, 5-120, 3.",
+      "ttft_ms": 13679,
+      "latency_ms": 13679,
+      "scores": {
+        "accuracy": 1,
+        "naturalness": 7.3,
+        "velocity": 3.3
+      },
+      "composite": 3.87,
+      "wer": 0.778,
+      "judge_rationale": null,
+      "status": "success",
+      "error": null
+    },
+    {
+      "category": "voice",
+      "tool": "speecht5",
+      "prompt_id": "voice-010",
+      "run_at": "2026-09-18T03:23:55.344Z",
+      "audio_url": "runs/voice/speecht5/voice-010.ogg",
+      "transcript": "Achtung. Bithalten C-Abstands erbanste Kanta. Der Nenische Zagnek und Schen-Hotbanhof hurt in Drei-Minuten-Von-Gle-Seven-Ab.",
+      "ttft_ms": 9040,
+      "latency_ms": 9040,
+      "scores": {
+        "accuracy": 1,
+        "naturalness": 7.2,
+        "velocity": 3.3
+      },
+      "composite": 3.83,
+      "wer": 0.667,
+      "judge_rationale": null,
+      "status": "success",
+      "error": null
+    },
+    {
+      "category": "voice",
+      "tool": "xtts-v2",
+      "prompt_id": "voice-001",
+      "run_at": "2026-09-18T03:29:29.921Z",
+      "audio_url": "runs/voice/xtts-v2/voice-001.ogg",
+      "transcript": "Meet Ledger, the invoicing tool that gets you paid in days, not weeks. Send an invoice, track it and let automatic reminders do the chasing.",
+      "ttft_ms": 23598,
+      "latency_ms": 23598,
+      "scores": {
+        "accuracy": 10,
+        "naturalness": 7.4,
+        "velocity": 1
+      },
+      "composite": 6.13,
+      "wer": 0,
+      "judge_rationale": null,
+      "status": "success",
+      "error": null
+    },
+    {
+      "category": "voice",
+      "tool": "xtts-v2",
+      "prompt_id": "voice-002",
+      "run_at": "2026-09-18T03:30:40.662Z",
+      "audio_url": "runs/voice/xtts-v2/voice-002.ogg",
+      "transcript": "Thank you for calling Northgate Dental. For appointments, press 1. For billing, press 2. For all other inquiries, press 3, or stay on the line.",
+      "ttft_ms": 34397,
+      "latency_ms": 34397,
+      "scores": {
+        "accuracy": 9.3,
+        "naturalness": 7.1,
+        "velocity": 1
+      },
+      "composite": 5.8,
+      "wer": 0.04,
+      "judge_rationale": null,
+      "status": "success",
+      "error": null
+    },
+    {
+      "category": "voice",
+      "tool": "xtts-v2",
+      "prompt_id": "voice-003",
+      "run_at": "2026-09-18T03:31:15.073Z",
+      "audio_url": "runs/voice/xtts-v2/voice-003.ogg",
+      "transcript": "You can reach our support team at 800-555-199. That's 800-555-199, Monday to Friday, 9 to 5.",
+      "ttft_ms": 37397,
+      "latency_ms": 37397,
+      "scores": {
+        "accuracy": 4.9,
+        "naturalness": 7.3,
+        "velocity": 1
+      },
+      "composite": 4.4,
+      "wer": 0.286,
+      "judge_rationale": null,
+      "status": "success",
+      "error": null
+    },
+    {
+      "category": "voice",
+      "tool": "xtts-v2",
+      "prompt_id": "voice-004",
+      "run_at": "2026-09-18T03:31:52.481Z",
+      "audio_url": "runs/voice/xtts-v2/voice-004.ogg",
+      "transcript": "Our office is at 14 at Clerkenwell Road, London, Econym, 5 p.m. The entrance is on Turnmills Street.",
+      "ttft_ms": 22939,
+      "latency_ms": 22939,
+      "scores": {
+        "accuracy": 2.1,
+        "naturalness": 6.8,
+        "velocity": 1
+      },
+      "composite": 3.3,
+      "wer": 0.438,
+      "judge_rationale": null,
+      "status": "success",
+      "error": null
+    },
+    {
+      "category": "voice",
+      "tool": "xtts-v2",
+      "prompt_id": "voice-005",
+      "run_at": "2026-09-18T03:32:15.429Z",
+      "audio_url": "runs/voice/xtts-v2/voice-005.ogg",
+      "transcript": "The house had been empty for eleven years, and it showed. Paint curled from the porch rails in long grey ribbons, and the swing, still hanging by one chain, moved when there was no wind. Mara set her bag down on the step and did not go in.",
+      "ttft_ms": 45588,
+      "latency_ms": 45588,
+      "scores": {
+        "accuracy": 10,
+        "naturalness": 7.1,
+        "velocity": 1
+      },
+      "composite": 6.03,
+      "wer": 0,
+      "judge_rationale": null,
+      "status": "success",
+      "error": null
+    },
+    {
+      "category": "voice",
+      "tool": "xtts-v2",
+      "prompt_id": "voice-006",
+      "run_at": "2026-09-18T03:33:01.807Z",
+      "audio_url": "runs/voice/xtts-v2/voice-006.ogg",
+      "transcript": "This weekend only. Everything at Summit Outdoor is 30% off. Tents, boots, bikes, all of it. Doors open Saturday at 8. Don't miss it.",
+      "ttft_ms": 33580,
+      "latency_ms": 33580,
+      "scores": {
+        "accuracy": 7.9,
+        "naturalness": 6.9,
+        "velocity": 1
+      },
+      "composite": 5.27,
+      "wer": 0.115,
+      "judge_rationale": null,
+      "status": "success",
+      "error": null
+    },
+    {
+      "category": "voice",
+      "tool": "xtts-v2",
+      "prompt_id": "voice-007",
+      "run_at": "2026-09-18T03:33:35.400Z",
+      "audio_url": "runs/voice/xtts-v2/voice-007.ogg",
+      "transcript": "Offer valid for new customers only. Turns and conditions apply. Rates subject to change without notice. See website for details. Lending criteria apply. Credit provided by Summit Finance Limited. How?",
+      "ttft_ms": 41653,
+      "latency_ms": 41653,
+      "scores": {
+        "accuracy": 8.8,
+        "naturalness": 7.3,
+        "velocity": 1
+      },
+      "composite": 5.7,
+      "wer": 0.069,
+      "judge_rationale": null,
+      "status": "success",
+      "error": null
+    },
+    {
+      "category": "voice",
+      "tool": "xtts-v2",
+      "prompt_id": "voice-008",
+      "run_at": "2026-09-18T03:34:17.065Z",
       "audio_url": null,
       "transcript": null,
       "ttft_ms": null,
@@ -561,51 +1337,119 @@
       "wer": null,
       "judge_rationale": null,
       "status": "error",
-      "error": "RuntimeError: Dataset scripts are no longer supported, but found cmu-arctic-xvectors.py"
+      "error": "ValueError: XTTS-v2 does not support language 'sv' (supported: en, es, fr, de, it, pt, pl, tr, ru, nl, cs, ar, zh-cn, hu, ko, ja, hi)"
+    },
+    {
+      "category": "voice",
+      "tool": "xtts-v2",
+      "prompt_id": "voice-009",
+      "run_at": "2026-09-18T03:34:17.300Z",
+      "audio_url": "runs/voice/xtts-v2/voice-009.ogg",
+      "transcript": "Hola, le recordamos su cita con la doctora Ruiz, el martes 14 de mayo, a las 10.30. Si necesita cambiarla, llame al 91-555-123.",
+      "ttft_ms": 36739,
+      "latency_ms": 36739,
+      "scores": {
+        "accuracy": 8.7,
+        "naturalness": 7.5,
+        "velocity": 1
+      },
+      "composite": 5.73,
+      "wer": 0.074,
+      "judge_rationale": null,
+      "status": "success",
+      "error": null
+    },
+    {
+      "category": "voice",
+      "tool": "xtts-v2",
+      "prompt_id": "voice-010",
+      "run_at": "2026-09-18T03:34:54.050Z",
+      "audio_url": "runs/voice/xtts-v2/voice-010.ogg",
+      "transcript": "Achtung! Bitte halten Sie Abstand zur Bahnsteigkante. Der nächste Zug nach München Hauptbahnhof fährt in drei Minuten von Gleis 7 ab.",
+      "ttft_ms": 30432,
+      "latency_ms": 30432,
+      "scores": {
+        "accuracy": 10,
+        "naturalness": 7.4,
+        "velocity": 1
+      },
+      "composite": 6.13,
+      "wer": 0,
+      "judge_rationale": null,
+      "status": "success",
+      "error": null
     }
   ],
   "ratings": [
     {
       "category": "voice",
       "tool": "piper",
-      "runs": 3,
-      "composite": 8.68,
+      "runs": 10,
+      "composite": 8.36,
       "scores": {
-        "accuracy": 8.67,
-        "naturalness": 7.37,
+        "accuracy": 8.11,
+        "naturalness": 6.98,
         "velocity": 10
       },
-      "median_ttft_ms": 399,
-      "median_latency_ms": 804,
+      "median_ttft_ms": 356,
+      "median_latency_ms": 965,
       "rank": 1
     },
     {
       "category": "voice",
       "tool": "kokoro",
-      "runs": 3,
-      "composite": 6.87,
+      "runs": 10,
+      "composite": 7.06,
       "scores": {
-        "accuracy": 9.2,
-        "naturalness": 7.4,
-        "velocity": 4
+        "accuracy": 7.95,
+        "naturalness": 7.41,
+        "velocity": 5.81
       },
-      "median_ttft_ms": 4341,
-      "median_latency_ms": 4341,
+      "median_ttft_ms": 6623,
+      "median_latency_ms": 6623,
       "rank": 2
     },
     {
       "category": "voice",
       "tool": "kittentts",
-      "runs": 3,
-      "composite": 6.07,
+      "runs": 10,
+      "composite": 6.97,
       "scores": {
-        "accuracy": 8.4,
-        "naturalness": 7.3,
-        "velocity": 2.5
+        "accuracy": 6.33,
+        "naturalness": 7.31,
+        "velocity": 7.26
       },
-      "median_ttft_ms": 5719,
-      "median_latency_ms": 5719,
+      "median_ttft_ms": 5901,
+      "median_latency_ms": 5901,
       "rank": 3
+    },
+    {
+      "category": "voice",
+      "tool": "xtts-v2",
+      "runs": 9,
+      "composite": 5.39,
+      "scores": {
+        "accuracy": 7.97,
+        "naturalness": 7.2,
+        "velocity": 1
+      },
+      "median_ttft_ms": 34397,
+      "median_latency_ms": 34397,
+      "rank": 4
+    },
+    {
+      "category": "voice",
+      "tool": "speecht5",
+      "runs": 10,
+      "composite": 5.15,
+      "scores": {
+        "accuracy": 5.13,
+        "naturalness": 7.25,
+        "velocity": 3.07
+      },
+      "median_ttft_ms": 10726,
+      "median_latency_ms": 10726,
+      "rank": 5
     }
   ],
   "pairs": [
@@ -1140,8 +1984,8 @@
       "a": "kokoro",
       "b": "piper",
       "verdict": {
-        "headline": "Piper leads Kokoro-82M 8.7 to 6.9 on the 10-prompt AI Voice bank.",
-        "summary": "Piper is ahead on speed. Kokoro-82M wins on transcript accuracy. Median time to first byte: Kokoro-82M 4341 ms, Piper 399 ms. Scored on 3 of 10 prompts so far."
+        "headline": "Piper leads Kokoro-82M 8.4 to 7.1 on the 10-prompt AI Voice bank.",
+        "summary": "Piper is ahead on speed. Kokoro-82M wins on naturalness. Median time to first byte: Kokoro-82M 6623 ms, Piper 356 ms."
       }
     },
     {
@@ -1150,8 +1994,8 @@
       "a": "kokoro",
       "b": "kittentts",
       "verdict": {
-        "headline": "Kokoro-82M leads KittenTTS Nano 6.9 to 6.1 on the 10-prompt AI Voice bank.",
-        "summary": "Kokoro-82M is ahead on speed and transcript accuracy. Median time to first byte: Kokoro-82M 4341 ms, KittenTTS Nano 5719 ms. Scored on 3 of 10 prompts so far."
+        "headline": "Kokoro-82M and KittenTTS Nano tie at 7.1 on the 10-prompt AI Voice bank.",
+        "summary": "Kokoro-82M is ahead on transcript accuracy. KittenTTS Nano wins on speed. Median time to first byte: Kokoro-82M 6623 ms, KittenTTS Nano 5901 ms."
       }
     },
     {
@@ -1159,7 +2003,10 @@
       "slug": "kokoro-vs-speecht5",
       "a": "kokoro",
       "b": "speecht5",
-      "verdict": null
+      "verdict": {
+        "headline": "Kokoro-82M leads SpeechT5 TTS 7.1 to 5.2 on the 10-prompt AI Voice bank.",
+        "summary": "Kokoro-82M is ahead on transcript accuracy and speed. Median time to first byte: Kokoro-82M 6623 ms, SpeechT5 TTS 10726 ms."
+      }
     },
     {
       "category": "voice",
@@ -1173,7 +2020,10 @@
       "slug": "kokoro-vs-xtts-v2",
       "a": "kokoro",
       "b": "xtts-v2",
-      "verdict": null
+      "verdict": {
+        "headline": "Kokoro-82M leads XTTS-v2 7.1 to 5.4 on the 10-prompt AI Voice bank.",
+        "summary": "Kokoro-82M is ahead on speed. Median time to first byte: Kokoro-82M 6623 ms, XTTS-v2 34397 ms. Scored on 9 of 10 prompts so far."
+      }
     },
     {
       "category": "voice",
@@ -1209,8 +2059,8 @@
       "a": "piper",
       "b": "kittentts",
       "verdict": {
-        "headline": "Piper leads KittenTTS Nano 8.7 to 6.1 on the 10-prompt AI Voice bank.",
-        "summary": "Piper is ahead on speed. Median time to first byte: Piper 399 ms, KittenTTS Nano 5719 ms. Scored on 3 of 10 prompts so far."
+        "headline": "Piper leads KittenTTS Nano 8.4 to 7.0 on the 10-prompt AI Voice bank.",
+        "summary": "Piper is ahead on speed and transcript accuracy. KittenTTS Nano wins on naturalness. Median time to first byte: Piper 356 ms, KittenTTS Nano 5901 ms."
       }
     },
     {
@@ -1218,7 +2068,10 @@
       "slug": "piper-vs-speecht5",
       "a": "piper",
       "b": "speecht5",
-      "verdict": null
+      "verdict": {
+        "headline": "Piper leads SpeechT5 TTS 8.4 to 5.2 on the 10-prompt AI Voice bank.",
+        "summary": "Piper is ahead on speed and transcript accuracy. Median time to first byte: Piper 356 ms, SpeechT5 TTS 10726 ms."
+      }
     },
     {
       "category": "voice",
@@ -1232,7 +2085,10 @@
       "slug": "piper-vs-xtts-v2",
       "a": "piper",
       "b": "xtts-v2",
-      "verdict": null
+      "verdict": {
+        "headline": "Piper leads XTTS-v2 8.4 to 5.4 on the 10-prompt AI Voice bank.",
+        "summary": "Piper is ahead on speed. Median time to first byte: Piper 356 ms, XTTS-v2 34397 ms. Scored on 9 of 10 prompts so far."
+      }
     },
     {
       "category": "voice",
@@ -1267,7 +2123,10 @@
       "slug": "kittentts-vs-speecht5",
       "a": "kittentts",
       "b": "speecht5",
-      "verdict": null
+      "verdict": {
+        "headline": "KittenTTS Nano leads SpeechT5 TTS 7.0 to 5.2 on the 10-prompt AI Voice bank.",
+        "summary": "KittenTTS Nano is ahead on speed and transcript accuracy. Median time to first byte: KittenTTS Nano 5901 ms, SpeechT5 TTS 10726 ms."
+      }
     },
     {
       "category": "voice",
@@ -1281,7 +2140,10 @@
       "slug": "kittentts-vs-xtts-v2",
       "a": "kittentts",
       "b": "xtts-v2",
-      "verdict": null
+      "verdict": {
+        "headline": "KittenTTS Nano leads XTTS-v2 7.0 to 5.4 on the 10-prompt AI Voice bank.",
+        "summary": "KittenTTS Nano is ahead on speed. XTTS-v2 wins on transcript accuracy. Median time to first byte: KittenTTS Nano 5901 ms, XTTS-v2 34397 ms. Scored on 9 of 10 prompts so far."
+      }
     },
     {
       "category": "voice",
@@ -1323,7 +2185,10 @@
       "slug": "speecht5-vs-xtts-v2",
       "a": "speecht5",
       "b": "xtts-v2",
-      "verdict": null
+      "verdict": {
+        "headline": "XTTS-v2 leads SpeechT5 TTS 5.4 to 5.2 on the 10-prompt AI Voice bank.",
+        "summary": "XTTS-v2 is ahead on transcript accuracy. SpeechT5 TTS wins on speed. Median time to first byte: SpeechT5 TTS 10726 ms, XTTS-v2 34397 ms. Scored on 9 of 10 prompts so far."
+      }
     },
     {
       "category": "voice",
@@ -1461,7 +2326,7 @@
   ],
   "previous_holders": {
     "voice": {
-      "run_at": "2026-09-18T03:19:28.610Z",
+      "run_at": "2026-09-18T03:38:46.832Z",
       "holders": {
         "voice-001": "piper",
         "voice-002": "piper",
