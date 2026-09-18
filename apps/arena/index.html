@@ -13,7 +13,7 @@
   --max:820px;--dock-h:176px;color-scheme:dark;
 }
 *{box-sizing:border-box}
-html{height:100%}
+html{height:100%;-webkit-text-size-adjust:100%;text-size-adjust:100%}
 body{margin:0;min-height:100%;background:var(--bg);color:var(--text);font:15.5px/1.5 var(--sans);-webkit-font-smoothing:antialiased;
   }
 button{font:inherit;color:inherit}
@@ -37,18 +37,19 @@ main{max-width:var(--max);margin:0 auto;padding:0 16px calc(var(--dock-h) + 24px
 /* dock: suggestions + composer pinned to the bottom, like a chat app */
 .dock{position:fixed;left:0;right:0;bottom:0;z-index:7;padding:6px 0 calc(12px + env(safe-area-inset-bottom,0px));background:linear-gradient(transparent,var(--bg) 22%)}
 .dock .in{max-width:var(--max);margin:0 auto;padding:0 16px}
-.gs-label{font-size:.9rem;color:var(--muted);margin:0 0 8px 2px}
+.gs-label{font-size:.82rem;color:var(--muted);margin:0 0 8px 2px}
 body.in-battle{--dock-h:112px}
 body.in-battle .gs-label,body.in-battle .cards{display:none}
 body.in-battle .dock{background:linear-gradient(transparent,var(--bg) 18%)}
 .cards{display:flex;gap:10px;overflow-x:auto;scrollbar-width:none;padding:0 0 12px;-webkit-overflow-scrolling:touch}
 .cards::-webkit-scrollbar{display:none}
-.cards button{flex:0 0 auto;width:min(78vw,300px);display:grid;grid-template-columns:auto 1fr;gap:12px;align-items:center;text-align:left;border:1px solid var(--border-2);background:var(--surface);border-radius:12px;padding:12px;cursor:pointer;color:var(--text)}
+.cards button{flex:0 0 auto;width:min(66vw,250px);display:grid;grid-template-columns:auto 1fr;gap:10px;align-items:center;text-align:left;border:1px solid var(--border-2);background:var(--surface);border-radius:12px;padding:10px;cursor:pointer;color:var(--text);min-width:0}
 .cards button:hover{background:var(--surface-2)}
-.cards .ic{width:40px;height:40px;border-radius:9px;background:var(--surface-2);display:grid;place-items:center;color:var(--muted)}
-.cards .ic svg{width:20px;height:20px}
-.cards .t{font-weight:600;font-size:.95rem;line-height:1.25}
-.cards .s{color:var(--muted);font-size:.82rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:2px}
+.cards .ic{width:34px;height:34px;border-radius:8px;background:var(--surface-2);display:grid;place-items:center;color:var(--muted)}
+.cards .ic svg{width:17px;height:17px}
+.cards button > span:last-child{min-width:0}
+.cards .t{font-weight:600;font-size:.88rem;line-height:1.25;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cards .s{color:var(--muted);font-size:.76rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:2px}
 .composer{background:var(--surface);border:1px solid var(--border-2);border-radius:18px;padding:12px 12px 10px;display:grid;gap:8px;box-shadow:0 10px 40px -10px rgba(0,0,0,.7)}
 .composer:focus-within{border-color:var(--faint)}
 .composer textarea{width:100%;border:0;background:transparent;resize:none;font:inherit;font-size:1.1rem;line-height:1.45;color:var(--text);outline:none;padding:2px 4px;max-height:120px;min-height:30px}
@@ -408,7 +409,7 @@ td .vendor{font-size:.76rem;color:var(--muted)}
     r.querySelector('[data-copy="text"]').onclick = () => copy(share, 'Copied. Paste it on X.');
     r.querySelector('[data-copy="link"]').onclick = () => copy(`toolwars.ai/?battle=${encodeURIComponent(battle.text)}&pair=${a.id},${b.id}`, 'Challenge link copied.');
     r.querySelector('[data-act="rematch"]').onclick = () => startBattle(battle.text, pickTwo());
-    r.querySelector('[data-act="lb"]').onclick = () => showLb();
+    r.querySelector('[data-act="lb"]').onclick = () => { if (LB_URL) location.href = LB_URL; else showLb(); };
     requestAnimationFrame(() => r.scrollIntoView({ behavior: 'smooth', block: 'nearest' }));
     renderLeaderboard();
   }
@@ -441,7 +442,8 @@ td .vendor{font-size:.76rem;color:var(--muted)}
   $('prompt').addEventListener('input', autosize);
   $('prompt').addEventListener('keydown', (e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); startBattle(); } });
   $('composer').addEventListener('submit', (e) => { e.preventDefault(); startBattle(); });
-  $('tab-lb').onclick = () => ($('lb').classList.contains('show') ? showArena() : showLb());
+  const LB_URL = REAL && DATA.leaderboard_url ? DATA.leaderboard_url : null;
+  $('tab-lb').onclick = () => { if (LB_URL) { location.href = LB_URL; return; } $('lb').classList.contains('show') ? showArena() : showLb(); };
   $('home').onclick = () => { showArena(); $('thread').innerHTML = ''; $('welcome').classList.remove('hide'); document.body.classList.remove('in-battle'); try { speechSynthesis.cancel(); } catch {} window.scrollTo({ top: 0 }); $('prompt').focus(); };
   $('plus').onclick = () => toast('Attachments come with the real build.');
   const MODES = { blind: 'Blind battle', side: 'Side by side', direct: 'Direct' };

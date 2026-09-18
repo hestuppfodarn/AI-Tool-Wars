@@ -38,7 +38,8 @@ const fullTitle = title.includes(SITE_NAME) ? title : `${title} · ${SITE_NAME}`
       <div class="wrap">
         <a class="brand" href={href('/')}>{SITE_NAME}</a>
         <ul>
-          <li><a href={href('/arena/')}><strong>Arena</strong></a></li>
+          <li><a href={href('/')}><strong>Arena</strong></a></li>
+          <li><a href={href('/explore/')}>Explore</a></li>
           {snap.categories.map((c) => <li><a href={href(`/${c.slug}/`)}>{c.name.replace(/\s*\(.*\)$/, '')}</a></li>)}
           <li><a href={href('/methodology/')}>Methodology</a></li>
         </ul>

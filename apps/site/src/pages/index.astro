@@ -1,46 +1,41 @@
 ---
-import Base from '../layouts/Base.astro';
-import StatusChip from '../components/StatusChip.astro';
-import { loadSnapshot, pairsIn, toolsIn, toolBySlug, ratingsIn } from '../lib/snapshot';
-import { href, SITE_NAME } from '../lib/site';
+// The arena page is a single self-contained HTML fragment (apps/arena/index.html,
+// also published as a Claude artifact for review). Here it is wrapped in a real
+// document and fed the live snapshot: tools with successful runs, the prompts
+// they answered, and the runs with audio URLs, timings and scores. With that data
+// present the page runs real blind battles from the benchmark cache; without it
+// (the artifact) it falls back to fictional placeholders.
+import arenaHtml from '../../../arena/index.html?raw';
+import { loadSnapshot } from '../lib/snapshot';
+import { asset, href, SITE_NAME } from '../lib/site';
 
 const snap = loadSnapshot();
+const runs = snap.runs.filter((r) => r.status === 'success' && r.audio_url).map((r) => ({
+  tool: r.tool, prompt_id: r.prompt_id, status: 'success', audio_url: asset(r.audio_url as string), ttft_ms: r.ttft_ms, latency_ms: r.latency_ms, scores: r.scores, composite: r.composite,
+}));
+const toolSlugs = new Set(runs.map((r) => r.tool));
+const data = {
+  tools: snap.tools.filter((t) => toolSlugs.has(t.slug)).map((t) => ({ slug: t.slug, name: t.name, vendor: t.vendor, status: t.status })),
+  prompts: snap.prompts.map((p) => ({ id: p.id, title: p.title, text: p.text, language: p.language })),
+  runs,
+  generated_at: snap.generated_at,
+  leaderboard_url: href('/voice/'),
+};
+const json = JSON.stringify(data).replace(/</g, '\\u003c');
+const html = arenaHtml
+  .replace('<script id="arena-data" type="application/json">{}</script>', `<script id="arena-data" type="application/json">${json}</script>`)
+  .replace('<title>Tool Wars</title>', `<title>${SITE_NAME} Arena</title>`);
 ---
-<Base title={`${SITE_NAME}: AI tools compared on real outputs`} description="Side-by-side comparisons of AI software built from actual outputs on a fixed prompt set, not feature tables or paid placement." canonicalPath="/">
-  <h1>AI tools compared on what they actually produce.</h1>
-  <p class="lede">
-    Every tool in a category runs the same public prompts. We publish the outputs, score them the same way, and
-    keep the scores up to date. No vendor can pay to be here or to rank higher.
-  </p>
-  <p><a class="btn" href={href('/arena/')}>Enter the arena: hear two tools, pick the winner</a></p>
-
-  {snap.categories.map((c) => {
-    const tools = toolsIn(snap, c.slug);
-    const pairs = pairsIn(snap, c.slug);
-    const ratings = ratingsIn(snap, c.slug);
-    return (
-      <section>
-        <h2><a href={href(`/${c.slug}/`)}>{c.name}</a></h2>
-        <p class="muted">{c.description}</p>
-        <div class="grid">
-          {tools.map((t) => {
-            const r = ratings.find((x) => x.tool === t.slug);
-            return (
-              <div class="card">
-                <div style="display:flex;justify-content:space-between;gap:8px;align-items:center">
-                  <strong><a href={href(`/${c.slug}/tools/${t.slug}/`)}>{t.name}</a></strong>
-                  <StatusChip status={t.status} />
-                </div>
-                <p class="small muted" style="margin:6px 0 0">{r ? `#${r.rank} · composite ${r.composite.toFixed(1)}` : t.vendor}</p>
-              </div>
-            );
-          })}
-        </div>
-        <h3 style="margin-top:1.5rem">Comparisons</h3>
-        <ul class="list-tight">
-          {pairs.map((p) => <li><a href={href(`/${c.slug}/${p.slug}/`)}>{toolBySlug(snap, p.a).name} vs {toolBySlug(snap, p.b).name}</a></li>)}
-        </ul>
-      </section>
-    );
-  })}
-</Base>
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#15181b" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400;1,6..72,500&family=Instrument+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" />
+    <Fragment set:html={html.split('</style>')[0] + '</style>'} />
+  </head>
+  <body>
+    <Fragment set:html={html.split('</style>').slice(1).join('</style>')} />
+  </body>
+</html>
