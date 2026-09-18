@@ -1,0 +1,465 @@
+<title>Tool Wars Arena</title>
+<meta name="description" content="Blind battles between AI voice tools. Type a line, two anonymous tools say it, you pick the winner.">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&family=Instrument+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap">
+<style>
+:root{
+  --bg:#f5f4ef;--surface:#fdfcfa;--surface-2:#ecebe4;--surface-3:#e4e2d9;--text:#1c1b18;--muted:#6b695f;--faint:#9a978c;--border:#e2e0d7;--border-strong:#cfccc1;
+  --ink:#1c1b18;--ink-on:#fdfcfa;--brand:#c25e35;--brand-soft:#f6e6de;
+  --a:#3457d5;--a-soft:#e6ebfb;--a-ink:#2540a8;--b:#c9633a;--b-soft:#f8e7de;--b-ink:#a44c26;
+  --good:#2f7a4f;--bad:#b3352b;--shadow:0 1px 2px rgba(28,27,24,.05),0 12px 40px -18px rgba(28,27,24,.25);
+  --serif:"Newsreader",Georgia,"Times New Roman",serif;--sans:"Instrument Sans",ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --r:18px;--max:940px;color-scheme:light dark;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#191816;--surface:#22211e;--surface-2:#2b2a26;--surface-3:#34322d;--text:#ece9e1;--muted:#a19e94;--faint:#77746a;--border:#35332e;--border-strong:#48453e;
+  --ink:#ece9e1;--ink-on:#191816;--brand:#e0855f;--brand-soft:#3a2418;
+  --a:#8ea3ff;--a-soft:#1f2745;--a-ink:#b6c3ff;--b:#e8906b;--b-soft:#3d2418;--b-ink:#f2b294;
+  --good:#6cc493;--bad:#f28b82;--shadow:0 1px 2px rgba(0,0,0,.4),0 12px 40px -18px rgba(0,0,0,.7);}}
+:root[data-theme="dark"]{
+  --bg:#191816;--surface:#22211e;--surface-2:#2b2a26;--surface-3:#34322d;--text:#ece9e1;--muted:#a19e94;--faint:#77746a;--border:#35332e;--border-strong:#48453e;
+  --ink:#ece9e1;--ink-on:#191816;--brand:#e0855f;--brand-soft:#3a2418;
+  --a:#8ea3ff;--a-soft:#1f2745;--a-ink:#b6c3ff;--b:#e8906b;--b-soft:#3d2418;--b-ink:#f2b294;
+  --good:#6cc493;--bad:#f28b82;--shadow:0 1px 2px rgba(0,0,0,.4),0 12px 40px -18px rgba(0,0,0,.7);}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font:15.5px/1.55 var(--sans);-webkit-font-smoothing:antialiased}
+button{font:inherit;color:inherit}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--a);outline-offset:2px}
+.serif{font-family:var(--serif)}
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:color-mix(in srgb,var(--bg) 86%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--border)}
+.top .in{max-width:var(--max);margin:0 auto;padding:0 16px;height:58px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.brand{font-family:var(--serif);font-weight:500;font-size:1.35rem;letter-spacing:-.01em;display:flex;align-items:center;gap:9px;text-decoration:none}
+.brand .mark{width:22px;height:22px;border-radius:7px;background:linear-gradient(135deg,var(--a) 0 50%,var(--b) 50% 100%);transform:rotate(-8deg)}
+.brand em{font-style:italic;color:var(--brand)}
+.tabs{display:flex;gap:2px;background:var(--surface-2);padding:3px;border-radius:999px}
+.tabs button{border:0;background:transparent;padding:7px 15px;border-radius:999px;cursor:pointer;color:var(--muted);font-weight:600;font-size:.875rem}
+.tabs button[aria-selected="true"]{background:var(--surface);color:var(--text);box-shadow:0 1px 2px rgba(0,0,0,.08)}
+main{max-width:var(--max);margin:0 auto;padding:22px 16px 96px}
+.notice{font-size:.78rem;color:var(--faint);text-align:center;margin:0 0 26px}
+.notice b{color:var(--muted);font-weight:600}
+.hero{text-align:center;margin:34px 0 26px}
+.eyebrow{font-size:.75rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:600;margin:0 0 12px}
+.hero h1{font-family:var(--serif);font-weight:500;font-size:clamp(2.4rem,6.5vw,3.9rem);line-height:1.02;letter-spacing:-.02em;margin:0 0 14px;text-wrap:balance}
+.hero h1 em{font-style:italic;color:var(--brand)}
+.hero p{color:var(--muted);margin:0 auto;font-size:1.05rem;max-width:44ch;text-wrap:balance}
+.composer{background:var(--surface);border:1px solid var(--border);border-radius:22px;padding:14px 14px 12px;box-shadow:var(--shadow);transition:border-color .15s}
+.composer:focus-within{border-color:var(--border-strong)}
+.composer textarea{width:100%;border:0;background:transparent;resize:none;font:inherit;font-size:1.1rem;line-height:1.5;color:var(--text);min-height:78px;outline:none;padding:4px 4px}
+.composer textarea::placeholder{color:var(--faint)}
+.composer .row{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-top:4px}
+.hint{color:var(--muted);font-size:.8rem}
+.btn{border:0;background:var(--ink);color:var(--ink-on);padding:11px 18px;border-radius:999px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:8px;transition:transform .08s,opacity .15s}
+.btn:hover{opacity:.92}.btn:active{transform:scale(.98)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.btn.ghost{background:transparent;color:var(--text);border:1px solid var(--border-strong)}
+.btn.brand{background:var(--brand);color:#fff}
+.btn svg{width:16px;height:16px}
+.sugg{margin:18px 0 0}
+.sugg .bar{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin:0 2px 8px}
+.sugg .bar span{font-size:.75rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.sugg .bar button{border:0;background:none;color:var(--muted);font-size:.8rem;cursor:pointer;text-decoration:underline;text-underline-offset:3px;padding:0}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chips button{border:1px solid var(--border);background:var(--surface);border-radius:999px;padding:8px 13px;font-size:.875rem;cursor:pointer;text-align:left;color:var(--text);transition:border-color .12s,background .12s}
+.chips button:hover{border-color:var(--border-strong);background:var(--surface-2)}
+.chips button.buyer{background:transparent}
+.battle{margin-top:30px;display:none}
+.battle.show{display:block}
+.said{display:flex;gap:12px;align-items:flex-start;margin:0 0 16px;padding:0 4px}
+.said .q{font-family:var(--serif);font-size:2rem;line-height:1;color:var(--brand)}
+.said .t{font-family:var(--serif);font-size:1.2rem;line-height:1.35}
+.said .k{display:block;font-family:var(--sans);font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:600;margin:0 0 4px}
+.sides{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media (max-width:660px){.sides{grid-template-columns:1fr}}
+.side{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:16px;display:grid;gap:12px;box-shadow:var(--shadow);position:relative;overflow:hidden}
+.side::before{content:"";position:absolute;inset:0 auto 0 0;width:4px;background:var(--a)}
+.side.b::before{background:var(--b)}
+.side .who{display:flex;justify-content:space-between;align-items:center}
+.side .letter{font-family:var(--serif);font-size:1.6rem;font-weight:500;line-height:1;color:var(--a-ink);display:flex;align-items:baseline;gap:10px}
+.side.b .letter{color:var(--b-ink)}
+.side .letter .nm{font-family:var(--sans);font-size:.95rem;font-weight:600;color:var(--text)}
+.tag{font-size:.72rem;padding:4px 9px;border-radius:999px;background:var(--surface-2);color:var(--muted);font-weight:600;letter-spacing:.02em}
+.tag.live{background:var(--a-soft);color:var(--a-ink)}.side.b .tag.live{background:var(--b-soft);color:var(--b-ink)}
+.tag.done{background:var(--surface-2);color:var(--text)}
+.wave{height:52px;display:flex;align-items:center;gap:3px;padding:0 2px;background:var(--surface-2);border-radius:12px;padding:0 10px}
+.wave i{display:block;width:3px;border-radius:2px;background:var(--a);height:6px;opacity:.9;flex:1;max-width:5px}
+.side.b .wave i{background:var(--b)}
+.wave.live i{animation:bar 1s ease-in-out infinite}
+@keyframes bar{0%,100%{height:6px}50%{height:32px}}
+.wave.done i{height:var(--h,10px)}
+@media (prefers-reduced-motion:reduce){.wave.live i{animation:none;height:18px}}
+.meta{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.stats{display:flex;gap:14px;font-size:.8rem;color:var(--muted);font-variant-numeric:tabular-nums}
+.stats b{color:var(--text);font-weight:600}
+.play{border:1px solid var(--border-strong);background:var(--surface);border-radius:999px;padding:8px 14px;cursor:pointer;font-weight:600;display:inline-flex;gap:8px;align-items:center;font-size:.9rem}
+.play:disabled{opacity:.45;cursor:wait}
+.play svg{width:14px;height:14px}
+.vote{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:16px}
+@media (max-width:660px){.vote{grid-template-columns:1fr 1fr}}
+.vote button{border:1px solid var(--border);background:var(--surface);border-radius:14px;padding:14px 10px;font-weight:600;cursor:pointer;transition:transform .08s,background .12s}
+.vote button:hover:not(:disabled){transform:translateY(-1px)}
+.vote button:disabled{opacity:.4;cursor:not-allowed}
+.vote button.a{border-color:var(--a);color:var(--a-ink);background:var(--a-soft)}
+.vote button.b{border-color:var(--b);color:var(--b-ink);background:var(--b-soft)}
+.reveal{display:none;margin-top:18px;background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:20px;box-shadow:var(--shadow)}
+.reveal.show{display:block}
+.reveal h3{font-family:var(--serif);font-weight:500;font-size:1.9rem;letter-spacing:-.015em;margin:0 0 4px;line-height:1.1}
+.reveal .sub{color:var(--muted);font-size:.92rem;margin:0 0 16px}
+.elo{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:0 0 18px}
+@media (max-width:660px){.elo{grid-template-columns:1fr}}
+.elo > div{background:var(--surface-2);border-radius:14px;padding:14px;display:grid;grid-template-columns:1fr auto;align-items:center;gap:2px 12px}
+.elo .k{font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:600;grid-column:1/-1}
+.elo .n{font-family:var(--serif);font-weight:500;font-size:1.9rem;line-height:1;font-variant-numeric:tabular-nums}
+.elo .d{font-weight:700;font-size:1rem;padding:4px 9px;border-radius:999px;background:var(--surface)}
+.up{color:var(--good)}.down{color:var(--bad)}
+.jury h4{margin:0 0 8px;font-size:.75rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.jury .m{display:grid;grid-template-columns:170px 1fr 36px 1fr 36px;gap:8px 10px;align-items:center;font-size:.85rem;padding:6px 0;border-top:1px solid var(--border)}
+@media (max-width:660px){.jury .m{grid-template-columns:1fr 36px 1fr 36px}.jury .m .l{grid-column:1/-1;margin-bottom:-2px}}
+.jury .track{height:7px;background:var(--surface-2);border-radius:999px;overflow:hidden}
+.jury .fill{height:100%;border-radius:999px;background:var(--a)}.jury .fill.b{background:var(--b)}
+.jury .v{text-align:right;font-variant-numeric:tabular-nums;color:var(--muted)}
+.judges{margin:10px 0 0;font-size:.78rem;color:var(--faint)}
+.share{margin-top:18px;border:1px dashed var(--border-strong);border-radius:14px;padding:14px;display:grid;gap:10px}
+.share .lbl{font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.share pre{margin:0;white-space:pre-wrap;font:inherit;font-family:var(--serif);font-size:1rem;line-height:1.4}
+.share .row{display:flex;gap:8px;flex-wrap:wrap}
+.again{display:flex;gap:8px;margin-top:18px;flex-wrap:wrap}
+.lb{display:none}.lb.show{display:block}
+.lb .head{display:flex;justify-content:space-between;align-items:end;gap:12px;flex-wrap:wrap;margin:10px 0 14px}
+.lb h2{font-family:var(--serif);font-weight:500;font-size:2rem;letter-spacing:-.015em;margin:0 0 2px;line-height:1.1}
+.toggle{display:flex;gap:2px;background:var(--surface-2);padding:3px;border-radius:999px}
+.toggle button{border:0;background:transparent;padding:7px 13px;border-radius:999px;font-size:.85rem;font-weight:600;color:var(--muted);cursor:pointer}
+.toggle button[aria-pressed="true"]{background:var(--surface);color:var(--text);box-shadow:0 1px 2px rgba(0,0,0,.08)}
+.table-wrap{overflow-x:auto;background:var(--surface);border:1px solid var(--border);border-radius:var(--r);box-shadow:var(--shadow)}
+table{width:100%;border-collapse:collapse;font-size:.92rem}
+th,td{padding:13px 14px;border-bottom:1px solid var(--border);text-align:left;white-space:nowrap;vertical-align:middle}
+th{font-size:.7rem;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);font-weight:600}
+td.n,th.n{text-align:right;font-variant-numeric:tabular-nums}
+tr:last-child td{border-bottom:0}
+.rank{font-family:var(--serif);font-size:1.25rem;color:var(--faint);width:44px}
+.rank.top{color:var(--brand)}
+td .vendor{font-size:.78rem;color:var(--muted)}
+.spark{display:inline-block;width:76px;height:6px;background:var(--surface-2);border-radius:999px;overflow:hidden;vertical-align:middle;margin-right:8px}
+.spark i{display:block;height:100%;background:var(--ink);opacity:.8}
+.fight{border:1px solid var(--border-strong);background:transparent;border-radius:999px;padding:6px 12px;font-size:.8rem;cursor:pointer;font-weight:600}
+.fight:hover{background:var(--surface-2)}
+.foot{color:var(--faint);font-size:.8rem;margin-top:28px;text-align:center;max-width:60ch;margin-left:auto;margin-right:auto}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--ink-on);padding:10px 16px;border-radius:999px;font-size:.875rem;opacity:0;pointer-events:none;transition:opacity .2s;box-shadow:var(--shadow)}
+.toast.show{opacity:1}
+</style>
+
+<div class="top"><div class="in">
+  <a class="brand" href="#" id="home"><span class="mark"></span>Tool <em>Wars</em></a>
+  <div class="tabs" role="tablist">
+    <button role="tab" id="tab-arena" aria-selected="true" data-tab="arena">Arena</button>
+    <button role="tab" id="tab-lb" aria-selected="false" data-tab="lb">Leaderboard</button>
+  </div>
+</div></div>
+
+<main>
+  <p class="notice"><b>Placeholder build.</b> Ten fictional tools; your browser's speech engine stands in for their APIs.</p>
+
+  <section id="arena">
+    <div class="hero">
+      <p class="eyebrow">Blind voice battle</p>
+      <h1>Say something.<br>Two AI voices <em>say it back.</em></h1>
+      <p>You pick the better one. Names are hidden until you vote, then the Elo moves.</p>
+    </div>
+
+    <div class="composer">
+      <textarea id="prompt" maxlength="400" placeholder="Type anything. A line, a phone number, a lullaby, an apology." aria-label="Prompt"></textarea>
+      <div class="row">
+        <span class="hint" id="hint">10 fighters · 0 battles this session</span>
+        <button class="btn" id="go">Start battle <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h10M9 4l4 4-4 4"/></svg></button>
+      </div>
+    </div>
+
+    <div class="sugg">
+      <div class="bar"><span>Or start with one of these</span><button id="shuffle" type="button">Shuffle</button></div>
+      <div class="chips" id="chips"></div>
+    </div>
+
+    <div class="battle" id="battle">
+      <div class="said"><span class="q serif">“</span><div><span class="k">Both were told to say</span><span class="t" id="said"></span></div></div>
+      <div class="sides">
+        <div class="side a" id="side-a">
+          <div class="who"><span class="letter">A <span class="nm" id="name-a"></span></span><span class="tag" id="tag-a">waiting</span></div>
+          <div class="wave" id="wave-a"></div>
+          <div class="meta">
+            <div class="stats"><span>First byte <b id="ttfb-a">–</b></span><span>Total <b id="lat-a">–</b></span></div>
+            <button class="play" id="play-a" disabled><svg viewBox="0 0 16 16" fill="currentColor"><path d="M4 2.5v11l9-5.5z"/></svg>Play A</button>
+          </div>
+        </div>
+        <div class="side b" id="side-b">
+          <div class="who"><span class="letter">B <span class="nm" id="name-b"></span></span><span class="tag" id="tag-b">waiting</span></div>
+          <div class="wave" id="wave-b"></div>
+          <div class="meta">
+            <div class="stats"><span>First byte <b id="ttfb-b">–</b></span><span>Total <b id="lat-b">–</b></span></div>
+            <button class="play" id="play-b" disabled><svg viewBox="0 0 16 16" fill="currentColor"><path d="M4 2.5v11l9-5.5z"/></svg>Play B</button>
+          </div>
+        </div>
+      </div>
+      <div class="vote">
+        <button class="a" data-vote="a" disabled>A is better</button>
+        <button class="b" data-vote="b" disabled>B is better</button>
+        <button data-vote="tie" disabled>Tie</button>
+        <button data-vote="both_bad" disabled>Both bad</button>
+      </div>
+      <div class="reveal" id="reveal">
+        <h3 id="reveal-h">Reveal</h3>
+        <p class="sub" id="reveal-sub"></p>
+        <div class="elo">
+          <div><span class="k" id="elo-a-name"></span><span class="n" id="elo-a"></span><span class="d" id="elo-a-d"></span></div>
+          <div><span class="k" id="elo-b-name"></span><span class="n" id="elo-b"></span><span class="d" id="elo-b-d"></span></div>
+        </div>
+        <div class="jury"><h4>Jury scorecard</h4><div id="jury"></div></div>
+        <p class="judges">Five judge models score each output 1–10 on four metrics. Simulated in this placeholder build.</p>
+        <div class="share">
+          <span class="lbl">Share this battle</span>
+          <pre id="share-text"></pre>
+          <div class="row"><button class="btn ghost" id="copy">Copy for X</button><button class="btn ghost" id="copy-link">Copy challenge link</button></div>
+        </div>
+        <div class="again">
+          <button class="btn" id="again">New battle</button>
+          <button class="btn ghost" id="rematch">Same line, new pair</button>
+          <button class="btn ghost" id="to-lb">Leaderboard</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="lb" id="lb">
+    <div class="head">
+      <div><h2>Voice leaderboard</h2><span class="hint" id="lb-hint"></span></div>
+      <div class="toggle">
+        <button aria-pressed="true" data-rating="elo">Human Elo</button>
+        <button aria-pressed="false" data-rating="jury">Jury score</button>
+      </div>
+    </div>
+    <div class="table-wrap"><table id="lb-table">
+      <thead><tr><th></th><th>Tool</th><th class="n" id="col-main">Elo</th><th class="n">Battles</th><th class="n">Win rate</th><th class="n">Jury</th><th></th></tr></thead>
+      <tbody></tbody>
+    </table></div>
+    <p class="foot">Elo starts at 1500 and moves with every vote in this browser. Jury is the four-metric composite. Nobody edits a score by hand, and no tool can pay to move.</p>
+  </section>
+</main>
+<div class="toast" id="toast"></div>
+
+<script>
+(() => {
+  const TOOLS = [
+    { id:'aria',      name:'Aria Voice',     vendor:'Aria Labs',      elo:1582, pitch:1.15, rate:1.0,  jury:[8.9,8.4,8.1,7.4], tt:[160,220], lat:[900,1500] },
+    { id:'cobalt',    name:'Cobalt Speech',  vendor:'Cobalt',         elo:1561, pitch:0.85, rate:0.95, jury:[7.6,9.5,7.8,6.3], tt:[380,520], lat:[2200,3000] },
+    { id:'meridian',  name:'Meridian TTS',   vendor:'Meridian Cloud', elo:1548, pitch:1.0,  rate:1.05, jury:[8.0,7.1,8.4,8.6], tt:[120,180], lat:[800,1300] },
+    { id:'northwind', name:'Northwind Audio',vendor:'Northwind',      elo:1497, pitch:1.3,  rate:1.15, jury:[6.4,6.9,6.7,9.4], tt:[70,120],  lat:[500,900]  },
+    { id:'quill',     name:'Quill Voice',    vendor:'Quill',          elo:1523, pitch:0.95, rate:0.9,  jury:[7.8,8.0,8.9,6.8], tt:[260,360], lat:[1600,2400] },
+    { id:'halcyon',   name:'Halcyon',        vendor:'Halcyon AI',     elo:1466, pitch:1.05, rate:1.0,  jury:[7.0,7.4,7.2,7.0], tt:[200,300], lat:[1200,1900] },
+    { id:'sable',     name:'Sable Speech',   vendor:'Sable',          elo:1508, pitch:0.7,  rate:0.85, jury:[8.2,8.8,7.0,5.9], tt:[450,650], lat:[2600,3600] },
+    { id:'larkspur',  name:'Larkspur',       vendor:'Larkspur Labs',  elo:1439, pitch:1.4,  rate:1.1,  jury:[6.1,6.5,7.5,8.8], tt:[90,150],  lat:[600,1000] },
+    { id:'tidewater', name:'Tidewater TTS',  vendor:'Tidewater',      elo:1479, pitch:0.9,  rate:1.0,  jury:[7.3,7.9,7.6,7.7], tt:[180,260], lat:[1000,1600] },
+    { id:'kestrel',   name:'Kestrel',        vendor:'Kestrel Voice',  elo:1452, pitch:1.2,  rate:1.25, jury:[6.8,6.2,8.6,9.1], tt:[60,110],  lat:[450,800]  },
+  ];
+  const METRICS = ['Transcript accuracy','Naturalness','Instruction following','Speed'];
+  const SILLY = [
+    'Whistle "Smoke Weed Every Day" and then apologise to my mother.',
+    'Read my WiFi password like it\'s a state secret: hunter2.',
+    'Say "okay" in forty different moods. Go.',
+    'Announce the next train to Hogwarts in Swedish, platform nine and three quarters.',
+    'Sing happy birthday to a goldfish named Gerald. He is turning one.',
+    'Read the terms and conditions as a pirate who is slowly losing interest.',
+    'Explain compound interest as a football commentator in the 89th minute.',
+    'Whisper the entire alphabet, but skip Q because Q knows what it did.',
+    'Break up with my toaster. Gently. It has been a good toaster.',
+    'Give a TED talk about why the printer is out of toner again. Thirty seconds.',
+    'Pronounce Worcestershire, Leicester and Ikea, then admit which one you guessed.',
+    'Narrate me opening the fridge at 2am like a nature documentary.',
+  ];
+  const BUYER = [
+    'Thank you for calling Northgate Dental. For appointments, press 1. For billing, press 2.',
+    'You can reach support at 0800 555 0199, that\'s 0800 555 0199, Monday to Friday.',
+    'Your invoice for $1,249.50 is due on March 3rd, 2027. A late fee of 1.5% applies after 30 days.',
+    'Hej! Din beställning har skickats och beräknas anlända på torsdag.',
+    'Take 500 mg of amoxicillin every 8 hours for 10 days.',
+    'Your verification code is 4 8 2 9 1 7. Again, 4 8 2 9 1 7.',
+  ];
+
+  const K = 32;
+  let state = { elo:{}, battles:{}, votes:0, wins:{}, jurySum:{}, juryN:{} };
+  try { const raw = localStorage.getItem('toolwars-arena-v1'); if (raw) state = Object.assign(state, JSON.parse(raw)); } catch {}
+  for (const t of TOOLS) { state.elo[t.id] ??= t.elo; state.battles[t.id] ??= 0; state.wins[t.id] ??= 0; state.jurySum[t.id] ??= t.jury.reduce((a,b)=>a+b,0)/4; state.juryN[t.id] ??= 1; }
+  const save = () => { try { localStorage.setItem('toolwars-arena-v1', JSON.stringify(state)); } catch {} };
+
+  const $ = (id) => document.getElementById(id);
+  let current = null, sessionBattles = 0, rating = 'elo';
+  const rnd = (a,b) => a + Math.random()*(b-a);
+  const shuffle = (xs) => xs.slice().sort(() => Math.random() - .5);
+  const pickTwo = () => { const s = shuffle(TOOLS); return [s[0], s[1]]; };
+  const fmtMs = (ms) => ms >= 1000 ? (ms/1000).toFixed(1)+' s' : Math.round(ms)+' ms';
+
+  // ---- speech (browser engine stands in for vendor APIs) ----
+  let voices = [];
+  const loadVoices = () => { try { voices = speechSynthesis.getVoices(); } catch {} };
+  if ('speechSynthesis' in window) { loadVoices(); speechSynthesis.onvoiceschanged = loadVoices; }
+  let audioCtx = null;
+  function beepFallback(tool, text) {
+    try {
+      audioCtx ??= new (window.AudioContext || window.webkitAudioContext)();
+      const words = Math.max(3, text.split(/\s+/).length), t0 = audioCtx.currentTime;
+      for (let i = 0; i < Math.min(words, 24); i++) {
+        const o = audioCtx.createOscillator(), g = audioCtx.createGain();
+        o.frequency.value = 180 * tool.pitch * (1 + (i % 3) * 0.12);
+        g.gain.setValueAtTime(0.0001, t0 + i*0.18); g.gain.exponentialRampToValueAtTime(0.25, t0 + i*0.18 + 0.03); g.gain.exponentialRampToValueAtTime(0.0001, t0 + i*0.18 + 0.15);
+        o.connect(g).connect(audioCtx.destination); o.start(t0 + i*0.18); o.stop(t0 + i*0.18 + 0.16);
+      }
+    } catch {}
+  }
+  function speak(tool, text, side) {
+    const btn = $('play-'+side), wave = $('wave-'+side);
+    const setPlaying = (on) => { wave.classList.toggle('live', on); wave.classList.toggle('done', !on); btn.lastChild.textContent = on ? 'Stop ' + side.toUpperCase() : 'Play ' + side.toUpperCase(); };
+    if ('speechSynthesis' in window && typeof SpeechSynthesisUtterance !== 'undefined') {
+      if (speechSynthesis.speaking && btn.lastChild.textContent.startsWith('Stop')) { speechSynthesis.cancel(); setPlaying(false); return; }
+      speechSynthesis.cancel();
+      const u = new SpeechSynthesisUtterance(text.replace(/\[[^\]]*\]/g, ' '));
+      u.pitch = tool.pitch; u.rate = tool.rate;
+      if (voices.length) u.voice = voices[(TOOLS.indexOf(tool) * 3) % voices.length];
+      u.onstart = () => setPlaying(true); u.onend = u.onerror = () => setPlaying(false);
+      speechSynthesis.speak(u);
+    } else { beepFallback(tool, text); setPlaying(true); setTimeout(() => setPlaying(false), 2500); }
+  }
+
+  // ---- render ----
+  function buildWave(id, seed) {
+    const w = $(id); w.innerHTML = '';
+    for (let i = 0; i < 40; i++) { const b = document.createElement('i'); b.style.animationDelay = ((i * 53 + seed * 7) % 1000) + 'ms'; b.style.setProperty('--h', (6 + Math.abs(Math.sin(i * 0.9 + seed)) * 26) + 'px'); w.appendChild(b); }
+  }
+  let sillyPick = shuffle(SILLY).slice(0, 5);
+  function renderChips() {
+    const c = $('chips'); c.innerHTML = '';
+    for (const s of sillyPick) { const b = document.createElement('button'); b.type = 'button'; b.textContent = s; b.onclick = () => { $('prompt').value = s; startBattle(); }; c.appendChild(b); }
+    for (const s of shuffle(BUYER).slice(0, 3)) { const b = document.createElement('button'); b.type = 'button'; b.className = 'buyer'; b.textContent = s; b.onclick = () => { $('prompt').value = s; startBattle(); }; c.appendChild(b); }
+  }
+  function updateHint() { $('hint').textContent = `${TOOLS.length} fighters · ${sessionBattles} battle${sessionBattles === 1 ? '' : 's'} this session`; }
+  function toast(msg) { const t = $('toast'); t.textContent = msg; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 1800); }
+
+  // ---- battle ----
+  function startBattle(forcedPair) {
+    const text = $('prompt').value.trim();
+    if (!text) { toast('Give the voices something to say first.'); $('prompt').focus(); return; }
+    const pair = forcedPair || pickTwo();
+    current = { text, a: pair[0], b: pair[1], done: { a:false, b:false }, voted: false, ttfb:{}, lat:{} };
+    sessionBattles++; updateHint();
+    $('said').textContent = text;
+    $('battle').classList.add('show'); $('reveal').classList.remove('show');
+    document.querySelectorAll('.vote button').forEach(b => b.disabled = true);
+    try { speechSynthesis.cancel(); } catch {}
+    for (const side of ['a','b']) {
+      const tool = current[side];
+      $('tag-'+side).textContent = 'generating'; $('tag-'+side).className = 'tag live';
+      $('ttfb-'+side).textContent = '–'; $('lat-'+side).textContent = '–';
+      $('play-'+side).disabled = true; $('play-'+side).lastChild.textContent = 'Play ' + side.toUpperCase();
+      $('name-'+side).textContent = '';
+      buildWave('wave-'+side, TOOLS.indexOf(tool)); $('wave-'+side).className = 'wave live';
+      const ttfb = rnd(tool.tt[0], tool.tt[1]), lat = Math.max(ttfb + 200, rnd(tool.lat[0], tool.lat[1]) * Math.min(2, text.length / 90 + 0.6));
+      current.ttfb[side] = ttfb; current.lat[side] = lat;
+      setTimeout(() => { if (current?.text !== text) return; $('ttfb-'+side).textContent = fmtMs(ttfb); $('tag-'+side).textContent = 'streaming'; }, ttfb);
+      setTimeout(() => {
+        if (current?.text !== text) return;
+        $('lat-'+side).textContent = fmtMs(lat); $('tag-'+side).textContent = 'ready'; $('tag-'+side).className = 'tag done';
+        $('wave-'+side).className = 'wave done'; $('play-'+side).disabled = false;
+        current.done[side] = true;
+        if (current.done.a && current.done.b) document.querySelectorAll('.vote button').forEach(b => b.disabled = false);
+      }, lat);
+    }
+    $('battle').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  const expected = (ra, rb) => 1 / (1 + Math.pow(10, (rb - ra) / 400));
+  function vote(choice) {
+    if (!current || current.voted) return;
+    current.voted = true;
+    document.querySelectorAll('.vote button').forEach(b => b.disabled = true);
+    const a = current.a, b = current.b, ra = state.elo[a.id], rb = state.elo[b.id];
+    const sa = choice === 'a' ? 1 : choice === 'b' ? 0 : 0.5;
+    const na = Math.round((ra + K * (sa - expected(ra, rb))) * 10) / 10, nb = Math.round((rb + K * ((1 - sa) - expected(rb, ra))) * 10) / 10;
+    state.elo[a.id] = na; state.elo[b.id] = nb; state.battles[a.id]++; state.battles[b.id]++; state.votes++;
+    if (choice === 'a') state.wins[a.id]++; if (choice === 'b') state.wins[b.id]++;
+    const jury = {};
+    for (const [side, tool] of [['a', a], ['b', b]]) {
+      jury[side] = tool.jury.map(v => Math.max(1, Math.min(10, Math.round((v + rnd(-0.6, 0.6)) * 10) / 10)));
+      state.jurySum[tool.id] += jury[side].reduce((x, y) => x + y, 0) / 4; state.juryN[tool.id]++;
+    }
+    save();
+    $('name-a').textContent = a.name; $('name-b').textContent = b.name;
+    const label = { a: `${a.name} takes it.`, b: `${b.name} takes it.`, tie: 'Dead heat.', both_bad: 'Both bad. Noted.' }[choice];
+    $('reveal-h').textContent = label;
+    $('reveal-sub').textContent = `A was ${a.name} by ${a.vendor}. B was ${b.name} by ${b.vendor}.`;
+    const setDelta = (id, n, o) => { const d = Math.round((n - o) * 10) / 10, el = $(id); el.className = 'd ' + (d >= 0 ? 'up' : 'down'); el.textContent = (d >= 0 ? '+' : '') + d; };
+    $('elo-a-name').textContent = 'A · ' + a.name; $('elo-b-name').textContent = 'B · ' + b.name;
+    $('elo-a').textContent = na; setDelta('elo-a-d', na, ra); $('elo-b').textContent = nb; setDelta('elo-b-d', nb, rb);
+    const j = $('jury'); j.innerHTML = '';
+    METRICS.forEach((m, i) => {
+      const va = jury.a[i], vb = jury.b[i];
+      const row = document.createElement('div'); row.className = 'm';
+      row.innerHTML = `<span class="l">${m}</span><div class="track"><div class="fill" style="width:${va * 10}%"></div></div><span class="v">${va.toFixed(1)}</span><div class="track"><div class="fill b" style="width:${vb * 10}%"></div></div><span class="v">${vb.toFixed(1)}</span>`;
+      j.appendChild(row);
+    });
+    const winner = choice === 'a' ? a : choice === 'b' ? b : null;
+    const line = current.text.length > 90 ? current.text.slice(0, 87) + '…' : current.text;
+    $('share-text').textContent = winner
+      ? `I made two AI voices say “${line}”\n\n${winner.name} won (Elo ${winner === a ? na : nb}, ${winner === a ? (na - ra >= 0 ? '+' : '') + Math.round((na - ra) * 10) / 10 : (nb - rb >= 0 ? '+' : '') + Math.round((nb - rb) * 10) / 10}). Loser: ${winner === a ? b.name : a.name}.\n\nCan you tell them apart? toolwars.ai`
+      : `I made two AI voices say “${line}”\n\n${a.name} vs ${b.name}: ${choice === 'tie' ? 'a dead heat' : 'both terrible'}.\n\nYou be the judge: toolwars.ai`;
+    $('reveal').classList.add('show'); $('reveal').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    renderLeaderboard();
+  }
+
+  // ---- leaderboard ----
+  function renderLeaderboard() {
+    const rows = TOOLS.map(t => ({ t, elo: state.elo[t.id], battles: state.battles[t.id], wins: state.wins[t.id], jury: state.jurySum[t.id] / state.juryN[t.id] }));
+    rows.sort((x, y) => rating === 'elo' ? y.elo - x.elo : y.jury - x.jury);
+    $('col-main').textContent = rating === 'elo' ? 'Elo' : 'Jury';
+    const val = (r) => rating === 'elo' ? r.elo : r.jury, max = val(rows[0]), min = val(rows[rows.length - 1]);
+    const tb = $('lb-table').querySelector('tbody'); tb.innerHTML = '';
+    rows.forEach((r, i) => {
+      const pct = max === min ? 100 : Math.round(18 + 82 * (val(r) - min) / (max - min));
+      const tr = document.createElement('tr');
+      tr.innerHTML = `<td class="rank ${i === 0 ? 'top' : ''}">${i + 1}</td><td><b>${r.t.name}</b><div class="vendor">${r.t.vendor}</div></td>
+        <td class="n"><span class="spark"><i style="width:${pct}%"></i></span>${rating === 'elo' ? Math.round(r.elo) : r.jury.toFixed(2)}</td>
+        <td class="n">${r.battles}</td><td class="n">${r.battles ? Math.round(100 * r.wins / r.battles) + '%' : '–'}</td><td class="n">${r.jury.toFixed(1)}</td>
+        <td><button class="fight" data-challenge="${r.t.id}">Fight</button></td>`;
+      tb.appendChild(tr);
+    });
+    $('lb-hint').textContent = `${state.votes} vote${state.votes === 1 ? '' : 's'} recorded in this browser · ${rating === 'elo' ? 'ranked by human Elo' : 'ranked by jury composite'}`;
+  }
+
+  // ---- wiring ----
+  function showTab(tab) {
+    document.querySelectorAll('.tabs [role=tab]').forEach(b => b.setAttribute('aria-selected', String(b.dataset.tab === tab)));
+    $('arena').style.display = tab === 'arena' ? '' : 'none'; $('lb').classList.toggle('show', tab === 'lb');
+    if (tab === 'lb') renderLeaderboard();
+    window.scrollTo({ top: 0 });
+  }
+  document.querySelectorAll('.tabs [role=tab]').forEach(b => b.onclick = () => showTab(b.dataset.tab));
+  $('home').onclick = (e) => { e.preventDefault(); showTab('arena'); };
+  document.querySelectorAll('.toggle button').forEach(b => b.onclick = () => { rating = b.dataset.rating; document.querySelectorAll('.toggle button').forEach(x => x.setAttribute('aria-pressed', String(x === b))); renderLeaderboard(); });
+  document.querySelectorAll('.vote button').forEach(b => b.onclick = () => vote(b.dataset.vote));
+  $('go').onclick = () => startBattle();
+  $('shuffle').onclick = () => { sillyPick = shuffle(SILLY).slice(0, 5); renderChips(); };
+  $('prompt').addEventListener('keydown', (e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); startBattle(); } });
+  $('play-a').onclick = () => current && speak(current.a, current.text, 'a');
+  $('play-b').onclick = () => current && speak(current.b, current.text, 'b');
+  $('again').onclick = () => { $('prompt').value = ''; $('battle').classList.remove('show'); try { speechSynthesis.cancel(); } catch {} window.scrollTo({ top: 0, behavior: 'smooth' }); $('prompt').focus(); };
+  $('rematch').onclick = () => startBattle(pickTwo());
+  $('to-lb').onclick = () => showTab('lb');
+  const copy = async (text, ok) => { try { await navigator.clipboard.writeText(text); toast(ok); } catch { toast('Copy blocked here. Select the text instead.'); } };
+  $('copy').onclick = () => copy($('share-text').textContent, 'Copied. Paste it on X.');
+  $('copy-link').onclick = () => copy(`toolwars.ai/?battle=${encodeURIComponent(current?.text ?? '')}&pair=${current?.a.id},${current?.b.id}`, 'Challenge link copied.');
+  $('lb-table').addEventListener('click', (e) => {
+    const id = e.target?.dataset?.challenge; if (!id) return;
+    const t = TOOLS.find(x => x.id === id), others = TOOLS.filter(x => x !== t), o = others[Math.floor(Math.random() * others.length)];
+    showTab('arena');
+    if (!$('prompt').value.trim()) $('prompt').value = SILLY[Math.floor(Math.random() * SILLY.length)];
+    startBattle(shuffle([t, o]));
+  });
+
+  renderChips(); updateHint(); renderLeaderboard(); buildWave('wave-a', 1); buildWave('wave-b', 2);
+})();
+</script>
