@@ -60,51 +60,69 @@ campaign's sub-line.
 
 ## Tone of voice
 
-Register: a dry sports desk reporting a league nobody expected to care about. Precise numbers,
-short sentences, deadpan, never shouting. The jokes come from the prompts and the results, not
-from adjectives. The machine is allowed to be a machine: it says "this account is automated"
-in the same voice it says "Kokoro holds 12 prompts".
+Register: **a referee who enjoys the fight.** Blunt verdicts, names named, numbers quoted,
+deadpan jokes, zero corporate hedging. The referee is impartial about tools and unimpressed by
+brands; the only things it respects are the prompt and the score. It is never cruel to a
+person and it never invents a result. The machine is allowed to be a machine: it says "this
+account is automated" in the same voice it says "Kokoro took the whisper. Bark shouted it."
 
 Rules:
 
-- Numbers before adjectives. "Piper answered in 140 ms" beats "Piper is blazing fast".
-- Results are about outputs, never about people. A model fails a prompt; a company does not
-  "embarrass itself".
-- One joke per post, placed at the end, and it must be true.
-- Say "pending" plainly. Never imply a pending tool is bad.
-- No exclamation marks in system copy. At most one in a post, and only in a quoted prompt.
-- British or American spelling is fine; be consistent within a page (the codebase leans
-  British in the prompt bank).
-- Swedish, when used, is used properly or not at all.
+- **Verdicts, not summaries.** Every post names a winner and a loser and the number between
+  them. "Piper beat Kokoro on the IVR menu by 0.9" beats "results were mixed".
+- **Name names.** Tools and vendors are named, including the ones that have not shown up.
+  "ElevenLabs: pending, day 21" is a fact and it is posted. People are not named unless they
+  ask to be.
+- **Numbers before adjectives.** "140 ms" beats "blazing". An adjective without a number is
+  cut.
+- **Confront the tool, not the human.** A model fails a prompt; the model gets the joke.
+  Its authors, the vendor's staff and the person who voted wrong are off limits.
+- **No hedging.** No "it seems", "arguably", "we believe", "results may vary". If the number
+  is uncertain the post says the margin ("contested, within 0.3"), not a shrug.
+- **One deadpan line per post,** at the end, and it has to be true.
+- **Quirky beats loud.** No exclamation marks in system copy; at most one in a post and only
+  inside a quoted prompt. No emoji in the wordmark, the reports or the bios.
+- **Pending is stated, never spun.** "Pending" means we have no key. It does not mean they
+  would lose. It also does not mean we stop saying it.
+- **Swedish, when used, is used properly or not at all.**
 
 **Ten example lines**
 
-1. Kokoro-82M holds the whisper prompt. It is 82 million parameters and it can keep a secret.
-2. Week 3 on the Front: two prompts changed hands, both over phone numbers.
-3. Six closed APIs are still listed as pending. The ring is open.
+1. Kokoro-82M took the whisper prompt. It is 82 million parameters and it can keep a secret.
+   Bark, 300 million, read it at full volume to a sleeping baby.
+2. Week 3 on the Front: two prompts changed hands, both over phone numbers. Piper reads
+   digits. XTTS reads years.
+3. ElevenLabs, OpenAI, Google, Cartesia, Polly, Inworld: pending, day 21. Ten open models
+   have been fighting without you. The door is not locked.
 4. Your ear agreed with the jury 64% of the time. The jury is five models and none of them
-   have ears.
+   have ears. Somebody here is wrong.
 5. Nobody can whistle. We have the audio.
-6. Same 30 prompts, ten open models, every output published, including the eleven seconds of
-   breathing.
-7. Bark took the sports commentary and lost the medical dosage. Priorities.
-8. Contested: Piper and MeloTTS within 0.3 on the IVR menu. Rerun next Sunday.
-9. This account is run by a script. A person reads the replies on Mondays.
-10. If a score looks wrong, name the prompt and we rerun it in public.
+6. Same 30 prompts, ten models, every output published, including the eleven seconds of
+   breathing that Bark submitted as a postcode.
+7. Bark took the sports commentary and dropped the medical dosage. Sign it up for the match,
+   not the pharmacy.
+8. Contested: Piper and MeloTTS within 0.3 on the IVR menu. Rematch Sunday. Bring a voice.
+9. This account is run by a script. A person reads the replies on Mondays. The script does not
+   care what you think of it. The person might.
+10. If a score looks wrong, name the prompt. We rerun it in public and post the result either
+    way.
 
 **Ten anti-examples** (and why)
 
-1. "🚀 HUGE update: our AI-powered leaderboard is LIVE!!!" (hype, emoji, exclamation marks,
-   "AI-powered")
-2. "ElevenLabs is scared to enter the arena." (about a company's motive; we do not know it)
+1. "🚀 HUGE update: our AI-powered leaderboard is LIVE!!!" (hype, emoji, three exclamation
+   marks, "AI-powered")
+2. "ElevenLabs is scared to enter the arena." (invented motive; the fact is "pending, day 21",
+   post that instead)
 3. "The best TTS on the market, hands down." (superlative without a number)
 4. "Users are loving Tool Wars!" (invented testimonial)
-5. "Kokoro absolutely destroys Piper." (violence vocabulary; also, the margin was 0.4)
+5. "Kokoro absolutely destroys Piper." (violence vocabulary; also, the margin was 0.4, say
+   0.4)
 6. "We estimate ElevenLabs would score around 8.5." (an invented score; pending means pending)
 7. "As a fellow indie hacker, I just stumbled on this cool site…" (an agent pretending to be a
    bystander)
-8. "Game-changing, next-gen voice synthesis benchmarking platform." (buzzwords, no content)
-9. "Drop a like if you agree!" (engagement bait)
+8. "Results were mixed and it depends on your use case." (a hedge; the referee has a verdict)
+9. "Whoever configured Bark's voice at Suno should be fired." (a person; the model gets the
+   joke, never the staff)
 10. "Sorry for the delay, I was on holiday." (a machine pretending to have a life)
 
 ## Visual direction
@@ -133,9 +151,11 @@ a serif display face for headlines, a plain sans for everything else. Keep it an
 
 The frame is a league table drawn as a map, not a conflict. Vocabulary is the control.
 
-Allowed nouns and verbs: front, territory, prompt, tile, holds, takes, loses, contested,
-unclaimed, movement, advance, retreat, rematch, challenger, fighter, ring, round, week,
-jury, verdict, pending, claim.
+Allowed nouns and verbs: front, territory, prompt, tile, holds, takes, loses, drops, beat,
+outread, walked it, collapsed on, contested, unclaimed, movement, advance, retreat, rematch,
+challenger, fighter, ring, round, week, jury, verdict, pending, claim, the door is open.
+Confrontation is aimed at tools and at absent vendors as institutions ("pending, day 21"),
+never at a person, and every barb carries its number.
 
 Never used: kill, destroy, annihilate, crush, bloodbath, casualties, massacre, weapons,
 bombs, invasion, enemy, troops, or references to any real war, army or nation's conflict.
@@ -145,8 +165,9 @@ Further rules:
 
 - Fighters are tools. People, companies and their staff are never fighters and never
   losers.
-- Losing is described by the number ("lost by 0.4") and by the prompt, never by
-  character ("pathetic", "embarrassing").
+- Losing is described by the number ("lost by 0.4") and by the prompt, then joked about,
+  never by character ("pathetic", "embarrassing") and never as a verdict on the people who
+  built it.
 - The map has no flags, borders of real countries, or military icons. Language prompts
   get a language code, not a flag.
 - If a real-world event makes war imagery read badly that week, the weekly report can run
