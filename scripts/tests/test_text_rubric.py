@@ -33,7 +33,7 @@ def test_norm_quotes_dashes_case_whitespace():
 
 
 def test_words_is_split_on_raw_output():
-    assert score_text.word_count("| a | b |\n|---|---|\n| c | d |") == 10
+    assert score_text.word_count("| a | b |\n|---|---|\n| c | d |") == 11   # the separator line is one token
     assert score_text.word_count("  one\ttwo\n\nthree  ") == 3
 
 
@@ -68,8 +68,8 @@ def test_must_not_include():
 
 # --- regex -------------------------------------------------------------------------
 def test_regex_runs_on_normalised_text_ignorecase_multiline():
-    assert hit({"type": "regex", "value": r"\b(24|twenty-?four)\b[^.]{0,20}months"}, "a Twenty-Four month tail")
-    assert hit({"type": "regex", "value": r"^clause\s*4"}, "Summary:\nClause 4 says...")
+    assert hit({"type": "regex", "value": r"\b(24|twenty-?four)\b[^.]{0,20}months"}, "a Twenty-Four months tail")
+    assert hit({"type": "regex", "value": r"^summary: clause\s*4"}, "Summary:\nClause 4 says...")   # newlines collapse to spaces
     assert not hit({"type": "regex", "value": r"clause\s*99"}, "Clause 4 says...")
 
 
