@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-09-18T04:16:53.111Z",
+  "generated_at": "2026-09-18T04:31:17.152Z",
   "source": "catalog",
   "demo": false,
   "categories": [
@@ -41,17 +41,17 @@
         {
           "key": "accuracy",
           "label": "Rubric accuracy",
-          "description": "Every prompt ships with a machine-checkable rubric: facts, clause numbers, party names and figures the answer must contain (must_include: substring on lowercased, whitespace-collapsed text, alternatives allowed), values that must appear in a specific shape and structural markers such as a bullet, a heading or a {+tracked change+} (regex, flags im), and citations that must stay inside the source (cites_only). accuracy = 1 + 9 x weighted passes / weighted items over those kinds, rounded to one decimal. No judge model, no estimate: a pass is a substring or a regex match."
+          "description": "Every prompt ships with a machine-checkable rubric: facts, clause numbers, party names, figures and patterns the answer must contain, plus things it must not say (a fabricated case endorsed as real). Accuracy = 10 × the weighted share of those items the output satisfies. No judge model is involved."
         },
         {
           "key": "adherence",
           "label": "Constraint adherence",
-          "description": "The prompt's constraints, checked deterministically: must_not_include (a fabricated case endorsed as real, a legalese word the brief banned, a clause number that does not exist), max_words and min_words on a Unicode word count that ignores markdown punctuation, language by a stopword vote (en/sv/de/fr/es), format_json (parses, and carries the required top-level keys) and format_markdown_table. adherence = 1 + 9 x weighted passes / weighted items over those kinds; null when a prompt has none."
+          "description": "The brief's constraints, checked deterministically: word limits, the required language (a stopword vote over English, Swedish, German, French and Spanish), and required formats such as valid JSON with the right keys, a markdown table, numbered or bulleted lists, headings or tracked-change markup. Adherence = 10 × the weighted share satisfied."
         },
         {
           "key": "conciseness",
           "label": "Conciseness",
-          "description": "Length against the brief, from a formula rather than a judge. target = the smallest max_words item in the prompt's rubric (400 when there is none). 10 when the output is at or under the target; linear down to 1 at three times the target; an empty output is 1. Facts are scored by accuracy, so this metric only measures whether the answer stayed the length the buyer asked for."
+          "description": "Useful content per word, from a formula rather than a judge: target = the prompt's target_words, else its smallest word limit, else 300; density = (accuracy ÷ 10) ÷ max(1, words ÷ target); conciseness = 10 × min(1, density), floored at 1. A long answer that still misses facts scores low; a short correct one scores high."
         },
         {
           "key": "velocity",
@@ -2018,7 +2018,7 @@
       "category": "voice",
       "tool": "melotts",
       "prompt_id": "voice-001",
-      "run_at": "2026-09-18T03:29:32.600Z",
+      "run_at": "2026-09-18T04:21:03.330Z",
       "audio_url": null,
       "transcript": null,
       "ttft_ms": null,
@@ -2034,7 +2034,7 @@
       "category": "voice",
       "tool": "melotts",
       "prompt_id": "voice-002",
-      "run_at": "2026-09-18T03:29:38.643Z",
+      "run_at": "2026-09-18T04:21:07.214Z",
       "audio_url": null,
       "transcript": null,
       "ttft_ms": null,
@@ -2590,7 +2590,7 @@
       "category": "voice",
       "tool": "xtts-v2",
       "prompt_id": "voice-008",
-      "run_at": "2026-09-18T03:34:17.065Z",
+      "run_at": "2026-09-18T04:21:13.306Z",
       "audio_url": null,
       "transcript": null,
       "ttft_ms": null,
@@ -3974,7 +3974,7 @@
   ],
   "previous_holders": {
     "voice": {
-      "run_at": "2026-09-18T04:16:26.762Z",
+      "run_at": "2026-09-18T04:16:53.111Z",
       "holders": {
         "voice-001": "piper",
         "voice-002": "piper",

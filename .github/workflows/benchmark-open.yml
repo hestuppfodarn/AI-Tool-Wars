@@ -27,7 +27,7 @@ name: benchmark-open
 #       -> data/runs/<category>/<slug>/{<prompt-id>.md, runs.json}
 #       requirements:  requirements/open-llm/base.txt [+ requirements/open-llm/<slug>.txt]
 #   python3 scripts/score-text.py --category <category> --tool <slug>
-#       -> fills "scores" and "rubric_results" in the same runs.json (stdlib only)
+#       -> fills "scores" and "rubric_hits" in the same runs.json (stdlib only)
 # All scripts must be idempotent: prompts already marked "success" (audio may
 # already be .ogg from a previous run) are skipped unless --force.
 
@@ -198,7 +198,10 @@ jobs:
     if: needs.plan.outputs.count != '0'
     runs-on: ubuntu-latest
     name: run (${{ matrix.category }}/${{ matrix.slug }})
-    timeout-minutes: 60
+    # Voice models finish well inside an hour. A 7B Q4_K_M text model decodes at
+    # ~4 tok/s on a 4-vCPU runner: 10 prompts x 700 tokens is ~40 min plus the
+    # first-time llama.cpp build and the GGUF download, so text jobs get longer.
+    timeout-minutes: ${{ matrix.kind == 'llm' && 120 || 60 }}
     continue-on-error: true
     strategy:
       fail-fast: false

@@ -17,9 +17,9 @@ Catalog contract (data/catalog/<category>/tools.json):
     "run": {"gguf_repo": "<hf repo>", "gguf_file": "<file>.gguf", "context": 8192,
             "max_tokens": 700, "temperature": 0.2, "system": "..."}
 Optional run keys: "gguf_url" (direct https URL instead of Hugging Face),
-"gguf_revision", "seed" (default 42), "top_p", "repeat_penalty", "chat_format"
-(llama-cpp-python format name; default is the template embedded in the GGUF),
-"stop" (list of stop strings).
+"gguf_revision", "seed" (default 42), "top_p", "top_k", "min_p", "repeat_penalty",
+"chat_format" (a llama-cpp-python format name such as "chatml" or "llama-3"; default is
+the Jinja template embedded in the GGUF, else llama-2), "stop" (extra stop strings).
 
 Prompt framing: system = run.system (if any); user = prompt.instructions +
 blank line + prompt.text (the text may embed a document). Nothing else is added.
@@ -29,8 +29,13 @@ huggingface_hub). The GGUF is downloaded once with huggingface_hub and cached
 under HF_HOME (default ~/.cache/huggingface; OPEN_LLM_CACHE=<dir> moves it to
 <dir>/hf). Set HF_HUB_OFFLINE=1 to fail fast instead of downloading.
 
-Generation runs in a worker subprocess that loads the model once and streams
-tokens, so ttft_ms is the real time to the first generated token. A prompt that
+Generation runs in a worker subprocess that loads the model once and drives
+llama.cpp token by token (the chat is rendered with the template embedded in the
+GGUF, exactly as llama-cpp-python's create_chat_completion would, then tokenised
+once and fed to Llama.generate()), so ttft_ms is the real time to the first sampled
+token and tokens_in/tokens_out are exact. Sampling matches llama-cpp-python's chat
+defaults unless run overrides them: top_k 40, top_p 0.95, min_p 0.05,
+repeat_penalty 1.1, seed 42. A prompt that
 exceeds LLM_TIMEOUT_S (default 600) is recorded as an error; the worker is
 killed and a fresh one is started for the next prompt. Nothing is retried
 silently and failures are always written to runs.json. Successful prompts are
@@ -39,8 +44,8 @@ aborts.
 
 runs.json entry (success):
     prompt_id, run_at, status "success", output "<prompt-id>.md", output_chars,
-    output_words, tokens_in, tokens_out, ttft_ms, latency_ms, tokens_per_s
-    (decode rate: tokens after the first / seconds after the first token),
+    output_words, tokens_in (rendered prompt tokens), tokens_out, ttft_ms, latency_ms,
+    tokens_per_s (decode rate: tokens after the first / seconds after the first token),
     finish_reason, model (gguf_repo), model_version, device "cpu",
     endpoint "local", threads, error null
 runs.json entry (error): prompt_id, run_at, status "error", error, model,
@@ -52,6 +57,7 @@ Exit codes: 0 ran, 1 every attempted prompt failed, 2 usage error,
 from __future__ import annotations
 
 import argparse
+import codecs
 import importlib.util
 import json
 import multiprocessing as mp
@@ -164,6 +170,94 @@ def resolve_model_path(cfg: dict) -> str:
 
 # --- worker process -------------------------------------------------------------
 
+DEFAULT_SAMPLING = {"top_k": 40, "top_p": 0.95, "min_p": 0.05, "repeat_penalty": 1.1}
+
+
+def render_chat(llm, messages: list[dict], cfg: dict) -> tuple[str, list[str], bool]:
+    """(prompt text, stop strings, template_added_bos) the way llama-cpp-python renders
+    a chat: run.chat_format names one of its built-in formats; otherwise the GGUF's
+    tokenizer.chat_template (Jinja) is used; otherwise the llama-2 format."""
+    from llama_cpp import llama_chat_format as cf
+
+    name = cfg.get("chat_format")
+    template = None if name else (llm.metadata or {}).get("tokenizer.chat_template")
+    if template:
+        eos_id, bos_id = llm.token_eos(), llm.token_bos()
+        eos = llm._model.token_get_text(eos_id) if eos_id != -1 else ""
+        bos = llm._model.token_get_text(bos_id) if bos_id != -1 else ""
+        formatter = cf.Jinja2ChatFormatter(template=template, eos_token=eos, bos_token=bos, stop_token_ids=[eos_id])
+        resp = formatter(messages=messages)
+    else:
+        # llama-cpp-python registers "llama-2" as format_llama2, "mistral-instruct" as
+        # format_mistral_instruct, "chatml" as format_chatml: try both spellings.
+        name = str(name or "llama-2")
+        fn = getattr(cf, "format_" + name.replace("-", "_"), None) or getattr(cf, "format_" + name.replace("-", ""), None)
+        if fn is None:
+            known = ", ".join(sorted(n[7:] for n in dir(cf) if n.startswith("format_")))
+            raise ValueError(f"unknown chat_format {name!r}; llama-cpp-python has: {known}")
+        resp = fn(messages=messages)
+    stop = resp.stop if isinstance(resp.stop, list) else ([resp.stop] if resp.stop else [])
+    return resp.prompt, [str(x) for x in stop if x], bool(getattr(resp, "added_special", False))
+
+
+def generate_text(llm, messages: list[dict], cfg: dict, timeout_s: float) -> dict:
+    """Token-by-token generation with exact timings. Raises on timeout / empty output."""
+    import llama_cpp
+
+    prompt, stops, added_bos = render_chat(llm, messages, cfg)
+    stops = stops + [str(x) for x in (cfg.get("stop") or [])]
+    tokens = llm.tokenize(prompt.encode("utf-8"), add_bos=not added_bos, special=True)
+    max_tokens = int(cfg.get("max_tokens") or 700)
+    n_ctx = llm.n_ctx()
+    if len(tokens) + max_tokens > n_ctx:
+        raise ValueError(f"prompt ({len(tokens)} tokens) + max_tokens ({max_tokens}) exceed context {n_ctx}")
+    sampling = {k: float(cfg.get(k, v)) for k, v in DEFAULT_SAMPLING.items()}
+    sampling["top_k"] = int(sampling["top_k"])
+    temperature = float(cfg.get("temperature", 0.2))
+
+    # Drop the KV cache so ttft_ms always includes full prompt evaluation
+    # (llama-cpp-python would otherwise reuse a shared prefix and make ttft
+    # depend on prompt order).
+    llm.reset()
+    decoder = codecs.getincrementaldecoder("utf-8")(errors="replace")
+    deadline = time.perf_counter() + timeout_s
+    t0 = time.perf_counter()
+    pieces, ttft_ms, tokens_out, finish, timed_out = [], None, 0, "length", False
+    for tok in llm.generate(tokens, temp=temperature, reset=True, **sampling):
+        if ttft_ms is None:
+            ttft_ms = round((time.perf_counter() - t0) * 1000)
+        if llama_cpp.llama_token_is_eog(llm._model.vocab, tok):
+            finish = "stop"
+            break
+        tokens_out += 1
+        pieces.append(decoder.decode(llm.detokenize([tok], special=False)))
+        if stops:
+            tail = "".join(pieces[-8:])
+            cut = [tail.find(x) for x in stops if x in tail]
+            if cut:
+                whole = "".join(pieces)
+                idx = whole.rfind(tail) + min(cut)
+                pieces, finish = [whole[:idx]], "stop"
+                break
+        if tokens_out >= max_tokens:
+            break
+        if time.perf_counter() > deadline:
+            timed_out = True
+            break
+    pieces.append(decoder.decode(b"", final=True))
+    latency_ms = round((time.perf_counter() - t0) * 1000)
+    text = "".join(pieces)
+    if timed_out:
+        raise TimeoutError(f"generation exceeded {timeout_s:g}s (LLM_TIMEOUT_S) after {tokens_out} tokens")
+    if not text.strip():
+        raise RuntimeError("empty completion")
+    decode_s = (latency_ms - (ttft_ms or 0)) / 1000
+    tps = round((tokens_out - 1) / decode_s, 2) if tokens_out > 1 and decode_s > 0 else None
+    return {"text": text, "tokens_in": len(tokens), "tokens_out": tokens_out,
+            "ttft_ms": ttft_ms if ttft_ms is not None else latency_ms, "latency_ms": latency_ms,
+            "tokens_per_s": tps, "finish_reason": finish}
+
+
 def _worker_main(conn, cfg: dict) -> None:
     """Downloads + loads the GGUF once, then serves completion jobs over the pipe."""
     try:
@@ -175,73 +269,33 @@ def _worker_main(conn, cfg: dict) -> None:
     try:
         path = resolve_model_path(cfg)
         threads = int(cfg.get("threads") or cpu_threads())
-        kwargs = dict(model_path=path, n_ctx=int(cfg.get("context") or 8192), n_threads=threads,
-                      n_threads_batch=threads, n_gpu_layers=0, seed=int(cfg.get("seed", 42)),
-                      verbose=False)
-        if cfg.get("chat_format"):
-            kwargs["chat_format"] = cfg["chat_format"]
-        llm = Llama(**kwargs)
+        llm = Llama(model_path=path, n_ctx=int(cfg.get("context") or 8192), n_threads=threads,
+                    n_threads_batch=threads, n_gpu_layers=0, seed=int(cfg.get("seed", 42)), verbose=False)
         # One-token warm-up so the first real prompt does not pay llama.cpp's
         # one-off thread-pool / graph allocation in its ttft_ms.
-        for _ in llm.create_chat_completion([{"role": "user", "content": "Hi"}], max_tokens=1, stream=True):
-            pass
+        for _ in llm.generate(llm.tokenize(b"Hi", add_bos=True), temp=0.0):
+            break
         llm.reset()
         meta = getattr(llm, "metadata", {}) or {}
         name = meta.get("general.name") or Path(path).stem
         version = f"{Path(path).name} ({name}; llama-cpp-python {llama_cpp.__version__})"
+        chat = "chat_format " + cfg["chat_format"] if cfg.get("chat_format") else \
+            ("gguf chat template" if meta.get("tokenizer.chat_template") else "llama-2 fallback format")
     except Exception as e:  # download / load failure: reported, not hidden
         conn.send(("load_error", f"{type(e).__name__}: {str(e)[:400]}\n{traceback.format_exc()[-600:]}"))
         return
-    conn.send(("ready", {"model_version": version, "threads": threads, "model_path": path}))
+    conn.send(("ready", {"model_version": version, "threads": threads, "model_path": path, "chat": chat}))
 
     while True:
         job = conn.recv()
         if job is None:
             return
         try:
-            gen_kwargs = dict(max_tokens=int(cfg.get("max_tokens") or 700),
-                              temperature=float(cfg.get("temperature", 0.2)),
-                              seed=int(cfg.get("seed", 42)), stream=True)
-            for key in ("top_p", "repeat_penalty", "stop"):
-                if cfg.get(key) is not None:
-                    gen_kwargs[key] = cfg[key]
-            # Drop the KV cache so ttft_ms always includes full prompt evaluation
-            # (llama-cpp-python would otherwise reuse the shared system-prompt prefix
-            # and make ttft depend on prompt order).
-            llm.reset()
-            deadline = time.perf_counter() + float(job["timeout_s"])
-            t0 = time.perf_counter()
-            pieces, ttft_ms, tokens_out, finish, timed_out = [], None, 0, None, False
-            for chunk in llm.create_chat_completion(job["messages"], **gen_kwargs):
-                choice = chunk["choices"][0]
-                delta = choice.get("delta") or {}
-                if "content" in delta and delta["content"] is not None:
-                    if ttft_ms is None:
-                        ttft_ms = round((time.perf_counter() - t0) * 1000)
-                    pieces.append(delta["content"])
-                    tokens_out += 1
-                if choice.get("finish_reason"):
-                    finish = choice["finish_reason"]
-                if time.perf_counter() > deadline:
-                    timed_out = True
-                    break
-            latency_ms = round((time.perf_counter() - t0) * 1000)
-            text = "".join(pieces)
-            if timed_out:
-                raise TimeoutError(f"generation exceeded {job['timeout_s']:g}s (LLM_TIMEOUT_S) after {tokens_out} tokens")
-            if not text.strip():
-                raise RuntimeError("empty completion")
-            decode_s = (latency_ms - (ttft_ms or 0)) / 1000
-            tps = round((tokens_out - 1) / decode_s, 2) if tokens_out > 1 and decode_s > 0 else None
-            # message contents only (chat-template tokens excluded): an approximation
-            tokens_in = len(llm.tokenize(
-                "\n".join(m["content"] for m in job["messages"]).encode("utf-8"), add_bos=True, special=True))
+            r = generate_text(llm, job["messages"], cfg, float(job["timeout_s"]))
+            text = r.pop("text")
             Path(job["out_path"]).write_text(text if text.endswith("\n") else text + "\n", encoding="utf-8")
-            conn.send(("ok", {
-                "output_chars": len(text), "output_words": word_count(text), "tokens_in": tokens_in,
-                "tokens_out": tokens_out, "ttft_ms": ttft_ms if ttft_ms is not None else latency_ms,
-                "latency_ms": latency_ms, "tokens_per_s": tps, "finish_reason": finish or "unknown",
-            }))
+            r.update({"output_chars": len(text), "output_words": word_count(text)})
+            conn.send(("ok", r))
         except Exception as e:
             conn.send(("err", f"{type(e).__name__}: {str(e)[:400]}"))
 
@@ -412,7 +466,8 @@ def main(argv=None) -> int:
                         raise
                     consecutive_load_failures = 0
                     model_version = worker.info.get("model_version")
-                    print(f"model loaded in {worker.load_ms} ms ({worker.info.get('threads')} threads): {model_version}")
+                    print(f"model loaded in {worker.load_ms} ms ({worker.info.get('threads')} threads, "
+                          f"{worker.info.get('chat')}): {model_version}")
                 sys.stdout.write(f"{p['id']} {p['title']:<34} ")
                 sys.stdout.flush()
                 job = {"messages": build_messages(p, cfg), "out_path": str(out_path), "timeout_s": args.timeout}

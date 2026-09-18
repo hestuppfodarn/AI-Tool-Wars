@@ -1,7 +1,7 @@
 {
-  "tools": "kokoro,piper,kittentts,speecht5,melotts,xtts-v2",
-  "categories": "",
+  "tools": "legal/llama-3.2-3b-instruct,legal/phi-4-mini",
+  "categories": "legal",
   "limit": "",
   "force": false,
-  "note": "Full 30-prompt bank on the light and medium open models. Requested 2026-09-18T03:20:19Z. `categories` (optional, comma-separated, empty = every category) restricts which data/catalog/<category>/ are planned; `tools` may also use category/slug."
+  "note": "First legal proxy run: two lightest open LLMs on the 10-prompt legal bank. Requested 2026-09-18T04:31:16Z. `categories` restricts which data/catalog/<category>/ are planned; `tools` may use category/slug."
 }
