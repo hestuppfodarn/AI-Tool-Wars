@@ -1,0 +1,47 @@
+{
+  "slug": "legal",
+  "name": "Legal AI",
+  "description": "Legal drafting and review assistants compared on the same public documents: an NDA with a buried non-compete, a Swedish employment clause, a DPA gap analysis, a fake citation. The products with no public API get a standing challenge; open models run the bank as proxies in the meantime.",
+  "output_modality": "text",
+  "metrics": [
+    {
+      "key": "accuracy",
+      "label": "Rubric accuracy",
+      "description": "Every prompt ships with a machine-checkable rubric: facts, clause numbers, party names and figures the answer must contain, statements it must not contain (a fabricated case treated as real, a clause number that does not exist), and regular expressions for values that have to appear in a specific shape. The scorer normalises the output (lowercase, collapsed whitespace, straight quotes) and tests every must_include, must_not_include and regex item; accuracy = 10 x weighted hits / weighted items. No judge model, no estimate: a hit is a substring or a regex match."
+    },
+    {
+      "key": "adherence",
+      "label": "Constraint adherence",
+      "description": "The format, length and language rules of the prompt, checked deterministically: max_words and min_words on the whitespace-split word count, language on a stopword-ratio detector (sv/en/de/fr), format on a structural test (valid JSON, a Markdown table, a numbered list, headings, or tracked-change markup with [-deleted-] and {+inserted+} spans). adherence = 10 x weighted hits / weighted items among the max_words, min_words, language and format rubric items."
+    },
+    {
+      "key": "conciseness",
+      "label": "Conciseness",
+      "description": "Useful content per word, from a formula rather than a judge. target = the prompt's target_words (or its max_words rubric item, else 300). density = accuracy fraction / max(1, words / target). conciseness = 10 x min(1, density), floored at 1. An answer that finds every fact inside the target length scores 10; the same facts at twice the length score 5; padding without facts scores 1."
+    },
+    {
+      "key": "velocity",
+      "label": "Speed",
+      "description": "Time to first token and total generation time, ranked against every other run on the same prompt. 10 = fastest, 1 = slowest, linear in between on the mean of the two ranks. Needs at least two tools on a prompt; otherwise blank. Open models run on the same CPU; API proxies are measured from the same host."
+    }
+  ],
+  "active_prompts": 10,
+  "rubric_contract": {
+    "version": 1,
+    "summary": "prompts[].rubric is a list of items {id, type, value, weight?}. The scorer (scripts/score-text.py) evaluates every item against the run's output file and writes scores.accuracy, scores.adherence and scores.conciseness into runs.json. Velocity is added by the exporter from ttft_ms and latency_ms.",
+    "normalisation": "Before any check the output is: NFC-normalised, curly quotes and dashes mapped to straight ones, lowercased, whitespace collapsed to single spaces. Regex items run against the same normalised text with re.IGNORECASE | re.MULTILINE. Words = len(output.split()) on the raw output.",
+    "types": {
+      "must_include": "value: string or list of strings. Hit when the normalised output contains the normalised value; for a list, when it contains at least one of them (alternatives, e.g. 'clause 7.3' or '7.3'). Metric: accuracy.",
+      "must_not_include": "value: string or list of strings. Hit when none of the values occur in the normalised output. Metric: accuracy.",
+      "regex": "value: a Python regular expression. Hit when re.search finds a match in the normalised output. Metric: accuracy.",
+      "max_words": "value: integer. Hit when words <= value. Metric: adherence. Also sets the conciseness target when the prompt has no target_words.",
+      "min_words": "value: integer. Hit when words >= value. Metric: adherence.",
+      "language": "value: ISO 639-1 code (sv, en, de, fr). Hit when the detector's top language for the output equals the value. Detector: ratio of a fixed stopword list per language over the tokens; ties go to the prompt's language. Metric: adherence.",
+      "format": "value: one of json, markdown_table, numbered_list, bullet_list, headings, tracked_changes. json: the whole output, or the first ``` fenced block, parses with json.loads. markdown_table: at least one line matching ^\\|.*\\|$ plus a separator line of dashes and pipes. numbered_list: at least three lines starting with a number and a dot or bracket. bullet_list: at least three lines starting with -, * or •. headings: at least two lines starting with #. tracked_changes: at least one [-...-] deletion span and at least one {+...+} insertion span. Metric: adherence."
+    },
+    "weight": "Optional number, default 1. Per metric: score = 10 x sum(weight x hit) / sum(weight) over that metric's items, rounded to one decimal. A metric with no items is null (not 0).",
+    "conciseness": "target = prompt.target_words, else the max_words item's value, else 300. density = (accuracy / 10) / max(1, words / target). conciseness = max(1, round(10 x min(1, density), 1)). Null when accuracy is null.",
+    "failures": "A run with status != success gets no scores. An empty or whitespace-only output scores accuracy 0 (or 10 if the rubric has only must_not_include items), adherence per the rules, conciseness 1.",
+    "output_fields": "The runner writes output (file name, <prompt-id>.md), output_chars, ttft_ms, latency_ms, model, run_at, status, error. The scorer adds scores.{accuracy,adherence,conciseness}, rubric_hits: [{id, hit, note?}], words, scored_at."
+  }
+}

@@ -1,0 +1,165 @@
+[
+  {
+    "slug": "harvey",
+    "name": "Harvey",
+    "vendor": "Harvey AI",
+    "website": "https://www.harvey.ai",
+    "description": "Legal AI platform sold to law firms and in-house teams for research, drafting and document review. No public API and no self-serve signup, so it cannot be run on the public bank without a seat from the vendor.",
+    "adapter": null,
+    "status": "challenged",
+    "challenge": {
+      "asked_on": "2026-09-18",
+      "terms": "one seat, run the public bank, publish everything",
+      "contact_hint": "via website form"
+    }
+  },
+  {
+    "slug": "legora",
+    "name": "Legora",
+    "vendor": "Legora",
+    "website": "https://legora.com",
+    "description": "Collaborative legal AI workspace from Stockholm: review, drafting, tabular document analysis, sold to law firms. No public API and no self-serve signup, so it cannot be run on the public bank without a seat from the vendor.",
+    "adapter": null,
+    "status": "challenged",
+    "challenge": {
+      "asked_on": "2026-09-18",
+      "terms": "one seat, run the public bank, publish everything",
+      "contact_hint": "via website form"
+    }
+  },
+  {
+    "slug": "llama-3.2-3b-instruct",
+    "name": "Llama 3.2 3B Instruct",
+    "vendor": "Meta",
+    "website": "https://huggingface.co/meta-llama/Llama-3.2-3B-Instruct",
+    "description": "3-billion-parameter open-weight instruction model, run locally on CPU through llama.cpp at Q4_K_M.",
+    "adapter": "open-llm:llama-3.2-3b-instruct",
+    "model_hint": "Llama-3.2-3B-Instruct Q4_K_M (GGUF)",
+    "license": "Llama 3.2 Community License",
+    "open_weights": true,
+    "proxy": true,
+    "proxy_note": "A general-purpose language model, not a legal product. It runs the bank so the prompts have a floor to be measured against while the legal vendors decide.",
+    "run": {
+      "gguf_repo": "bartowski/Llama-3.2-3B-Instruct-GGUF",
+      "gguf_file": "Llama-3.2-3B-Instruct-Q4_K_M.gguf",
+      "context": 8192
+    }
+  },
+  {
+    "slug": "qwen2.5-7b-instruct",
+    "name": "Qwen2.5 7B Instruct",
+    "vendor": "Alibaba Cloud",
+    "website": "https://huggingface.co/Qwen/Qwen2.5-7B-Instruct",
+    "description": "7-billion-parameter open-weight instruction model with strong multilingual and structured-output behaviour, run locally through llama.cpp at Q4_K_M.",
+    "adapter": "open-llm:qwen2.5-7b-instruct",
+    "model_hint": "Qwen2.5-7B-Instruct Q4_K_M (GGUF)",
+    "license": "Apache-2.0",
+    "open_weights": true,
+    "proxy": true,
+    "proxy_note": "A general-purpose language model, not a legal product. It runs the bank so the prompts have a floor to be measured against while the legal vendors decide.",
+    "run": {
+      "gguf_repo": "bartowski/Qwen2.5-7B-Instruct-GGUF",
+      "gguf_file": "Qwen2.5-7B-Instruct-Q4_K_M.gguf",
+      "context": 8192
+    }
+  },
+  {
+    "slug": "phi-4-mini",
+    "name": "Phi-4 mini",
+    "vendor": "Microsoft",
+    "website": "https://huggingface.co/microsoft/Phi-4-mini-instruct",
+    "description": "3.8-billion-parameter open-weight instruction model trained on filtered and synthetic data, run locally through llama.cpp at Q4_K_M.",
+    "adapter": "open-llm:phi-4-mini",
+    "model_hint": "Phi-4-mini-instruct Q4_K_M (GGUF)",
+    "license": "MIT",
+    "open_weights": true,
+    "proxy": true,
+    "proxy_note": "A general-purpose language model, not a legal product. It runs the bank so the prompts have a floor to be measured against while the legal vendors decide.",
+    "run": {
+      "gguf_repo": "bartowski/microsoft_Phi-4-mini-instruct-GGUF",
+      "gguf_file": "microsoft_Phi-4-mini-instruct-Q4_K_M.gguf",
+      "context": 8192
+    }
+  },
+  {
+    "slug": "gemma-3-4b-it",
+    "name": "Gemma 3 4B",
+    "vendor": "Google DeepMind",
+    "website": "https://huggingface.co/google/gemma-3-4b-it",
+    "description": "4-billion-parameter open-weight instruction-tuned model with 140+ languages, run locally through llama.cpp at Q4_K_M.",
+    "adapter": "open-llm:gemma-3-4b-it",
+    "model_hint": "gemma-3-4b-it Q4_K_M (GGUF)",
+    "license": "Gemma Terms of Use",
+    "open_weights": true,
+    "proxy": true,
+    "proxy_note": "A general-purpose language model, not a legal product. It runs the bank so the prompts have a floor to be measured against while the legal vendors decide.",
+    "run": {
+      "gguf_repo": "bartowski/google_gemma-3-4b-it-GGUF",
+      "gguf_file": "google_gemma-3-4b-it-Q4_K_M.gguf",
+      "context": 8192
+    }
+  },
+  {
+    "slug": "mistral-7b-instruct",
+    "name": "Mistral 7B Instruct",
+    "vendor": "Mistral AI",
+    "website": "https://huggingface.co/mistralai/Mistral-7B-Instruct-v0.3",
+    "description": "7-billion-parameter open-weight instruction model (v0.3), run locally through llama.cpp at Q4_K_M.",
+    "adapter": "open-llm:mistral-7b-instruct",
+    "model_hint": "Mistral-7B-Instruct-v0.3 Q4_K_M (GGUF)",
+    "license": "Apache-2.0",
+    "open_weights": true,
+    "proxy": true,
+    "proxy_note": "A general-purpose language model, not a legal product. It runs the bank so the prompts have a floor to be measured against while the legal vendors decide.",
+    "run": {
+      "gguf_repo": "bartowski/Mistral-7B-Instruct-v0.3-GGUF",
+      "gguf_file": "Mistral-7B-Instruct-v0.3-Q4_K_M.gguf",
+      "context": 8192
+    }
+  },
+  {
+    "slug": "gpt",
+    "name": "GPT (OpenAI API)",
+    "vendor": "OpenAI",
+    "website": "https://platform.openai.com",
+    "description": "OpenAI's chat completions API, run as a proxy with default settings once a key is in the environment.",
+    "adapter": "openai-chat",
+    "status": "pending",
+    "proxy": true,
+    "proxy_note": "A general-purpose language model, not a legal product. Listed as a proxy for what an API model does on the same prompts; needs OPENAI_API_KEY to run.",
+    "run": {
+      "model_id": null,
+      "note": "model id is set when the key is added; the run records it"
+    }
+  },
+  {
+    "slug": "claude",
+    "name": "Claude (Anthropic API)",
+    "vendor": "Anthropic",
+    "website": "https://www.anthropic.com",
+    "description": "Anthropic's messages API, run as a proxy with default settings once a key is in the environment.",
+    "adapter": "anthropic",
+    "status": "pending",
+    "proxy": true,
+    "proxy_note": "A general-purpose language model, not a legal product. Listed as a proxy for what an API model does on the same prompts; needs ANTHROPIC_API_KEY to run.",
+    "run": {
+      "model_id": null,
+      "note": "model id is set when the key is added; the run records it"
+    }
+  },
+  {
+    "slug": "gemini",
+    "name": "Gemini (Google API)",
+    "vendor": "Google",
+    "website": "https://ai.google.dev",
+    "description": "Google's Gemini API, run as a proxy with default settings once a key is in the environment.",
+    "adapter": "gemini",
+    "status": "pending",
+    "proxy": true,
+    "proxy_note": "A general-purpose language model, not a legal product. Listed as a proxy for what an API model does on the same prompts; needs GEMINI_API_KEY to run.",
+    "run": {
+      "model_id": null,
+      "note": "model id is set when the key is added; the run records it"
+    }
+  }
+]
