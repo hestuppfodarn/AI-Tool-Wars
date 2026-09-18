@@ -1,13 +1,13 @@
 {
   "version": 1,
-  "generated_at": "2026-09-18T03:19:28.610Z",
+  "generated_at": "2026-09-18T03:38:46.832Z",
   "source": "catalog",
   "demo": false,
   "categories": [
     {
       "slug": "voice",
       "name": "AI Voice (Text to Speech)",
-      "description": "Text-to-speech APIs compared on the same 30 prompts: transcript accuracy, naturalness, instruction following, and speed.",
+      "description": "Text-to-speech APIs compared on the same public prompts: transcript accuracy, naturalness, instruction following, and speed.",
       "output_modality": "audio",
       "metrics": [
         {
@@ -347,349 +347,6 @@
       "constraints": [
         "'Gleis 7' read as 'Gleis sieben'",
         "Formal, even pace"
-      ]
-    },
-    {
-      "id": "voice-011",
-      "category": "voice",
-      "rank": 11,
-      "title": "Mixed-language brand names",
-      "language": "en-US",
-      "tags": [
-        "names",
-        "multilingual"
-      ],
-      "text": "We integrate with Klarna, Spotify, Zalando, Bolt, Skanska and Ikea, so your team can stay in the tools it already uses.",
-      "instructions": "English sentence with Nordic brand names.",
-      "constraints": [
-        "'Ikea' pronounced 'eye-KEE-ah' or 'ee-KAY-ah', not spelled out",
-        "No stumble on 'Skanska'"
-      ]
-    },
-    {
-      "id": "voice-012",
-      "category": "voice",
-      "rank": 12,
-      "title": "Acronyms and initialisms",
-      "language": "en-US",
-      "tags": [
-        "names"
-      ],
-      "text": "Our API supports OAuth, SAML, and SCIM. Export to CSV or PDF, and connect via SQL or the SDK. NASA and the FBI are not customers, in case you were wondering.",
-      "instructions": "Technical but conversational.",
-      "constraints": [
-        "'API', 'CSV', 'PDF', 'SQL', 'SDK', 'FBI' spelled letter by letter",
-        "'NASA', 'SAML', 'SCIM', 'OAuth' spoken as words"
-      ]
-    },
-    {
-      "id": "voice-013",
-      "category": "voice",
-      "rank": 13,
-      "title": "Currency and dates",
-      "language": "en-US",
-      "tags": [
-        "numbers"
-      ],
-      "text": "Your invoice for $1,249.50 is due on March 3rd, 2027. A late fee of 1.5% applies after 30 days.",
-      "instructions": "Neutral finance voice.",
-      "constraints": [
-        "'$1,249.50' read as 'one thousand two hundred forty-nine dollars and fifty cents'",
-        "'1.5%' read as 'one point five percent'",
-        "'March 3rd, 2027' read as a date, not digits"
-      ]
-    },
-    {
-      "id": "voice-014",
-      "category": "voice",
-      "rank": 14,
-      "title": "Heteronyms",
-      "language": "en-US",
-      "tags": [
-        "pronunciation"
-      ],
-      "text": "I read the report yesterday and I will read the next one tomorrow. The wind was strong enough to wind the flag around the pole. Please record the record time.",
-      "instructions": "Plain read.",
-      "constraints": [
-        "Past-tense 'read' as 'red', future 'read' as 'reed'",
-        "Noun 'record' and verb 'record' stressed differently"
-      ]
-    },
-    {
-      "id": "voice-015",
-      "category": "voice",
-      "rank": 15,
-      "title": "Explicit pauses",
-      "language": "en-US",
-      "tags": [
-        "ssml",
-        "pauses"
-      ],
-      "text": "Take a breath. ... Now, let's begin. ... First, close your eyes. ... Second, relax your shoulders. ... Good.",
-      "instructions": "Meditation guide. Each '...' is a pause of at least one second.",
-      "constraints": [
-        "Silence of at least 800 ms at each ellipsis",
-        "Ellipses are not spoken"
-      ]
-    },
-    {
-      "id": "voice-016",
-      "category": "voice",
-      "rank": 16,
-      "title": "Whisper / soft delivery",
-      "language": "en-US",
-      "tags": [
-        "emotion",
-        "style"
-      ],
-      "text": "Shh. The baby's finally asleep. Let's go downstairs and I'll make us some tea.",
-      "instructions": "Whispered or very soft delivery.",
-      "constraints": [
-        "Noticeably lower volume and softer delivery than baseline",
-        "All words still intelligible"
-      ]
-    },
-    {
-      "id": "voice-017",
-      "category": "voice",
-      "rank": 17,
-      "title": "Angry customer line",
-      "language": "en-US",
-      "tags": [
-        "emotion",
-        "style"
-      ],
-      "text": "I've been on hold for forty minutes. Forty. This is the third time I've called about the same charge and nobody can tell me why it's there.",
-      "instructions": "Frustrated, controlled anger.",
-      "constraints": [
-        "Audibly frustrated tone",
-        "Emphasis on the second 'Forty'"
-      ]
-    },
-    {
-      "id": "voice-018",
-      "category": "voice",
-      "rank": 18,
-      "title": "Cheerful onboarding",
-      "language": "en-US",
-      "tags": [
-        "emotion",
-        "style"
-      ],
-      "text": "Welcome aboard! You're all set up. Your first project is waiting, and we've added a couple of templates to get you going.",
-      "instructions": "Warm and upbeat.",
-      "constraints": [
-        "Positive, smiling tone",
-        "Exclamation carries energy without shouting"
-      ]
-    },
-    {
-      "id": "voice-019",
-      "category": "voice",
-      "rank": 19,
-      "title": "Dialogue with two speakers",
-      "language": "en-US",
-      "tags": [
-        "style",
-        "long-form"
-      ],
-      "text": "\"Did you send the file?\" she asked. \"Twice,\" he said. \"Check your spam folder.\" She sighed. \"It's not in spam.\"",
-      "instructions": "Narrate the dialogue; distinguish the two speakers by delivery, not by different voices.",
-      "constraints": [
-        "Quotation marks are not spoken",
-        "Attributions ('she asked') read in narrator tone"
-      ]
-    },
-    {
-      "id": "voice-020",
-      "category": "voice",
-      "rank": 20,
-      "title": "Long-form explainer",
-      "language": "en-US",
-      "tags": [
-        "long-form",
-        "audiobook"
-      ],
-      "text": "Compound interest is interest calculated on both the original principal and the interest already added. Over short periods the difference is small. Over decades it is the whole story: a sum growing at seven percent a year doubles roughly every ten years, so money invested at twenty-five has doubled four times by sixty-five. That is why the usual advice is simply to start early.",
-      "instructions": "Explainer, measured pace.",
-      "constraints": [
-        "Consistent pace across the whole passage",
-        "'seven percent' and 'twenty-five' as words, not digits"
-      ]
-    },
-    {
-      "id": "voice-021",
-      "category": "voice",
-      "rank": 21,
-      "title": "Product names with odd casing",
-      "language": "en-US",
-      "tags": [
-        "names"
-      ],
-      "text": "Try iPhone, watchOS, PostgreSQL, GraphQL, NGINX, and the k8s CLI. Then tell me which one you'd rather pronounce.",
-      "instructions": "Developer-facing tone.",
-      "constraints": [
-        "'iPhone' as 'eye-phone'",
-        "'PostgreSQL' as 'post-gres-Q-L' or 'postgres'",
-        "'NGINX' as 'engine-X'",
-        "'k8s' as 'kates' or 'kubernetes'"
-      ]
-    },
-    {
-      "id": "voice-022",
-      "category": "voice",
-      "rank": 22,
-      "title": "Medical dosage",
-      "language": "en-US",
-      "tags": [
-        "numbers",
-        "pronunciation"
-      ],
-      "text": "Take 500 mg of amoxicillin every 8 hours for 10 days. Do not exceed 3 g in 24 hours. Contact your doctor if symptoms persist beyond 72 hours.",
-      "instructions": "Clear, clinical.",
-      "constraints": [
-        "'mg' read as 'milligrams', 'g' as 'grams'",
-        "'amoxicillin' pronounced correctly",
-        "All numbers as words"
-      ]
-    },
-    {
-      "id": "voice-023",
-      "category": "voice",
-      "rank": 23,
-      "title": "Verification code",
-      "language": "en-US",
-      "tags": [
-        "numbers",
-        "ivr"
-      ],
-      "text": "Your verification code is 4 8 2 9 1 7. Again, 4 8 2 9 1 7. This code expires in ten minutes.",
-      "instructions": "OTP read-out.",
-      "constraints": [
-        "Each digit spoken separately with a short gap",
-        "Both read-outs identical"
-      ]
-    },
-    {
-      "id": "voice-024",
-      "category": "voice",
-      "rank": 24,
-      "title": "French luxury ad",
-      "language": "fr-FR",
-      "tags": [
-        "multilingual",
-        "ad"
-      ],
-      "text": "Découvrez la nouvelle collection Maison Lyre. Des matières nobles, un savoir-faire d'exception, et une élégance qui ne se démode pas.",
-      "instructions": "Sophisticated, unhurried French.",
-      "constraints": [
-        "Native French pronunciation",
-        "Liaison on 'savoir-faire d'exception'"
-      ]
-    },
-    {
-      "id": "voice-025",
-      "category": "voice",
-      "rank": 25,
-      "title": "Japanese greeting",
-      "language": "ja-JP",
-      "tags": [
-        "multilingual"
-      ],
-      "text": "いらっしゃいませ。本日はご来店いただきありがとうございます。ご注文がお決まりになりましたら、お呼びください。",
-      "instructions": "Polite retail Japanese.",
-      "constraints": [
-        "Natural Japanese pitch accent",
-        "Polite register maintained"
-      ]
-    },
-    {
-      "id": "voice-026",
-      "category": "voice",
-      "rank": 26,
-      "title": "Sports commentary",
-      "language": "en-GB",
-      "tags": [
-        "emotion",
-        "style"
-      ],
-      "text": "And he's through, one on one with the keeper, he shoots, and it's in! Unbelievable! Two minutes from time and the underdogs have done it!",
-      "instructions": "Live football commentary, rising excitement.",
-      "constraints": [
-        "Pace and pitch rise through the passage",
-        "'Unbelievable!' delivered with peak energy"
-      ]
-    },
-    {
-      "id": "voice-027",
-      "category": "voice",
-      "rank": 27,
-      "title": "Bedtime story",
-      "language": "en-US",
-      "tags": [
-        "emotion",
-        "audiobook"
-      ],
-      "text": "Once upon a time, in a burrow under the old oak, lived a very small rabbit who was afraid of the dark. Every night his mother lit a tiny lantern and said, 'The dark is only the day resting.'",
-      "instructions": "Gentle, slow, for a child.",
-      "constraints": [
-        "Slow pace",
-        "Soft, warm delivery",
-        "Quoted line delivered as the mother, gently"
-      ]
-    },
-    {
-      "id": "voice-028",
-      "category": "voice",
-      "rank": 28,
-      "title": "Homograph proper nouns",
-      "language": "en-US",
-      "tags": [
-        "names",
-        "pronunciation"
-      ],
-      "text": "We have offices in Reading, Worcester, Leicester, Nice, and Lima, and a small team in Cairns.",
-      "instructions": "Place names.",
-      "constraints": [
-        "'Reading' as 'Redding'",
-        "'Worcester' as 'Wooster'",
-        "'Leicester' as 'Lester'",
-        "'Nice' as 'Neese'",
-        "'Cairns' as 'Cans'"
-      ]
-    },
-    {
-      "id": "voice-029",
-      "category": "voice",
-      "rank": 29,
-      "title": "Very short utterance",
-      "language": "en-US",
-      "tags": [
-        "baseline",
-        "latency"
-      ],
-      "text": "Okay.",
-      "instructions": "Single-word acknowledgement.",
-      "constraints": [
-        "Audio contains only 'Okay'",
-        "Time to first byte is the primary measure"
-      ]
-    },
-    {
-      "id": "voice-030",
-      "category": "voice",
-      "rank": 30,
-      "title": "Instructed style change mid-text",
-      "language": "en-US",
-      "tags": [
-        "style",
-        "ssml"
-      ],
-      "text": "Here are today's headlines. Markets closed higher for a third day. [Now, sadly:] The city has lost one of its longest-serving librarians, who died at ninety-one. [Back to neutral:] And in sport, the final is set for Sunday.",
-      "instructions": "Bracketed notes are stage directions, not to be spoken.",
-      "constraints": [
-        "Bracketed directions are not spoken",
-        "Audible tone shift at the second and third segments"
       ]
     }
   ],
@@ -1483,8 +1140,8 @@
       "a": "kokoro",
       "b": "piper",
       "verdict": {
-        "headline": "Piper leads Kokoro-82M 8.7 to 6.9 on the 30-prompt AI Voice bank.",
-        "summary": "Piper is ahead on speed. Kokoro-82M wins on transcript accuracy. Median time to first byte: Kokoro-82M 4341 ms, Piper 399 ms. Scored on 3 of 30 prompts so far."
+        "headline": "Piper leads Kokoro-82M 8.7 to 6.9 on the 10-prompt AI Voice bank.",
+        "summary": "Piper is ahead on speed. Kokoro-82M wins on transcript accuracy. Median time to first byte: Kokoro-82M 4341 ms, Piper 399 ms. Scored on 3 of 10 prompts so far."
       }
     },
     {
@@ -1493,8 +1150,8 @@
       "a": "kokoro",
       "b": "kittentts",
       "verdict": {
-        "headline": "Kokoro-82M leads KittenTTS Nano 6.9 to 6.1 on the 30-prompt AI Voice bank.",
-        "summary": "Kokoro-82M is ahead on speed and transcript accuracy. Median time to first byte: Kokoro-82M 4341 ms, KittenTTS Nano 5719 ms. Scored on 3 of 30 prompts so far."
+        "headline": "Kokoro-82M leads KittenTTS Nano 6.9 to 6.1 on the 10-prompt AI Voice bank.",
+        "summary": "Kokoro-82M is ahead on speed and transcript accuracy. Median time to first byte: Kokoro-82M 4341 ms, KittenTTS Nano 5719 ms. Scored on 3 of 10 prompts so far."
       }
     },
     {
@@ -1552,8 +1209,8 @@
       "a": "piper",
       "b": "kittentts",
       "verdict": {
-        "headline": "Piper leads KittenTTS Nano 8.7 to 6.1 on the 30-prompt AI Voice bank.",
-        "summary": "Piper is ahead on speed. Median time to first byte: Piper 399 ms, KittenTTS Nano 5719 ms. Scored on 3 of 30 prompts so far."
+        "headline": "Piper leads KittenTTS Nano 8.7 to 6.1 on the 10-prompt AI Voice bank.",
+        "summary": "Piper is ahead on speed. Median time to first byte: Piper 399 ms, KittenTTS Nano 5719 ms. Scored on 3 of 10 prompts so far."
       }
     },
     {
@@ -1801,5 +1458,15 @@
       "b": "chatterbox",
       "verdict": null
     }
-  ]
+  ],
+  "previous_holders": {
+    "voice": {
+      "run_at": "2026-09-18T03:19:28.610Z",
+      "holders": {
+        "voice-001": "piper",
+        "voice-002": "piper",
+        "voice-003": "piper"
+      }
+    }
+  }
 }

@@ -84,9 +84,10 @@ jobs:
             echo "limit=$(jq -r '.limit // ""' .github/benchmark-open-request.json)" >> "$GITHUB_OUTPUT"
             echo "force=$(jq -r '.force // false' .github/benchmark-open-request.json)" >> "$GITHUB_OUTPUT"
           else
-            # workflow_dispatch inputs, or the defaults (all open models, full bank) on schedule
+            # workflow_dispatch inputs, or the defaults (all open models, the active bank) on schedule
+            ACTIVE=$(jq -r '.active_prompts // ""' data/catalog/voice/category.json)
             echo "tools=$IN_TOOLS" >> "$GITHUB_OUTPUT"
-            echo "limit=$IN_LIMIT" >> "$GITHUB_OUTPUT"
+            echo "limit=${IN_LIMIT:-$ACTIVE}" >> "$GITHUB_OUTPUT"
             echo "force=$IN_FORCE" >> "$GITHUB_OUTPUT"
           fi
 

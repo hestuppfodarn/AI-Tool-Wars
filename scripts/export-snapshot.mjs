@@ -59,7 +59,9 @@ export function buildFromCatalog() {
       });
     }
 
+    const active = Number(process.env.PROMPT_BANK_SIZE ?? category.active_prompts ?? catPrompts.length);
     for (const p of catPrompts) {
+      if (p.rank > active) continue;   // the rest of the bank stays in the catalog for later
       prompts.push({
         id: p.id, category: category.slug, rank: p.rank, title: p.title, language: p.language,
         tags: p.tags ?? [], text: p.text, instructions: p.instructions, constraints: p.constraints ?? [],
@@ -77,7 +79,7 @@ export function buildFromCatalog() {
     }
   }
 
-  const runs = collectRuns(tools);
+  const runs = collectRuns(tools, prompts);
   addVelocity(runs);
   const ratings = aggregateRatings(runs, tools, categories);
   for (const pair of pairs) pair.verdict = buildVerdict(pair, ratings, tools, categories, prompts);
@@ -219,7 +221,7 @@ function buildVerdict(pair, ratings, tools, categories, prompts) {
 }
 
 /** Merge data/runs/<category>/<tool>/runs.json files; copies audio to the site's public dir. */
-function collectRuns(tools) {
+function collectRuns(tools, prompts) {
   const out = [];
   rmSync(publicRunsDir, { recursive: true, force: true });
   if (!existsSync(runsDir)) return out;
@@ -230,8 +232,10 @@ function collectRuns(tools) {
       const tool = tools.find((t) => t.slug === toolDir.name && t.category === cat.name);
       if (!tool) { console.warn(`runs for unknown tool ${cat.name}/${toolDir.name}; skipped`); continue; }
       const recorded = readJson(file);
+      const activeIds = new Set(prompts.filter((p) => p.category === cat.name).map((p) => p.id));
       let successes = 0;
       for (const r of recorded) {
+        if (!activeIds.has(r.prompt_id)) continue;
         const success = r.status === 'success';
         if (success) successes++;
         out.push({

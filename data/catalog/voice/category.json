@@ -1,7 +1,7 @@
 {
   "slug": "voice",
   "name": "AI Voice (Text to Speech)",
-  "description": "Text-to-speech APIs compared on the same 30 prompts: transcript accuracy, naturalness, instruction following, and speed.",
+  "description": "Text-to-speech APIs compared on the same public prompts: transcript accuracy, naturalness, instruction following, and speed.",
   "output_modality": "audio",
   "metrics": [
     {
@@ -24,5 +24,6 @@
       "label": "Speed",
       "description": "Time to first audio byte and total generation time, ranked against every other run in the category. 10 = fastest decile."
     }
-  ]
+  ],
+  "active_prompts": 10
 }

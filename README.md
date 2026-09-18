@@ -12,7 +12,7 @@ day-60 success test.
 
 | Path | Contents |
 |---|---|
-| `data/catalog/voice/` | The category definition (metrics), five tools, thirty golden prompts. Editing these is how you change what gets benchmarked. |
+| `data/catalog/voice/` | The category definition (metrics, `active_prompts`), sixteen tools, thirty golden prompts of which the first `active_prompts` (10) are live. Editing these is how you change what gets benchmarked. |
 | `data/snapshot.json` | Generated. The single input the site renders from. Today built from the catalog with no runs, so every tool is "benchmark pending". |
 | `data/fixtures/demo-snapshot.json` | Generated. A fictional dataset for previewing the populated layout. Never deployed as real data. |
 | `apps/site/` | Astro static site: home, category leaderboard, `X vs Y` pages, tool pages, methodology, sitemap. |
@@ -47,7 +47,7 @@ project sites), `SITE_NAME`, `PUBLIC_CONTACT_EMAIL` (claim CTA address), `SNAPSH
 ```sh
 cp .env.example .env            # then fill in the vendor key(s); .env is gitignored
 node scripts/run-voice.mjs --tool inworld-tts --limit 3      # smoke
-node scripts/run-voice.mjs --tool inworld-tts                # full 30-prompt bank
+node scripts/run-voice.mjs --tool inworld-tts --limit 10     # the active bank
 npm run build                                                # snapshot picks up data/runs/, site shows outputs
 ```
 
