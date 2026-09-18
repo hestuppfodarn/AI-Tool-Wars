@@ -12,6 +12,7 @@ const snap = loadSnapshot();
     Every tool in a category runs the same public prompts. We publish the outputs, score them the same way, and
     keep the scores up to date. No vendor can pay to be here or to rank higher.
   </p>
+  <p><a class="btn" href={href('/arena/')}>Enter the arena: hear two tools, pick the winner</a></p>
 
   {snap.categories.map((c) => {
     const tools = toolsIn(snap, c.slug);

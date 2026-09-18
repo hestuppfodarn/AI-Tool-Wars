@@ -63,6 +63,20 @@ body.in-battle .dock{background:linear-gradient(transparent,var(--bg) 18%)}
 .send:hover{background:var(--surface-3)}
 .send:disabled{opacity:.35;cursor:not-allowed}
 .send svg{width:18px;height:18px}
+/* mode menu (arena.ai-style popover above the composer) */
+.menu{position:fixed;left:16px;right:16px;bottom:calc(var(--dock-h) + 8px + env(safe-area-inset-bottom,0px));z-index:9;max-width:420px;margin:0 auto;background:var(--surface);border:1px solid var(--border-2);border-radius:14px;overflow:hidden;box-shadow:0 20px 60px -20px rgba(0,0,0,.8)}
+.menu button{display:grid;grid-template-columns:32px 1fr;gap:12px;align-items:center;width:100%;text-align:left;background:transparent;border:0;border-bottom:1px solid var(--border);padding:14px 16px;cursor:pointer;color:var(--text)}
+.menu button:last-child{border-bottom:0}
+.menu button:hover,.menu button[aria-current="true"]{background:var(--surface-2)}
+.menu .mi{font-size:1.2rem;color:var(--muted);text-align:center}
+.menu b{display:block;font-weight:600;font-size:1rem}
+.menu small{display:block;color:var(--muted);font-size:.82rem;margin-top:2px}
+.caret{font-size:.7rem;color:var(--faint);transform:translateY(2px)}
+.pickers{display:flex;gap:8px;align-items:center;margin:0 0 10px;color:var(--muted);font-size:.85rem}
+.pickers select{flex:1;min-width:0;background:var(--surface);color:var(--text);border:1px solid var(--border-2);border-radius:10px;padding:9px 10px;font:inherit}
+.src{font-size:.7rem;color:var(--faint);margin:0}
+.side audio{display:none}
+.direct .sides{grid-template-columns:1fr}
 /* thread */
 .thread{display:grid;gap:26px;padding-top:6px}
 .battle{display:grid;gap:12px}
@@ -157,7 +171,7 @@ td .vendor{font-size:.76rem;color:var(--muted)}
   <section class="welcome" id="welcome">
     <div class="wordmark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.5 17.5 3 6V3h3l11.5 11.5"/><path d="M13 19l6-6M16 16l4 4M19 21l2-2"/><path d="M9.5 17.5 21 6V3h-3L6.5 14.5"/><path d="M11 19l-6-6M8 16l-4 4M5 21l-2-2"/></svg><span>Tool Wars</span></div>
     <h1>Settle the<br><em>voice wars</em></h1>
-    <p class="tiny">Placeholder build · ten fictional tools · your browser's speech engine stands in</p>
+    <p class="tiny" id="tiny">Placeholder build · ten fictional tools · your browser's speech engine stands in</p>
   </section>
   <div class="thread" id="thread"></div>
 </main>
@@ -183,18 +197,25 @@ td .vendor{font-size:.76rem;color:var(--muted)}
     <textarea id="prompt" rows="1" maxlength="400" placeholder="Make two voices say anything…" aria-label="Prompt"></textarea>
     <div class="tools">
       <button class="tb" type="button" id="plus" aria-label="Add">+</button>
-      <button class="tb chip" type="button" id="mode"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 17.5 3 6V3h3l11.5 11.5M13 19l6-6M16 16l4 4M19 21l2-2M9.5 17.5 21 6V3h-3L6.5 14.5M11 19l-6-6M8 16l-4 4M5 21l-2-2"/></svg>Blind battle</button>
+      <button class="tb chip" type="button" id="mode" aria-haspopup="menu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 17.5 3 6V3h3l11.5 11.5M13 19l6-6M16 16l4 4M19 21l2-2M9.5 17.5 21 6V3h-3L6.5 14.5M11 19l-6-6M8 16l-4 4M5 21l-2-2"/></svg><span id="mode-label">Blind battle</span> <span class="caret">⌃</span></button>
       <button class="tb chip" type="button" id="cat">Voice</button>
       <span class="grow"></span>
       <button class="send" id="go" type="submit" aria-label="Start battle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
     </div>
   </form>
 </div></div>
+<div class="menu" id="menu" hidden>
+  <button type="button" data-mode="blind"><span class="mi">⚔</span><span><b>Blind battle</b><small>Two anonymous tools, you judge</small></span></button>
+  <button type="button" data-mode="side"><span class="mi">⇄</span><span><b>Side by side</b><small>Pick both fighters yourself</small></span></button>
+  <button type="button" data-mode="direct"><span class="mi">◎</span><span><b>Direct</b><small>Hear one tool on its own</small></span></button>
+</div>
+<div class="pickers" id="pickers" hidden><select id="pick-a" aria-label="Tool A"></select><span>vs</span><select id="pick-b" aria-label="Tool B"></select></div>
 <div class="toast" id="toast"></div>
+<script id="arena-data" type="application/json">{}</script>
 
 <script>
 (() => {
-  const TOOLS = [
+  const PLACEHOLDER_TOOLS = [
     { id:'aria',      name:'Aria Voice',     vendor:'Aria Labs',      elo:1582, pitch:1.15, rate:1.0,  jury:[8.9,8.4,8.1,7.4], tt:[160,220], lat:[900,1500] },
     { id:'cobalt',    name:'Cobalt Speech',  vendor:'Cobalt',         elo:1561, pitch:0.85, rate:0.95, jury:[7.6,9.5,7.8,6.3], tt:[380,520], lat:[2200,3000] },
     { id:'meridian',  name:'Meridian TTS',   vendor:'Meridian Cloud', elo:1548, pitch:1.0,  rate:1.05, jury:[8.0,7.1,8.4,8.6], tt:[120,180], lat:[800,1300] },
@@ -207,7 +228,8 @@ td .vendor{font-size:.76rem;color:var(--muted)}
     { id:'kestrel',   name:'Kestrel',        vendor:'Kestrel Voice',  elo:1452, pitch:1.2,  rate:1.25, jury:[6.8,6.2,8.6,9.1], tt:[60,110],  lat:[450,800]  },
   ];
   const METRICS = ['Transcript accuracy','Naturalness','Instruction following','Speed'];
-  const SILLY = [
+  const METRIC_KEYS = ['accuracy','naturalness','adherence','velocity'];
+  const FUN = [
     { t:'Whistle a classic',       s:'Whistle "Smoke Weed Every Day" and then apologise to my mother.' },
     { t:'State secret',            s:'Read my WiFi password like it\'s a state secret: hunter2.' },
     { t:'Forty moods of okay',     s:'Say "okay" in forty different moods. Go.' },
@@ -225,6 +247,17 @@ td .vendor{font-size:.76rem;color:var(--muted)}
     { t:'Swedish delivery notice', s:'Hej! Din beställning har skickats och beräknas anlända på torsdag.' },
   ];
 
+  // ---- data: real snapshot (injected by the site build) or the fictional placeholder set ----
+  let DATA = {}; try { DATA = JSON.parse(document.getElementById('arena-data').textContent || '{}'); } catch {}
+  const REAL = Array.isArray(DATA.runs) && DATA.runs.length > 0;
+  const TOOLS = REAL
+    ? DATA.tools.filter(t => DATA.runs.some(r => r.tool === t.slug && (r.status ?? 'success') === 'success' && r.audio_url)).map(t => ({ id: t.slug, name: t.name, vendor: t.vendor, elo: 1500, pitch: 1, rate: 1, jury: [7,7,7,7], tt: [0,0], lat: [0,0] }))
+    : PLACEHOLDER_TOOLS;
+  // prompts that at least two real tools have answered
+  const RUNS_BY = new Map(); // prompt_id -> [{tool, run}]
+  if (REAL) for (const r of DATA.runs) { if ((r.status ?? 'success') !== 'success' || !r.audio_url) continue; if (!RUNS_BY.has(r.prompt_id)) RUNS_BY.set(r.prompt_id, []); RUNS_BY.get(r.prompt_id).push(r); }
+  const GOLDEN = REAL ? DATA.prompts.filter(p => (RUNS_BY.get(p.id) || []).length >= 2).map(p => ({ id: p.id, t: p.title, s: p.text })) : [];
+  const SILLY = REAL ? GOLDEN : FUN;
   const K = 32;
   let state = { elo:{}, battles:{}, votes:0, wins:{}, jurySum:{}, juryN:{} };
   try { const raw = localStorage.getItem('toolwars-arena-v2'); if (raw) state = Object.assign(state, JSON.parse(raw)); } catch {}
@@ -237,7 +270,7 @@ td .vendor{font-size:.76rem;color:var(--muted)}
   const pickTwo = () => { const s = shuffle(TOOLS); return [s[0], s[1]]; };
   const fmtMs = (ms) => ms >= 1000 ? (ms/1000).toFixed(1)+' s' : Math.round(ms)+' ms';
   const esc = (s) => s.replace(/[&<>"]/g, (c) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-  let rating = 'elo', battleCount = 0, lastPrompt = '';
+  let rating = 'elo', battleCount = 0, lastPrompt = '', mode = 'blind';
 
   // ---- speech: the browser's engine stands in for vendor APIs ----
   let voices = [];
@@ -286,7 +319,17 @@ td .vendor{font-size:.76rem;color:var(--muted)}
     $('welcome').classList.add('hide'); document.body.classList.add('in-battle');
     $('prompt').value = ''; autosize();
     try { speechSynthesis.cancel(); } catch {}
-    const [ta, tb] = forcedPair || pickTwo();
+    const golden = REAL ? GOLDEN.find(g => g.s === text) : null;
+    if (REAL && !golden) { toast('Custom lines need a vendor key. Pick one of the public prompts for now.'); return; }
+    let pair;
+    if (forcedPair) pair = forcedPair;
+    else if (mode === 'side' || mode === 'direct') {
+      const a = TOOLS.find(t => t.id === $('pick-a').value) || TOOLS[0], b = TOOLS.find(t => t.id === $('pick-b').value) || TOOLS[1];
+      if (mode === 'side' && a === b) { toast('Pick two different tools.'); return; }
+      pair = mode === 'direct' ? [a, null] : shuffle([a, b]);
+    } else if (golden) { const avail = RUNS_BY.get(golden.id).map(r => TOOLS.find(t => t.id === r.tool)).filter(Boolean); pair = shuffle(avail).slice(0, 2); }
+    else pair = pickTwo();
+    const [ta, tb] = pair;
     const n = ++battleCount; lastPrompt = text;
     const el = document.createElement('article'); el.className = 'battle'; el.dataset.n = n;
     const sideHtml = (L, seed) => `<div class="side ${L.toLowerCase()}" data-side="${L.toLowerCase()}">
@@ -294,23 +337,34 @@ td .vendor{font-size:.76rem;color:var(--muted)}
         <div class="wave live">${waveBars(seed)}</div>
         <div class="meta"><div class="stats"><span>First byte <b class="ttfb">–</b></span><span>Total <b class="lat">–</b></span></div>
         <button class="play" type="button" disabled><svg viewBox="0 0 16 16" fill="currentColor"><path d="M4 2.5v11l9-5.5z"/></svg>Play ${L}</button></div></div>`;
+    const direct = !tb;
+    if (direct) el.classList.add('direct');
     el.innerHTML = `<div class="you">${esc(text)}</div>
-      <div class="sides">${sideHtml('A', TOOLS.indexOf(ta))}${sideHtml('B', TOOLS.indexOf(tb))}</div>
-      <div class="vote"><button class="a" data-vote="a" disabled>A is better</button><button class="b" data-vote="b" disabled>B is better</button><button data-vote="tie" disabled>Tie</button><button data-vote="both_bad" disabled>Both bad</button></div>
+      <div class="sides">${sideHtml('A', TOOLS.indexOf(ta))}${direct ? '' : sideHtml('B', TOOLS.indexOf(tb))}</div>
+      ${direct ? '' : '<div class="vote"><button class="a" data-vote="a" disabled>A is better</button><button class="b" data-vote="b" disabled>B is better</button><button data-vote="tie" disabled>Tie</button><button data-vote="both_bad" disabled>Both bad</button></div>'}
+      <p class="src">${REAL ? 'Real outputs from the public benchmark run. Timings measured on the run.' : 'Placeholder: fictional tools, browser speech engine, simulated timings.'}</p>
       <div class="reveal"></div>`;
     $('thread').appendChild(el);
-    const battle = { text, a: ta, b: tb, done: { a:false, b:false }, voted: false, el };
+    const battle = { text, a: ta, b: tb, done: { a:false, b:!!direct }, voted: false, el, golden, direct };
     const sides = { a: el.querySelector('.side.a'), b: el.querySelector('.side.b') };
-    for (const s of ['a','b']) {
+    for (const s of direct ? ['a'] : ['a','b']) {
       const tool = battle[s], node = sides[s];
-      const ttfb = rnd(tool.tt[0], tool.tt[1]), lat = Math.max(ttfb + 200, rnd(tool.lat[0], tool.lat[1]) * Math.min(2, text.length / 90 + .6));
-      node.querySelector('.play').onclick = () => speak(tool, text, node.querySelector('.play'), node.querySelector('.wave'), s.toUpperCase());
-      setTimeout(() => { node.querySelector('.ttfb').textContent = fmtMs(ttfb); node.querySelector('.tag').textContent = 'streaming'; }, ttfb);
+      const real = golden ? RUNS_BY.get(golden.id).find(r => r.tool === tool.id) : null;
+      const ttfb = real ? Math.min(real.ttft_ms ?? 400, 1200) : rnd(tool.tt[0], tool.tt[1]);
+      const lat = real ? Math.min(real.latency_ms ?? 1500, 2400) : Math.max(ttfb + 200, rnd(tool.lat[0], tool.lat[1]) * Math.min(2, text.length / 90 + .6));
+      if (real) { const au = document.createElement('audio'); au.preload = 'none'; au.src = real.audio_url; node.appendChild(au); battle[s + 'Run'] = real;
+        node.querySelector('.play').onclick = () => { const btn = node.querySelector('.play'), w = node.querySelector('.wave'); document.querySelectorAll('audio').forEach(x => { if (x !== au) x.pause(); });
+          if (!au.paused) { au.pause(); return; } au.currentTime = 0; au.play().catch(() => toast('Playback blocked; tap again.'));
+          au.onplay = () => { w.classList.add('live'); w.classList.remove('done'); btn.lastChild.textContent = 'Stop ' + s.toUpperCase(); };
+          au.onpause = au.onended = () => { w.classList.remove('live'); w.classList.add('done'); btn.lastChild.textContent = 'Play ' + s.toUpperCase(); }; }; }
+      else node.querySelector('.play').onclick = () => speak(tool, text, node.querySelector('.play'), node.querySelector('.wave'), s.toUpperCase());
+      setTimeout(() => { node.querySelector('.ttfb').textContent = fmtMs(real ? real.ttft_ms : ttfb); node.querySelector('.tag').textContent = 'streaming'; }, ttfb);
       setTimeout(() => {
-        node.querySelector('.lat').textContent = fmtMs(lat); const tag = node.querySelector('.tag'); tag.textContent = 'ready'; tag.className = 'tag';
+        node.querySelector('.lat').textContent = fmtMs(real ? real.latency_ms : lat); const tag = node.querySelector('.tag'); tag.textContent = 'ready'; tag.className = 'tag';
         node.querySelector('.wave').className = 'wave done'; node.querySelector('.play').disabled = false;
         battle.done[s] = true;
         if (battle.done.a && battle.done.b) el.querySelectorAll('.vote button').forEach(b => b.disabled = false);
+        if (direct) { el.querySelector('.side.a .nm').textContent = tool.name; }
       }, lat);
     }
     el.querySelectorAll('.vote button').forEach(b => b.onclick = () => vote(battle, b.dataset.vote));
@@ -327,7 +381,13 @@ td .vendor{font-size:.76rem;color:var(--muted)}
     state.elo[a.id] = na; state.elo[b.id] = nb; state.battles[a.id]++; state.battles[b.id]++; state.votes++;
     if (choice === 'a') state.wins[a.id]++; if (choice === 'b') state.wins[b.id]++;
     const jury = {};
-    for (const [s, tool] of [['a', a], ['b', b]]) { jury[s] = tool.jury.map(v => Math.max(1, Math.min(10, Math.round((v + rnd(-.6, .6)) * 10) / 10))); state.jurySum[tool.id] += jury[s].reduce((x, y) => x + y, 0) / 4; state.juryN[tool.id]++; }
+    for (const [s, tool] of [['a', a], ['b', b]]) {
+      const real = battle[s + 'Run'];
+      jury[s] = real ? METRIC_KEYS.map(k => (typeof real.scores?.[k] === 'number' ? real.scores[k] : null))
+                     : tool.jury.map(v => Math.max(1, Math.min(10, Math.round((v + rnd(-.6, .6)) * 10) / 10)));
+      const present = jury[s].filter(v => v != null);
+      if (present.length) { state.jurySum[tool.id] += present.reduce((x, y) => x + y, 0) / present.length; state.juryN[tool.id]++; }
+    }
     save();
     el.querySelector('.side.a .nm').textContent = a.name; el.querySelector('.side.b .nm').textContent = b.name;
     const head = { a: `${a.name} takes it.`, b: `${b.name} takes it.`, tie: 'Dead heat.', both_bad: 'Both bad. Noted.' }[choice];
@@ -340,8 +400,8 @@ td .vendor{font-size:.76rem;color:var(--muted)}
     const r = el.querySelector('.reveal');
     r.innerHTML = `<h3>${esc(head)}</h3><p class="sub">A was ${esc(a.name)} by ${esc(a.vendor)}. B was ${esc(b.name)} by ${esc(b.vendor)}.</p>
       <div class="elo"><div><span class="k">A · ${esc(a.name)}</span><span class="n">${na}</span>${delta(na, ra)}</div><div><span class="k">B · ${esc(b.name)}</span><span class="n">${nb}</span>${delta(nb, rb)}</div></div>
-      <div class="jury"><h4>Jury scorecard</h4>${METRICS.map((m, i) => `<div class="m"><span class="l">${m}</span><div class="track"><div class="fill" style="width:${jury.a[i] * 10}%"></div></div><span class="v">${jury.a[i].toFixed(1)}</span><div class="track"><div class="fill b" style="width:${jury.b[i] * 10}%"></div></div><span class="v">${jury.b[i].toFixed(1)}</span></div>`).join('')}</div>
-      <p class="note">Five judge models score each output 1–10 on four metrics. Simulated in this placeholder build.</p>
+      <div class="jury"><h4>Jury scorecard</h4>${METRICS.map((m, i) => { const va = jury.a[i], vb = jury.b[i]; const f = (v) => v == null ? '–' : v.toFixed(1); const w = (v) => v == null ? 0 : v * 10; return `<div class="m"><span class="l">${m}</span><div class="track"><div class="fill" style="width:${w(va)}%"></div></div><span class="v">${f(va)}</span><div class="track"><div class="fill b" style="width:${w(vb)}%"></div></div><span class="v">${f(vb)}</span></div>`; }).join('')}</div>
+      <p class="note">${REAL ? 'Accuracy is word error rate against the prompt via Whisper; naturalness is a speech-quality model; speed is the rank across tools on this prompt. Instruction following needs a judge model and is blank until one is configured.' : 'Five judge models score each output 1–10 on four metrics. Simulated in this placeholder build.'}</p>
       <div class="share"><span class="lbl">Share this battle</span><pre>${esc(share)}</pre><div class="row"><button class="pill" type="button" data-copy="text">Copy for X</button><button class="pill" type="button" data-copy="link">Copy challenge link</button></div></div>
       <div class="row"><button class="pill solid" type="button" data-act="rematch">Same line, new pair</button><button class="pill" type="button" data-act="lb">Leaderboard</button></div>`;
     r.classList.add('show');
@@ -355,6 +415,7 @@ td .vendor{font-size:.76rem;color:var(--muted)}
 
   // ---- leaderboard ----
   function renderLeaderboard() {
+    if (!TOOLS.length) { $('lb-hint').textContent = 'No tools with outputs yet.'; return; }
     const rows = TOOLS.map(t => ({ t, elo: state.elo[t.id], battles: state.battles[t.id], wins: state.wins[t.id], jury: state.jurySum[t.id] / state.juryN[t.id] }));
     rows.sort((x, y) => rating === 'elo' ? y.elo - x.elo : y.jury - x.jury);
     $('col-main').textContent = rating === 'elo' ? 'Elo' : 'Jury';
@@ -383,7 +444,20 @@ td .vendor{font-size:.76rem;color:var(--muted)}
   $('tab-lb').onclick = () => ($('lb').classList.contains('show') ? showArena() : showLb());
   $('home').onclick = () => { showArena(); $('thread').innerHTML = ''; $('welcome').classList.remove('hide'); document.body.classList.remove('in-battle'); try { speechSynthesis.cancel(); } catch {} window.scrollTo({ top: 0 }); $('prompt').focus(); };
   $('plus').onclick = () => toast('Attachments come with the real build.');
-  $('mode').onclick = () => toast('Blind battle: two random tools, names hidden until you vote.');
+  const MODES = { blind: 'Blind battle', side: 'Side by side', direct: 'Direct' };
+  function setMode(m) {
+    mode = m; $('mode-label').textContent = MODES[m]; $('menu').hidden = true;
+    document.querySelectorAll('#menu button').forEach(b => b.setAttribute('aria-current', String(b.dataset.mode === m)));
+    const pk = $('pickers'); pk.hidden = m === 'blind'; $('pick-b').hidden = m === 'direct'; pk.querySelector('span').hidden = m === 'direct';
+    if (!pk.hidden && !pk.parentNode.classList.contains('in')) { $('composer').before(pk); }
+    $('prompt').placeholder = m === 'direct' ? 'Hear one tool say…' : 'Make two voices say anything…';
+  }
+  $('mode').onclick = (e) => { e.stopPropagation(); $('menu').hidden = !$('menu').hidden; };
+  document.addEventListener('click', (e) => { if (!$('menu').hidden && !e.target.closest('#menu') && !e.target.closest('#mode')) $('menu').hidden = true; });
+  document.querySelectorAll('#menu button').forEach(b => b.onclick = () => setMode(b.dataset.mode));
+  for (const [sel, i] of [['pick-a', 0], ['pick-b', 1]]) { const el = $(sel); TOOLS.forEach((t, j) => { const o = document.createElement('option'); o.value = t.id; o.textContent = t.name; if (j === i % TOOLS.length) o.selected = true; el.appendChild(o); }); }
+  setMode('blind');
+  if (REAL) { $('tiny').textContent = `${TOOLS.length} tools with real outputs on ${GOLDEN.length} public prompts · custom lines unlock when a vendor claims a listing`; document.querySelector('.gs-label').textContent = 'Pick a public prompt'; }
   $('cat').onclick = () => toast('Voice is the first category. Transcription, image and video next.');
   document.querySelectorAll('.toggle button').forEach(b => b.onclick = () => { rating = b.dataset.rating; document.querySelectorAll('.toggle button').forEach(x => x.setAttribute('aria-pressed', String(x === b))); renderLeaderboard(); });
   $('lb-table').addEventListener('click', (e) => {
