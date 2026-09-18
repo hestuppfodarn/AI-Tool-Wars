@@ -1,0 +1,23 @@
+---
+// The prompt as the reader should see it. Audio: the script is the prompt. Text: the
+// task (instructions) is the prompt and the embedded document sits under a fold, since
+// a contract does not belong inline in a table. App: the brief is the prompt.
+import type { Prompt } from '../lib/snapshot';
+interface Props { prompt: Prompt; modality: string; compact?: boolean; }
+const { prompt, modality, compact = false } = Astro.props;
+const words = prompt.text.trim().split(/\s+/).length;
+---
+{modality === 'text' ? (
+  <div class="prompt-doc">
+    {prompt.instructions && <div class={compact ? 'small' : ''}><span class="muted">Task:</span> {prompt.instructions}</div>}
+    <details class="doc small">
+      <summary class="muted">The document ({words} words)</summary>
+      <pre>{prompt.text}</pre>
+    </details>
+  </div>
+) : (
+  <div class="prompt-doc">
+    <div class={`text ${compact ? 'small' : ''}`}>“{prompt.text}”</div>
+    {prompt.instructions && <div class="text small">Direction: {prompt.instructions}</div>}
+  </div>
+)}

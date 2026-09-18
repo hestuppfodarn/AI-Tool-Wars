@@ -1,9 +1,65 @@
 {
   "version": 1,
-  "generated_at": "2026-09-18T03:57:06.440Z",
+  "generated_at": "2026-09-18T04:16:53.111Z",
   "source": "catalog",
   "demo": false,
   "categories": [
+    {
+      "slug": "apps",
+      "name": "AI App Builders",
+      "description": "Prompt-to-app builders compared on the same six briefs: does the generated app run, does it look like the brief, did it follow the instructions, and how long did it take. Every builder here needs a paid seat and has no public API, so the bank waits for one.",
+      "output_modality": "app",
+      "metrics": [
+        {
+          "key": "works",
+          "label": "Works",
+          "description": "The generated app is opened in a headless browser and the brief's acceptance checks are run: the page loads without console errors, the named controls exist, and the scripted interaction (add a row, submit the form, switch the language) produces the expected DOM state. 10 = every check passes."
+        },
+        {
+          "key": "visual",
+          "label": "Visual match",
+          "description": "Screenshots at 390 and 1280 px are compared with the brief's layout requirements (sections present, responsive, no horizontal overflow, contrast) by a fixed checklist, and rated by a model jury that never sees the builder's name."
+        },
+        {
+          "key": "instructions",
+          "label": "Instruction following",
+          "description": "The brief's explicit constraints (language of the copy, named fields, currency format, no external services) checked one by one against the delivered app and its source. Weighted hits out of 10."
+        },
+        {
+          "key": "velocity",
+          "label": "Speed",
+          "description": "Wall-clock time from submitting the brief to a deployable preview, ranked against every other builder on the same brief. 10 = fastest, 1 = slowest."
+        }
+      ]
+    },
+    {
+      "slug": "legal",
+      "name": "Legal AI",
+      "description": "Legal drafting and review assistants compared on the same public documents: an NDA with a buried non-compete, a Swedish employment clause, a DPA gap analysis, a fake citation. The products with no public API get a standing challenge; open models run the bank as proxies in the meantime.",
+      "output_modality": "text",
+      "metrics": [
+        {
+          "key": "accuracy",
+          "label": "Rubric accuracy",
+          "description": "Every prompt ships with a machine-checkable rubric: facts, clause numbers, party names and figures the answer must contain (must_include: substring on lowercased, whitespace-collapsed text, alternatives allowed), values that must appear in a specific shape and structural markers such as a bullet, a heading or a {+tracked change+} (regex, flags im), and citations that must stay inside the source (cites_only). accuracy = 1 + 9 x weighted passes / weighted items over those kinds, rounded to one decimal. No judge model, no estimate: a pass is a substring or a regex match."
+        },
+        {
+          "key": "adherence",
+          "label": "Constraint adherence",
+          "description": "The prompt's constraints, checked deterministically: must_not_include (a fabricated case endorsed as real, a legalese word the brief banned, a clause number that does not exist), max_words and min_words on a Unicode word count that ignores markdown punctuation, language by a stopword vote (en/sv/de/fr/es), format_json (parses, and carries the required top-level keys) and format_markdown_table. adherence = 1 + 9 x weighted passes / weighted items over those kinds; null when a prompt has none."
+        },
+        {
+          "key": "conciseness",
+          "label": "Conciseness",
+          "description": "Length against the brief, from a formula rather than a judge. target = the smallest max_words item in the prompt's rubric (400 when there is none). 10 when the output is at or under the target; linear down to 1 at three times the target; an empty output is 1. Facts are scored by accuracy, so this metric only measures whether the answer stayed the length the buyer asked for."
+        },
+        {
+          "key": "velocity",
+          "label": "Speed",
+          "description": "Time to first token and total generation time, ranked against every other run on the same prompt. 10 = fastest, 1 = slowest, linear in between on the mean of the two ranks. Needs at least two tools on a prompt; otherwise blank. Open models run on the same CPU; API proxies are measured from the same host."
+        }
+      ]
+    },
     {
       "slug": "voice",
       "name": "AI Voice (Text to Speech)",
@@ -34,6 +90,172 @@
     }
   ],
   "tools": [
+    {
+      "slug": "lovable",
+      "name": "Lovable",
+      "vendor": "Lovable",
+      "website": "https://lovable.dev",
+      "description": "Prompt-to-web-app builder producing React and Supabase projects with one-click deploy. Paid seat, no public API.",
+      "category": "apps",
+      "status": "seat_needed",
+      "seat_url": "https://lovable.dev/pricing"
+    },
+    {
+      "slug": "bolt-new",
+      "name": "Bolt.new",
+      "vendor": "StackBlitz",
+      "website": "https://bolt.new",
+      "description": "In-browser AI agent that scaffolds, runs and deploys full-stack web apps from a prompt. Paid seat, no public API.",
+      "category": "apps",
+      "status": "seat_needed",
+      "seat_url": "https://bolt.new/pricing"
+    },
+    {
+      "slug": "v0",
+      "name": "v0",
+      "vendor": "Vercel",
+      "website": "https://v0.app",
+      "description": "Vercel's generative UI and app builder producing Next.js and shadcn/ui code from prompts and screenshots. Paid seat for anything beyond the free tier, no public API for the builder itself.",
+      "category": "apps",
+      "status": "seat_needed",
+      "seat_url": "https://v0.app/pricing"
+    },
+    {
+      "slug": "replit-agent",
+      "name": "Replit Agent",
+      "vendor": "Replit",
+      "website": "https://replit.com",
+      "description": "Agent inside Replit that plans, builds, tests and deploys apps from a natural-language brief. Paid seat, no public API for the agent.",
+      "category": "apps",
+      "status": "seat_needed",
+      "seat_url": "https://replit.com/pricing"
+    },
+    {
+      "slug": "base44",
+      "name": "Base44",
+      "vendor": "Base44 (Wix)",
+      "website": "https://base44.com",
+      "description": "No-code AI app builder with built-in database, auth and hosting, aimed at internal tools. Paid seat, no public API for the builder.",
+      "category": "apps",
+      "status": "seat_needed",
+      "seat_url": "https://base44.com/pricing"
+    },
+    {
+      "slug": "harvey",
+      "name": "Harvey",
+      "vendor": "Harvey AI",
+      "website": "https://www.harvey.ai",
+      "description": "Legal AI platform sold to law firms and in-house teams for research, drafting and document review. No public API and no self-serve signup, so it cannot be run on the public bank without a seat from the vendor.",
+      "category": "legal",
+      "status": "challenged",
+      "challenge": {
+        "asked_on": "2026-09-18",
+        "terms": "one seat, run the public bank, publish everything",
+        "contact_hint": "via website form"
+      }
+    },
+    {
+      "slug": "legora",
+      "name": "Legora",
+      "vendor": "Legora",
+      "website": "https://legora.com",
+      "description": "Collaborative legal AI workspace from Stockholm: review, drafting, tabular document analysis, sold to law firms. No public API and no self-serve signup, so it cannot be run on the public bank without a seat from the vendor.",
+      "category": "legal",
+      "status": "challenged",
+      "challenge": {
+        "asked_on": "2026-09-18",
+        "terms": "one seat, run the public bank, publish everything",
+        "contact_hint": "via website form"
+      }
+    },
+    {
+      "slug": "llama-3.2-3b-instruct",
+      "name": "Llama 3.2 3B Instruct",
+      "vendor": "Meta",
+      "website": "https://huggingface.co/meta-llama/Llama-3.2-3B-Instruct",
+      "description": "3-billion-parameter open-weight instruction model, run locally on CPU through llama.cpp at Q4_K_M.",
+      "category": "legal",
+      "status": "pending",
+      "proxy": true,
+      "proxy_note": "A general-purpose language model, not a legal product. It runs the bank so the prompts have a floor to be measured against while the legal vendors decide."
+    },
+    {
+      "slug": "qwen2.5-7b-instruct",
+      "name": "Qwen2.5 7B Instruct",
+      "vendor": "Alibaba Cloud",
+      "website": "https://huggingface.co/Qwen/Qwen2.5-7B-Instruct",
+      "description": "7-billion-parameter open-weight instruction model with strong multilingual and structured-output behaviour, run locally through llama.cpp at Q4_K_M.",
+      "category": "legal",
+      "status": "pending",
+      "proxy": true,
+      "proxy_note": "A general-purpose language model, not a legal product. It runs the bank so the prompts have a floor to be measured against while the legal vendors decide."
+    },
+    {
+      "slug": "phi-4-mini",
+      "name": "Phi-4 mini",
+      "vendor": "Microsoft",
+      "website": "https://huggingface.co/microsoft/Phi-4-mini-instruct",
+      "description": "3.8-billion-parameter open-weight instruction model trained on filtered and synthetic data, run locally through llama.cpp at Q4_K_M.",
+      "category": "legal",
+      "status": "pending",
+      "proxy": true,
+      "proxy_note": "A general-purpose language model, not a legal product. It runs the bank so the prompts have a floor to be measured against while the legal vendors decide."
+    },
+    {
+      "slug": "gemma-3-4b-it",
+      "name": "Gemma 3 4B",
+      "vendor": "Google DeepMind",
+      "website": "https://huggingface.co/google/gemma-3-4b-it",
+      "description": "4-billion-parameter open-weight instruction-tuned model with 140+ languages, run locally through llama.cpp at Q4_K_M.",
+      "category": "legal",
+      "status": "pending",
+      "proxy": true,
+      "proxy_note": "A general-purpose language model, not a legal product. It runs the bank so the prompts have a floor to be measured against while the legal vendors decide."
+    },
+    {
+      "slug": "mistral-7b-instruct",
+      "name": "Mistral 7B Instruct",
+      "vendor": "Mistral AI",
+      "website": "https://huggingface.co/mistralai/Mistral-7B-Instruct-v0.3",
+      "description": "7-billion-parameter open-weight instruction model (v0.3), run locally through llama.cpp at Q4_K_M.",
+      "category": "legal",
+      "status": "pending",
+      "proxy": true,
+      "proxy_note": "A general-purpose language model, not a legal product. It runs the bank so the prompts have a floor to be measured against while the legal vendors decide."
+    },
+    {
+      "slug": "gpt",
+      "name": "GPT (OpenAI API)",
+      "vendor": "OpenAI",
+      "website": "https://platform.openai.com",
+      "description": "OpenAI's chat completions API, run as a proxy with default settings once a key is in the environment.",
+      "category": "legal",
+      "status": "pending",
+      "proxy": true,
+      "proxy_note": "A general-purpose language model, not a legal product. Listed as a proxy for what an API model does on the same prompts; needs OPENAI_API_KEY to run."
+    },
+    {
+      "slug": "claude",
+      "name": "Claude (Anthropic API)",
+      "vendor": "Anthropic",
+      "website": "https://www.anthropic.com",
+      "description": "Anthropic's messages API, run as a proxy with default settings once a key is in the environment.",
+      "category": "legal",
+      "status": "pending",
+      "proxy": true,
+      "proxy_note": "A general-purpose language model, not a legal product. Listed as a proxy for what an API model does on the same prompts; needs ANTHROPIC_API_KEY to run."
+    },
+    {
+      "slug": "gemini",
+      "name": "Gemini (Google API)",
+      "vendor": "Google",
+      "website": "https://ai.google.dev",
+      "description": "Google's Gemini API, run as a proxy with default settings once a key is in the environment.",
+      "category": "legal",
+      "status": "pending",
+      "proxy": true,
+      "proxy_note": "A general-purpose language model, not a legal product. Listed as a proxy for what an API model does on the same prompts; needs GEMINI_API_KEY to run."
+    },
     {
       "slug": "elevenlabs",
       "name": "ElevenLabs",
@@ -180,6 +402,1047 @@
     }
   ],
   "prompts": [
+    {
+      "id": "apps-001",
+      "category": "apps",
+      "rank": 1,
+      "title": "Invoice tracker with a Stripe-style table",
+      "language": "en-US",
+      "tags": [
+        "internal-tool",
+        "table",
+        "crud"
+      ],
+      "text": "Build an invoice tracker for a small agency. One page: a table of invoices (number, client, amount, currency, issued date, due date, status) styled like the Stripe dashboard payments table, with a filter by status (draft, sent, paid, overdue), a search box on client name, and an 'Add invoice' modal. Amounts are formatted per currency (USD, EUR, SEK). Overdue is computed from the due date, not stored. Seed it with 12 invoices across three clients.",
+      "instructions": "Front-end only, local state is fine. No external API calls. Must work on a 390 px wide phone without horizontal scroll.",
+      "constraints": [
+        "Status filter with the four values",
+        "Overdue derived from due date",
+        "Per-currency formatting",
+        "Add-invoice modal adds a row",
+        "No horizontal scroll at 390 px"
+      ]
+    },
+    {
+      "id": "apps-002",
+      "category": "apps",
+      "rank": 2,
+      "title": "Landing page for a dog-walking service, in Swedish",
+      "language": "sv-SE",
+      "tags": [
+        "landing-page",
+        "swedish",
+        "marketing"
+      ],
+      "text": "Bygg en landningssida för 'Tassa Hundpromenader' i Uppsala. Sektioner: hero med rubrik och en knapp 'Boka en promenad', tre tjänster (30 minuter 149 kr, 60 minuter 249 kr, veckopaket 990 kr), tre kundomdömen (hitta på namn, inga riktiga personer), ett kontaktformulär med namn, e-post, hundens namn och ett meddelande, samt sidfot med adress och organisationsnummer. All text på svenska.",
+      "instructions": "Every visible string in Swedish, including form labels and the button. Prices in Swedish format (149 kr). Mobile first.",
+      "constraints": [
+        "All copy in Swedish",
+        "Three price points as specified",
+        "Contact form with the four fields",
+        "Footer with address and org number",
+        "Mobile first"
+      ]
+    },
+    {
+      "id": "apps-003",
+      "category": "apps",
+      "rank": 3,
+      "title": "Habit tracker with weekly heatmap",
+      "language": "en-GB",
+      "tags": [
+        "consumer",
+        "data",
+        "charts"
+      ],
+      "text": "Build a habit tracker. The user adds up to eight habits, ticks them off per day, and sees a 12-week heatmap per habit (GitHub contribution style) plus a current-streak counter. Data persists in localStorage. Include an export to CSV button.",
+      "instructions": "No backend, no login. Keyboard accessible: every tick box reachable by tab and toggled with space.",
+      "constraints": [
+        "Max eight habits",
+        "12-week heatmap per habit",
+        "Streak counter",
+        "localStorage persistence",
+        "CSV export"
+      ]
+    },
+    {
+      "id": "apps-004",
+      "category": "apps",
+      "rank": 4,
+      "title": "Restaurant booking form with capacity rules",
+      "language": "en-GB",
+      "tags": [
+        "form",
+        "validation",
+        "business-logic"
+      ],
+      "text": "Build a table-booking page for a 40-seat restaurant open Tuesday to Sunday, 17:00 to 22:00, with sittings every 30 minutes. A booking has name, phone, party size (1-8), date and sitting. The page must refuse Mondays, refuse a sitting when the seats already booked at that time plus the new party exceed 40, and show remaining seats per sitting for the chosen date. Seed it with existing bookings so at least two sittings on the coming Saturday are full.",
+      "instructions": "Client-side logic, seed data in code. Show validation messages inline, not as alerts.",
+      "constraints": [
+        "Closed Mondays",
+        "Capacity 40 per sitting enforced",
+        "Party size 1-8",
+        "Remaining seats shown per sitting",
+        "Inline validation"
+      ]
+    },
+    {
+      "id": "apps-005",
+      "category": "apps",
+      "rank": 5,
+      "title": "Internal CRM with kanban pipeline",
+      "language": "en-US",
+      "tags": [
+        "internal-tool",
+        "kanban",
+        "crud"
+      ],
+      "text": "Build a small sales CRM: a contacts list (name, company, email, value in USD, stage) and a kanban board with five stages (Lead, Contacted, Proposal, Won, Lost) where cards can be dragged between columns. Each column shows the count and the total value. A detail drawer opens on click with editable fields and a notes log with timestamps. Seed with 15 contacts.",
+      "instructions": "Drag and drop must also work with keyboard (move left/right buttons on each card). Local state only.",
+      "constraints": [
+        "Five stages",
+        "Drag and drop between columns",
+        "Column totals update",
+        "Keyboard alternative to drag",
+        "Detail drawer with notes log"
+      ]
+    },
+    {
+      "id": "apps-006",
+      "category": "apps",
+      "rank": 6,
+      "title": "Multilingual FAQ page with search",
+      "language": "en-GB",
+      "tags": [
+        "content",
+        "i18n",
+        "search"
+      ],
+      "text": "Build an FAQ page for an e-bike rental service with 20 questions grouped in four categories, a language switch between English and German that translates every visible string including the questions and answers, and an instant search box that filters questions as you type in the active language. Deep-link each question (URL hash opens it expanded).",
+      "instructions": "Both languages written out in full in the code; no translation API. Search must be accent-insensitive in German.",
+      "constraints": [
+        "20 questions in four groups",
+        "EN/DE switch translates everything",
+        "Instant search in the active language",
+        "Hash deep links",
+        "No external services"
+      ]
+    },
+    {
+      "id": "legal-001",
+      "category": "legal",
+      "rank": 1,
+      "title": "NDA with a buried non-compete",
+      "language": "en-GB",
+      "tags": [
+        "review",
+        "nda",
+        "commercial"
+      ],
+      "text": "MUTUAL NON-DISCLOSURE AGREEMENT\n\nThis Agreement is made on 1 September 2026 between Norrbo Analytics AB (org. no. 559123-4567, Sveavägen 44, 111 34 Stockholm) (\"Norrbo\") and Fenwick Data Ltd (company no. 11223344, 3 Finsbury Avenue, London EC2M 2PA) (\"Fenwick\"), each a \"Party\".\n\n1. Purpose. The Parties wish to evaluate a possible data-partnership (the \"Purpose\") and may disclose Confidential Information to each other for that Purpose.\n2. Confidential Information. \"Confidential Information\" means all non-public information disclosed by a Party, in any form, marked confidential or which a reasonable person would treat as confidential.\n3. Obligations. The Receiving Party shall (a) use Confidential Information only for the Purpose, (b) not disclose it to any third party other than its employees and advisers who need to know and are bound by written obligations no less protective, and (c) protect it with at least reasonable care.\n4. Exclusions. Clause 3 does not apply to information that is or becomes public through no fault of the Receiving Party, was already lawfully known to it, is independently developed, or must be disclosed by law.\n5. Term. This Agreement runs for two (2) years from the date above. The obligations in clause 3 survive for five (5) years after expiry.\n6. Return. On written request the Receiving Party shall return or destroy all Confidential Information within 14 days.\n7. General.\n7.1 No licence. Nothing in this Agreement grants any licence to intellectual property.\n7.2 No obligation to proceed. Neither Party is obliged to enter into any further agreement.\n7.3 Restricted activities. During the term and for twenty-four (24) months after it, the Receiving Party shall not, directly or through an affiliate, (i) solicit for employment any employee of the Disclosing Party with whom it had contact under this Agreement, nor (ii) develop, market or provide in the United Kingdom, Sweden or Norway any product or service that competes with the data-analytics products of the Disclosing Party as they exist at the date of this Agreement.\n7.4 Remedies. Each Party acknowledges that damages may be an inadequate remedy and that the other Party may seek injunctive relief.\n8. Governing law. This Agreement is governed by the laws of England and Wales and the courts of England have exclusive jurisdiction.\n\nSigned for Norrbo Analytics AB ______   Signed for Fenwick Data Ltd ______",
+      "instructions": "You are reviewing this NDA for Fenwick Data Ltd before signature. List every obligation on Fenwick that goes beyond keeping information confidential, cite the clause number for each, say which one you would refuse to sign as drafted and why, and give the survival period of the confidentiality obligations. Bullet points, under 350 words.",
+      "constraints": [
+        "Cites clause 7.3 and names the non-compete",
+        "States the 24-month tail",
+        "Mentions the non-solicit",
+        "States the 5-year survival",
+        "Bullet list, under 350 words"
+      ],
+      "rubric": [
+        {
+          "id": "clause-73",
+          "kind": "must_include",
+          "value": [
+            "7.3",
+            "clause 7"
+          ],
+          "weight": 2
+        },
+        {
+          "id": "non-compete",
+          "kind": "regex",
+          "value": "non-?compet|compete with|competing",
+          "weight": 3
+        },
+        {
+          "id": "tail-24",
+          "kind": "regex",
+          "value": "\\b(24|twenty-?four)\\b[^.]{0,20}months",
+          "weight": 2
+        },
+        {
+          "id": "non-solicit",
+          "kind": "regex",
+          "value": "non-?solicit|solicit",
+          "weight": 1
+        },
+        {
+          "id": "survival-5",
+          "kind": "regex",
+          "value": "\\b(5|five)\\b[^.]{0,15}years",
+          "weight": 1
+        },
+        {
+          "id": "territory",
+          "kind": "regex",
+          "value": "united kingdom|sweden|norway",
+          "weight": 1
+        },
+        {
+          "id": "no-fake-clause",
+          "kind": "must_not_include",
+          "value": [
+            "clause 9",
+            "clause 10",
+            "7.5"
+          ],
+          "weight": 1
+        },
+        {
+          "id": "len",
+          "kind": "max_words",
+          "value": 350
+        },
+        {
+          "id": "bullets",
+          "kind": "regex",
+          "value": "^\\s*[-*•]\\s+\\S",
+          "weight": 1,
+          "note": "at least one bullet line"
+        },
+        {
+          "id": "lang",
+          "kind": "language",
+          "value": "en"
+        }
+      ],
+      "reference": "The trap is 7.3(ii): a 24-month, three-country non-compete inside an NDA, with injunctive relief in 7.4 behind it. Confidentiality survives 5 years (clause 5). The non-solicit in 7.3(i) is the usual ask; the non-compete is not."
+    },
+    {
+      "id": "legal-002",
+      "category": "legal",
+      "rank": 2,
+      "title": "Swedish employment clause against LAS",
+      "language": "sv-SE",
+      "tags": [
+        "review",
+        "employment",
+        "swedish"
+      ],
+      "text": "ANSTÄLLNINGSAVTAL (utdrag)\n\nArbetsgivare: Fjällbryggeriet AB, org.nr 556987-1234, Storgatan 12, 831 30 Östersund\nArbetstagare: [namn], befattning: Kvalitetsansvarig\nTillträde: 1 november 2026\n\n§ 3 Anställningsform\nAnställningen inleds med en provanställning om nio (9) månader. Om anställningen inte avbryts dessförinnan övergår den i en tillsvidareanställning.\n\n§ 4 Arbetstid\nHeltid, 40 timmar per vecka. Övertid ersätts inte särskilt utan anses ingå i lönen.\n\n§ 5 Lön\nMånadslön 42 000 kr. Lönerevision sker årligen per den 1 april.\n\n§ 6 Uppsägningstid\nArbetstagaren har en uppsägningstid om tre (3) månader. Arbetsgivaren har en uppsägningstid om en (1) månad oavsett anställningstid.\n\n§ 7 Semester\n25 semesterdagar per år enligt semesterlagen.\n\n§ 8 Konkurrens\nArbetstagaren får under anställningen och tolv (12) månader därefter inte ta anställning hos konkurrerande bryggeri i Jämtlands län. Ingen ersättning utgår under bindningstiden.",
+      "instructions": "Granska § 3, § 6 och § 8 mot lagen om anställningsskydd (LAS) och gällande praxis. Ange för varje punkt om den strider mot tvingande lag eller är oskälig, med hänvisning till aktuell paragraf i LAS där sådan finns, och föreslå en korrigering. Svara på svenska, som punktlista, högst 250 ord.",
+      "constraints": [
+        "Answer in Swedish",
+        "Flags the 9-month probation against the 6-month maximum in 6 § LAS",
+        "Flags the employer's fixed 1-month notice against 11 § LAS",
+        "Comments on the uncompensated non-compete",
+        "Bullet list, under 250 words"
+      ],
+      "rubric": [
+        {
+          "id": "probation-max",
+          "kind": "regex",
+          "value": "(sex|6)\\s*månader",
+          "weight": 3
+        },
+        {
+          "id": "las-6",
+          "kind": "regex",
+          "value": "6\\s*§|§\\s*6\\b",
+          "weight": 1
+        },
+        {
+          "id": "notice-11",
+          "kind": "regex",
+          "value": "11\\s*§|§\\s*11\\b",
+          "weight": 2
+        },
+        {
+          "id": "notice-scale",
+          "kind": "regex",
+          "value": "anställningstid|två\\s*månader|2\\s*månader",
+          "weight": 1
+        },
+        {
+          "id": "noncompete-comp",
+          "kind": "regex",
+          "value": "ersättning|kompensation|oskälig|38\\s*§\\s*avtalslagen",
+          "weight": 2
+        },
+        {
+          "id": "no-fake-section",
+          "kind": "must_not_include",
+          "value": [
+            "45 §",
+            "§ 45"
+          ],
+          "weight": 1
+        },
+        {
+          "id": "lang",
+          "kind": "language",
+          "value": "sv",
+          "weight": 2
+        },
+        {
+          "id": "len",
+          "kind": "max_words",
+          "value": 250
+        },
+        {
+          "id": "bullets",
+          "kind": "regex",
+          "value": "^\\s*[-*•]\\s+\\S",
+          "weight": 1,
+          "note": "at least one bullet line"
+        }
+      ],
+      "reference": "6 § LAS caps provanställning at six months, so § 3 is void beyond that. 11 § LAS gives a one-month minimum for both sides and raises the employer's notice with length of service (two months after two years, up to six after ten), so § 6 cannot fix it at one month regardless. § 8 is a non-compete with no compensation; assessed for reasonableness under 38 § avtalslagen and the 2015 collective agreement practice."
+    },
+    {
+      "id": "legal-003",
+      "category": "legal",
+      "rank": 3,
+      "title": "GDPR data processing agreement: gap analysis",
+      "language": "en-GB",
+      "tags": [
+        "review",
+        "gdpr",
+        "privacy"
+      ],
+      "text": "DATA PROCESSING AGREEMENT\n\nBetween Kallio Health Oy (\"Controller\") and Brightwave Cloud GmbH (\"Processor\"), effective 15 October 2026, supplementing the Master Services Agreement of the same date.\n\n1. Subject matter and duration. The Processor processes personal data on behalf of the Controller for the purpose of hosting and operating the Controller's patient-booking application, for the duration of the Master Services Agreement.\n2. Nature and purpose. Storage, backup and transmission of booking records; no analysis for the Processor's own purposes.\n3. Categories of data and data subjects. Names, contact details, appointment times and appointment types of the Controller's patients and staff.\n4. Instructions. The Processor shall process personal data only on documented instructions from the Controller, including with regard to transfers to a third country, unless required to do so by Union or Member State law.\n5. Confidentiality. The Processor ensures that persons authorised to process the personal data have committed themselves to confidentiality.\n6. Security. The Processor shall implement appropriate technical and organisational measures pursuant to Article 32 GDPR, as described in Annex 2.\n7. Breach notification. The Processor shall notify the Controller without undue delay, and in any event within 48 hours, after becoming aware of a personal data breach.\n8. Sub-processors. The Processor may engage sub-processors at its discretion as needed to provide the services.\n9. Liability. Each party's liability under this Agreement is subject to the limitations in the Master Services Agreement.\n10. Governing law. Finnish law.\n\nAnnex 1: Description of processing (see clauses 1-3).\nAnnex 2: Security measures (ISO 27001 certificate attached).",
+      "instructions": "Compare this DPA against the mandatory content of Article 28(3) GDPR. Produce a numbered list of every Article 28(3) requirement that is missing or defective, quoting the sub-paragraph letter where you can, and say what clause 8 gets wrong. Under 400 words.",
+      "constraints": [
+        "Cites Article 28(3)",
+        "Finds the sub-processor problem in clause 8 (prior authorisation, notification, flow-down)",
+        "Finds the missing deletion/return at end of processing",
+        "Finds the missing audit and inspection right",
+        "Finds the missing assistance obligations (data subject rights, Articles 32-36)",
+        "Numbered list, under 400 words"
+      ],
+      "rubric": [
+        {
+          "id": "art-28",
+          "kind": "regex",
+          "value": "article\\s*28|art\\.?\\s*28",
+          "weight": 1
+        },
+        {
+          "id": "subprocessor",
+          "kind": "regex",
+          "value": "sub-?processor",
+          "weight": 2
+        },
+        {
+          "id": "subprocessor-authorisation",
+          "kind": "regex",
+          "value": "prior (specific or general )?(written )?authori[sz]ation|prior (written )?(consent|approval)|general (written )?authori[sz]ation",
+          "weight": 2
+        },
+        {
+          "id": "deletion-return",
+          "kind": "regex",
+          "value": "delet|return",
+          "weight": 2
+        },
+        {
+          "id": "audit",
+          "kind": "regex",
+          "value": "audit|inspection",
+          "weight": 2
+        },
+        {
+          "id": "assistance",
+          "kind": "regex",
+          "value": "data subject|assist",
+          "weight": 2
+        },
+        {
+          "id": "dpia",
+          "kind": "regex",
+          "value": "impact assessment|dpia|articles?\\s*3[2-6]",
+          "weight": 1
+        },
+        {
+          "id": "not-missing-confidentiality",
+          "kind": "must_not_include",
+          "value": [
+            "confidentiality is missing",
+            "no confidentiality clause",
+            "lacks a confidentiality"
+          ],
+          "weight": 1
+        },
+        {
+          "id": "len",
+          "kind": "max_words",
+          "value": 400
+        },
+        {
+          "id": "numbered",
+          "kind": "regex",
+          "value": "^\\s*\\d+[.)]\\s+\\S",
+          "weight": 1,
+          "note": "at least one numbered line"
+        },
+        {
+          "id": "lang",
+          "kind": "language",
+          "value": "en"
+        }
+      ],
+      "reference": "Present: instructions (a), confidentiality (b), security (c), breach notice (part of f). Missing: sub-processor prior authorisation and flow-down (d, 28(2) and 28(4)); assistance with data subject requests (e); assistance with Articles 32-36 including DPIAs (f); deletion or return at end of processing (g); making information available and allowing audits (h). Clause 8 gives the processor a free hand on sub-processors, which 28(2) forbids."
+    },
+    {
+      "id": "legal-004",
+      "category": "legal",
+      "rank": 4,
+      "title": "Draft a lease break notice",
+      "language": "en-GB",
+      "tags": [
+        "drafting",
+        "property",
+        "notice"
+      ],
+      "text": "LEASE OF UNIT 4, BRYGGAN YARD, 17 CANAL STREET, MANCHESTER M1 7HJ (extract)\n\nLandlord: Halden Estates Limited (company no. 08811223), registered office 22 Bishopsgate, London EC2N 4BQ.\nTenant: Bryggan Coffee Roasters Ltd (company no. 12233445), registered office Unit 4, Bryggan Yard, 17 Canal Street, Manchester M1 7HJ.\nTerm: ten years from and including 1 July 2022.\nRent: £38,000 per year, payable quarterly in advance on the usual quarter days.\n\n12. Tenant's option to determine\n12.1 The Tenant may determine this Lease on 30 June 2027 (the \"Break Date\") by serving written notice on the Landlord not less than six (6) months before the Break Date.\n12.2 The notice is valid only if, on the Break Date, (a) all Rent due up to the Break Date has been paid and (b) the Tenant gives vacant possession of the Premises.\n12.3 Notice under this clause must be served by recorded delivery post to the Landlord's registered office and is deemed served two working days after posting.\n12.4 On termination under this clause the Landlord shall refund any Rent paid for the period after the Break Date within 21 days.\n12.5 Time is of the essence of this clause.\n\n25. Notices\n25.1 Any notice under this Lease must be in writing and signed by or on behalf of the party giving it.",
+      "instructions": "Today is 18 September 2026. Draft the break notice for Bryggan Coffee Roasters Ltd to serve on the Landlord under clause 12.1, as a complete letter ready to sign. Then, in one sentence after the letter, state the last day the notice can be posted to be validly served. Under 300 words.",
+      "constraints": [
+        "Addressed to Halden Estates Limited at 22 Bishopsgate, London EC2N 4BQ",
+        "Cites clause 12.1 and the Break Date 30 June 2027",
+        "Identifies the premises",
+        "Mentions vacant possession and the rent condition",
+        "States the latest posting date",
+        "Under 300 words"
+      ],
+      "rubric": [
+        {
+          "id": "landlord-name",
+          "kind": "must_include",
+          "value": "halden estates limited",
+          "weight": 2
+        },
+        {
+          "id": "landlord-address",
+          "kind": "must_include",
+          "value": "22 bishopsgate",
+          "weight": 2
+        },
+        {
+          "id": "clause-121",
+          "kind": "must_include",
+          "value": "12.1",
+          "weight": 1
+        },
+        {
+          "id": "break-date",
+          "kind": "regex",
+          "value": "30(th)?\\s*june\\s*2027",
+          "weight": 2
+        },
+        {
+          "id": "premises",
+          "kind": "regex",
+          "value": "unit 4|bryggan yard|17 canal street",
+          "weight": 1
+        },
+        {
+          "id": "tenant",
+          "kind": "must_include",
+          "value": "bryggan coffee roasters",
+          "weight": 1
+        },
+        {
+          "id": "vacant-possession",
+          "kind": "must_include",
+          "value": "vacant possession",
+          "weight": 1
+        },
+        {
+          "id": "recorded-delivery",
+          "kind": "regex",
+          "value": "recorded delivery",
+          "weight": 1
+        },
+        {
+          "id": "last-post-date",
+          "kind": "regex",
+          "value": "(2[4-9]|30|31)(st|th)?\\s*december\\s*2026|december\\s*(2[4-9]|30|31)(st|th)?,?\\s*2026",
+          "weight": 2
+        },
+        {
+          "id": "len",
+          "kind": "max_words",
+          "value": 300
+        },
+        {
+          "id": "lang",
+          "kind": "language",
+          "value": "en"
+        }
+      ],
+      "reference": "Six months before 30 June 2027 is 30 December 2026 (or 31 December on a strict reading of 'not less than six months'); with two working days' deemed service the safe posting date is before Christmas. Any answer in the last week of December 2026 gets the hit; a careful answer says 'post by 24 December 2026'."
+    },
+    {
+      "id": "legal-005",
+      "category": "legal",
+      "rank": 5,
+      "title": "Term sheet summary for founders",
+      "language": "en-US",
+      "tags": [
+        "summary",
+        "venture",
+        "finance"
+      ],
+      "text": "SERIES A TERM SHEET (non-binding except Confidentiality and Exclusivity)\n\nCompany: Skarv Robotics AB\nLead investor: Alder Ventures Fund III (\"Alder\")\nInvestment: SEK 40,000,000 for Series A Preferred Shares\nPre-money valuation: SEK 160,000,000, fully diluted, including an option pool equal to 20% of the post-money fully diluted share capital, to be created before closing\nLiquidation preference: 1x the original purchase price, non-participating, senior to Ordinary Shares\nDividends: non-cumulative, as and when declared\nAnti-dilution: broad-based weighted average\nConversion: 1:1, subject to adjustment\nBoard: five directors: two appointed by the Founders, two by Alder, one independent appointed by mutual agreement\nProtective provisions: consent of Series A majority required for new senior securities, sale of the company, changes to the articles, debt above SEK 5,000,000\nPro-rata rights: Alder may participate in future rounds to maintain its percentage\nDrag-along: holders of 60% of shares (including the Series A majority) may require all holders to sell\nFounder vesting: 4 years, 1-year cliff, 25% credited for time served\nExclusivity: 45 days from signature\nGoverning law: Sweden",
+      "instructions": "Summarise this term sheet for the two founders in at most 150 words. Include the post-money valuation in SEK, Alder's resulting ownership percentage, the liquidation preference, the anti-dilution mechanism, the option pool and the board composition. No preamble.",
+      "constraints": [
+        "Post-money SEK 200,000,000",
+        "Alder's stake 20%",
+        "1x non-participating preference",
+        "Broad-based weighted average anti-dilution",
+        "20% option pool in the pre-money",
+        "Board 2-2-1",
+        "At most 150 words"
+      ],
+      "rubric": [
+        {
+          "id": "post-money",
+          "kind": "regex",
+          "value": "200[, ]?000[, ]?000|200\\s?(m|mn|million|mkr|msek)",
+          "weight": 3
+        },
+        {
+          "id": "stake",
+          "kind": "regex",
+          "value": "20\\s?(%|percent|per cent)",
+          "weight": 2
+        },
+        {
+          "id": "pref-1x",
+          "kind": "regex",
+          "value": "\\b1\\s?x\\b|one times",
+          "weight": 1
+        },
+        {
+          "id": "non-participating",
+          "kind": "regex",
+          "value": "non-?participating",
+          "weight": 1
+        },
+        {
+          "id": "anti-dilution",
+          "kind": "must_include",
+          "value": "weighted average",
+          "weight": 1
+        },
+        {
+          "id": "board",
+          "kind": "regex",
+          "value": "two[^.]{0,40}two[^.]{0,40}(one|independent)|2[^.]{0,30}2[^.]{0,30}1\\b",
+          "weight": 1
+        },
+        {
+          "id": "pool",
+          "kind": "regex",
+          "value": "option pool|pool",
+          "weight": 1
+        },
+        {
+          "id": "wrong-post-money",
+          "kind": "must_not_include",
+          "value": [
+            "160,000,000 post",
+            "post-money of sek 160",
+            "post-money valuation of sek 160"
+          ],
+          "weight": 1
+        },
+        {
+          "id": "len",
+          "kind": "max_words",
+          "value": 150,
+          "weight": 2
+        },
+        {
+          "id": "lang",
+          "kind": "language",
+          "value": "en"
+        }
+      ],
+      "reference": "Post-money = 160 + 40 = SEK 200m; Alder gets 40/200 = 20%. The 20% pool sits inside the pre-money, so it dilutes the founders, not Alder."
+    },
+    {
+      "id": "legal-006",
+      "category": "legal",
+      "rank": 6,
+      "title": "Redline a liability clause as tracked changes",
+      "language": "en-GB",
+      "tags": [
+        "drafting",
+        "redline",
+        "commercial"
+      ],
+      "text": "13. LIABILITY\n\n13.1 The Supplier shall be liable to the Customer for all losses, damages, costs and expenses of any kind arising out of or in connection with this Agreement, however caused, including loss of profit, loss of business and indirect or consequential loss.\n\n13.2 The Customer's liability to the Supplier under this Agreement is limited to the Fees paid in the three (3) months preceding the event giving rise to the claim.\n\n13.3 Nothing in this Agreement limits any liability which cannot legally be limited.",
+      "instructions": "You act for the Supplier. Redline clause 13 so that (1) the Supplier's total liability is capped at the Fees paid in the twelve (12) months before the claim, (2) the Supplier is not liable for loss of profit, loss of business or indirect or consequential loss, (3) the cap and exclusion do not apply to death or personal injury caused by negligence, fraud or fraudulent misrepresentation, or breach of the confidentiality clause, and (4) the Customer's cap in 13.2 becomes the same twelve months. Output the full revised clause 13 as tracked changes: wrap deleted text in [- -] and inserted text in {+ +}. No commentary.",
+      "constraints": [
+        "Output uses [-deleted-] and {+inserted+} markup",
+        "Cap at 12 months' fees",
+        "Excludes loss of profit and indirect loss",
+        "Carve-outs for death or personal injury, fraud, confidentiality",
+        "Customer cap changed to 12 months",
+        "Under 400 words"
+      ],
+      "rubric": [
+        {
+          "id": "tracked-1",
+          "kind": "regex",
+          "value": "\\[-[\\s\\S]+?-\\]",
+          "weight": 3,
+          "note": "a [-deletion-] span"
+        },
+        {
+          "id": "tracked-2",
+          "kind": "regex",
+          "value": "\\{\\+[\\s\\S]+?\\+\\}",
+          "weight": 3,
+          "note": "an {+insertion+} span"
+        },
+        {
+          "id": "cap-12",
+          "kind": "regex",
+          "value": "\\{\\+[^}]*(twelve|12)[^}]*months?[^}]*\\+\\}|(twelve|12)\\s*\\(?1?2?\\)?\\s*months",
+          "weight": 2
+        },
+        {
+          "id": "excl-profit",
+          "kind": "regex",
+          "value": "not be liable[^.]{0,120}(loss of profit|indirect|consequential)|exclud[^.]{0,120}(loss of profit|indirect|consequential)",
+          "weight": 2
+        },
+        {
+          "id": "carve-injury",
+          "kind": "regex",
+          "value": "death|personal injury",
+          "weight": 1
+        },
+        {
+          "id": "carve-fraud",
+          "kind": "must_include",
+          "value": "fraud",
+          "weight": 1
+        },
+        {
+          "id": "carve-confidentiality",
+          "kind": "regex",
+          "value": "confidential",
+          "weight": 1
+        },
+        {
+          "id": "deleted-three",
+          "kind": "regex",
+          "value": "\\[-[^\\]]*three[^\\]]*-\\]|\\[-[^\\]]*\\(3\\)[^\\]]*-\\]",
+          "weight": 1
+        },
+        {
+          "id": "len",
+          "kind": "max_words",
+          "value": 400
+        },
+        {
+          "id": "lang",
+          "kind": "language",
+          "value": "en"
+        }
+      ],
+      "reference": "13.1 as drafted is an uncapped, all-inclusive liability on the Supplier. The redline flips it: cap at 12 months' Fees, exclude indirect loss, keep 13.3 and add the three carve-outs, and replace 'three (3)' with 'twelve (12)' in 13.2 as a deletion plus insertion."
+    },
+    {
+      "id": "legal-007",
+      "category": "legal",
+      "rank": 7,
+      "title": "Extract contract terms to JSON",
+      "language": "en-US",
+      "tags": [
+        "extraction",
+        "structured",
+        "saas"
+      ],
+      "text": "SOFTWARE SUBSCRIPTION AGREEMENT\n\nThis Agreement is entered into as of October 1, 2026 (the \"Effective Date\") by Ashgrove Software Limited, a company incorporated in Ireland with registered number 654321 (the \"Provider\"), and Marlow & Finch LLP, a limited liability partnership registered in England (the \"Customer\").\n\n2. Term. The Initial Term is twenty-four (24) months from the Effective Date. Thereafter this Agreement renews automatically for successive periods of twelve (12) months unless either party gives written notice of non-renewal at least ninety (90) days before the end of the then-current term.\n3. Fees. The Customer shall pay a subscription fee of EUR 4,800 per month, invoiced monthly in advance. Invoices are payable within thirty (30) days of the invoice date. Late payments bear interest at 8% per annum above the European Central Bank main refinancing rate.\n4. Service levels. The Provider shall make the Service available 99.5% of the time in each calendar month, excluding scheduled maintenance notified 48 hours in advance. Service credits are set out in Schedule 2.\n5. Data. The Customer retains all rights in Customer Data. The Provider shall delete Customer Data within 60 days after termination.\n11. Governing law and jurisdiction. This Agreement is governed by the laws of Ireland. The courts of Ireland have exclusive jurisdiction.",
+      "instructions": "Return ONLY a JSON object, no prose and no code fence, with exactly these keys: provider, customer, effective_date (ISO 8601 date), initial_term_months (integer), renewal_term_months (integer), renewal_notice_days (integer), monthly_fee (number), currency (ISO 4217), payment_terms_days (integer), late_interest_percent (number), uptime_percent (number), data_deletion_days (integer), governing_law (country name).",
+      "constraints": [
+        "Valid JSON, nothing else",
+        "Exactly the 13 requested keys",
+        "Dates in ISO 8601",
+        "Integers where requested"
+      ],
+      "rubric": [
+        {
+          "id": "json",
+          "kind": "format_json",
+          "value": [
+            "provider",
+            "customer",
+            "effective_date",
+            "initial_term_months",
+            "renewal_term_months",
+            "renewal_notice_days",
+            "monthly_fee",
+            "currency",
+            "payment_terms_days",
+            "late_interest_percent",
+            "uptime_percent",
+            "data_deletion_days",
+            "governing_law"
+          ],
+          "weight": 3
+        },
+        {
+          "id": "effective-date",
+          "kind": "regex",
+          "value": "\"effective_date\"\\s*:\\s*\"2026-10-01\"",
+          "weight": 2
+        },
+        {
+          "id": "initial-term",
+          "kind": "regex",
+          "value": "\"initial_term_months\"\\s*:\\s*24\\b",
+          "weight": 1
+        },
+        {
+          "id": "renewal-term",
+          "kind": "regex",
+          "value": "\"renewal_term_months\"\\s*:\\s*12\\b",
+          "weight": 1
+        },
+        {
+          "id": "notice",
+          "kind": "regex",
+          "value": "\"renewal_notice_days\"\\s*:\\s*90\\b",
+          "weight": 1
+        },
+        {
+          "id": "fee",
+          "kind": "regex",
+          "value": "\"monthly_fee\"\\s*:\\s*4800(\\.0+)?\\b",
+          "weight": 1
+        },
+        {
+          "id": "currency",
+          "kind": "regex",
+          "value": "\"currency\"\\s*:\\s*\"eur\"",
+          "weight": 1
+        },
+        {
+          "id": "payment-terms",
+          "kind": "regex",
+          "value": "\"payment_terms_days\"\\s*:\\s*30\\b",
+          "weight": 1
+        },
+        {
+          "id": "interest",
+          "kind": "regex",
+          "value": "\"late_interest_percent\"\\s*:\\s*8(\\.0+)?\\b",
+          "weight": 1
+        },
+        {
+          "id": "uptime",
+          "kind": "regex",
+          "value": "\"uptime_percent\"\\s*:\\s*99\\.5\\b",
+          "weight": 1
+        },
+        {
+          "id": "deletion",
+          "kind": "regex",
+          "value": "\"data_deletion_days\"\\s*:\\s*60\\b",
+          "weight": 1
+        },
+        {
+          "id": "law",
+          "kind": "regex",
+          "value": "\"governing_law\"\\s*:\\s*\"ireland\"",
+          "weight": 1
+        },
+        {
+          "id": "provider",
+          "kind": "regex",
+          "value": "\"provider\"\\s*:\\s*\"ashgrove software limited\"",
+          "weight": 1
+        },
+        {
+          "id": "no-fence",
+          "kind": "must_not_include",
+          "value": [
+            "```"
+          ],
+          "weight": 1
+        },
+        {
+          "id": "len",
+          "kind": "max_words",
+          "value": 120
+        }
+      ],
+      "reference": "Thirteen fields, all present in the text. The scorer lowercases before matching, so the regexes are written in lowercase."
+    },
+    {
+      "id": "legal-008",
+      "category": "legal",
+      "rank": 8,
+      "title": "Citation check with one fabricated case",
+      "language": "en-GB",
+      "tags": [
+        "research",
+        "citations",
+        "hallucination"
+      ],
+      "text": "MEMORANDUM (extract)\n\nRe: recoverability of the lost Q4 contract\n\nUnder Hadley v Baxendale (1854) 9 Exch 341 damages for breach of contract are limited to losses arising naturally from the breach or within the reasonable contemplation of both parties at the time of contracting. The duty-of-care analysis in Donoghue v Stevenson [1932] AC 562 is not engaged because the claim is contractual. The Court of Appeal confirmed in Pemberton v Northgate Logistics Ltd [2019] EWCA Civ 1187 that a supplier who is told of a downstream contract is deemed to contemplate the loss of that contract, so the Q4 loss is recoverable in full. See also Victoria Laundry (Windsor) Ltd v Newman Industries Ltd [1949] 2 KB 528 on the two limbs of remoteness.",
+      "instructions": "Check each of the four citations in this extract. For each one state whether it is a genuine reported case that you can verify, what proposition it actually stands for, and whether the memo's use of it is accurate. If you cannot verify a case, say so plainly rather than describing it. Under 300 words.",
+      "constraints": [
+        "Covers all four citations",
+        "Flags Pemberton v Northgate Logistics as unverifiable or fabricated",
+        "Does not describe Pemberton as if it were real",
+        "Under 300 words"
+      ],
+      "rubric": [
+        {
+          "id": "hadley",
+          "kind": "must_include",
+          "value": "hadley",
+          "weight": 1
+        },
+        {
+          "id": "donoghue",
+          "kind": "must_include",
+          "value": "donoghue",
+          "weight": 1
+        },
+        {
+          "id": "victoria-laundry",
+          "kind": "must_include",
+          "value": "victoria laundry",
+          "weight": 1
+        },
+        {
+          "id": "pemberton-named",
+          "kind": "must_include",
+          "value": "pemberton",
+          "weight": 1
+        },
+        {
+          "id": "pemberton-flagged",
+          "kind": "regex",
+          "value": "(not (a |an )?(real|genuine|actual|known|reported|verifiable)|cannot (be )?(verif|locat|find|confirm)|could not (be )?(verif|locat|find|confirm)|unable to (verif|locat|find|confirm)|no (record|such case|trace)|fabricat|fictitious|fictional|does not (appear to )?exist|unverif|invented|made[- ]up|hallucinat|not (be )?found)",
+          "weight": 4
+        },
+        {
+          "id": "pemberton-not-endorsed",
+          "kind": "must_not_include",
+          "value": [
+            "pemberton v northgate logistics ltd [2019] ewca civ 1187 is a genuine",
+            "pemberton is a genuine",
+            "pemberton is a real",
+            "pemberton is correctly cited",
+            "pemberton is accurately cited"
+          ],
+          "weight": 2
+        },
+        {
+          "id": "remoteness",
+          "kind": "regex",
+          "value": "remoteness|reasonable contemplation|two limbs",
+          "weight": 1
+        },
+        {
+          "id": "duty-of-care",
+          "kind": "regex",
+          "value": "duty of care|negligence|neighbour",
+          "weight": 1
+        },
+        {
+          "id": "len",
+          "kind": "max_words",
+          "value": 300
+        },
+        {
+          "id": "lang",
+          "kind": "language",
+          "value": "en"
+        }
+      ],
+      "reference": "Hadley, Donoghue and Victoria Laundry are real and correctly described. Pemberton v Northgate Logistics Ltd is invented for this prompt; the proposition attributed to it is also wrong (knowledge of a downstream contract goes to the second limb of Hadley, it does not make the loss recoverable 'in full'). The scorer rewards the flag and penalises endorsing the case."
+    },
+    {
+      "id": "legal-009",
+      "category": "legal",
+      "rank": 9,
+      "title": "Plain-language rewrite of a returns clause",
+      "language": "en-GB",
+      "tags": [
+        "drafting",
+        "consumer",
+        "plain-language"
+      ],
+      "text": "9. RETURNS AND REFUNDS\n\n9.1 Notwithstanding any other provision of these Terms, the Consumer (hereinafter \"you\") shall be entitled, within a period of fourteen (14) days commencing on the day following the day of receipt of the Goods, to cancel the Contract without giving any reason, by notifying the Seller in writing of the aforesaid cancellation.\n9.2 Upon such cancellation the Consumer shall return the Goods to the Seller at the Consumer's own expense within fourteen (14) days of the notification referred to in clause 9.1, and the Seller shall reimburse all sums paid by the Consumer, including the cost of standard delivery, within thirty (30) days of receipt of the returned Goods.\n9.3 The Consumer shall indemnify the Seller in respect of any diminution in the value of the Goods resulting from handling beyond that necessary to establish their nature, characteristics and functioning.",
+      "instructions": "Rewrite clause 9 in plain English for shoppers, so that a 12-year-old could follow it. Keep every right and obligation the same, keep the 14-day and 30-day periods, and keep the point that you pay for the return postage and may lose money if you have used the goods. Use 'you' and 'we'. Do not use the words notwithstanding, hereinafter, aforesaid, indemnify or diminution. At most 120 words.",
+      "constraints": [
+        "No legalese: notwithstanding, hereinafter, aforesaid, indemnify, diminution",
+        "Keeps 14 days to cancel and 14 days to return",
+        "Keeps the refund within 30 days",
+        "Keeps return postage at the customer's cost",
+        "At most 120 words"
+      ],
+      "rubric": [
+        {
+          "id": "no-legalese",
+          "kind": "must_not_include",
+          "value": [
+            "notwithstanding",
+            "hereinafter",
+            "aforesaid",
+            "indemnif",
+            "diminution"
+          ],
+          "weight": 3
+        },
+        {
+          "id": "fourteen",
+          "kind": "regex",
+          "value": "\\b(14|fourteen)\\s*days",
+          "weight": 2
+        },
+        {
+          "id": "thirty",
+          "kind": "regex",
+          "value": "\\b(30|thirty)\\s*days",
+          "weight": 2
+        },
+        {
+          "id": "refund",
+          "kind": "regex",
+          "value": "refund|money back|pay you back|reimburse",
+          "weight": 1
+        },
+        {
+          "id": "return-cost",
+          "kind": "regex",
+          "value": "(you|your)[^.]{0,60}(pay|cost|cover)[^.]{0,40}(return|send|post)|(return|send|post)[^.]{0,40}(at your (own )?cost|your expense|you pay)",
+          "weight": 1
+        },
+        {
+          "id": "used-goods",
+          "kind": "regex",
+          "value": "used|handled|worn|damage|less than|lose|deduct|reduce",
+          "weight": 1
+        },
+        {
+          "id": "you-we",
+          "kind": "regex",
+          "value": "\\byou\\b[\\s\\S]*\\bwe\\b|\\bwe\\b[\\s\\S]*\\byou\\b",
+          "weight": 1
+        },
+        {
+          "id": "len",
+          "kind": "max_words",
+          "value": 120,
+          "weight": 2
+        },
+        {
+          "id": "lang",
+          "kind": "language",
+          "value": "en"
+        }
+      ],
+      "reference": "Three sentences will do it: 14 days to cancel from the day after delivery, 14 days to send it back at your cost, refund including standard delivery within 30 days, and we can deduct for use beyond checking the goods."
+    },
+    {
+      "id": "legal-010",
+      "category": "legal",
+      "rank": 10,
+      "title": "Risk memo under 200 words: contractor or employee?",
+      "language": "en-GB",
+      "tags": [
+        "memo",
+        "employment",
+        "ip"
+      ],
+      "text": "FACTS\n\nVolt Charging AB (Gothenburg) has engaged Mikael Ek as a \"freelance firmware developer\" since March 2023 under a one-page agreement: SEK 95,000 per month invoiced through his sole-trader firm, full time, working from Volt's office on a Volt laptop, reporting daily to Volt's CTO, with 25 days' paid time off written into the agreement. The agreement contains a clause that Mikael \"will not work for any other charging-hardware company during the engagement\". It says nothing about intellectual property, confidentiality or termination notice. Mikael has written roughly 70% of the firmware in Volt's flagship charger, which is the main asset in a Series B due diligence starting next month. Mikael is not a member of any union and has never invoiced anyone else.",
+      "instructions": "Write a risk memo for Volt's CEO of at most 200 words, in English, with exactly three headings: Issue, Risk, Recommendation. Cover both the employment-status question and the ownership of the firmware. No introduction and no sign-off.",
+      "constraints": [
+        "Exactly the headings Issue, Risk, Recommendation",
+        "Names the misclassification risk",
+        "Names the missing IP assignment and its effect on the firmware ownership",
+        "Gives a concrete recommendation",
+        "80 to 200 words"
+      ],
+      "rubric": [
+        {
+          "id": "headings",
+          "kind": "regex",
+          "value": "^\\s*#{1,3}\\s+\\S|^\\s*\\*\\*[^*\\n]+\\*\\*\\s*$",
+          "weight": 2,
+          "note": "markdown heading or bold line"
+        },
+        {
+          "id": "heading-names",
+          "kind": "regex",
+          "value": "issue[\\s\\S]*risk[\\s\\S]*recommendation",
+          "weight": 2
+        },
+        {
+          "id": "employment-status",
+          "kind": "regex",
+          "value": "employee|employment|misclassif|disguised|sham",
+          "weight": 2
+        },
+        {
+          "id": "ip-gap",
+          "kind": "regex",
+          "value": "intellectual property|\\bip\\b|copyright|ownership",
+          "weight": 2
+        },
+        {
+          "id": "assignment",
+          "kind": "regex",
+          "value": "assign",
+          "weight": 2
+        },
+        {
+          "id": "diligence",
+          "kind": "regex",
+          "value": "due diligence|series b|investor",
+          "weight": 1
+        },
+        {
+          "id": "recommend-action",
+          "kind": "regex",
+          "value": "sign|execute|enter into|offer (him )?employment|convert|regulari[sz]e",
+          "weight": 1
+        },
+        {
+          "id": "company",
+          "kind": "must_include",
+          "value": "volt",
+          "weight": 1
+        },
+        {
+          "id": "len",
+          "kind": "max_words",
+          "value": 200,
+          "weight": 2
+        },
+        {
+          "id": "min",
+          "kind": "min_words",
+          "value": 80
+        },
+        {
+          "id": "lang",
+          "kind": "language",
+          "value": "en"
+        }
+      ],
+      "reference": "Every indicator points to employment: fixed monthly pay, full time, exclusive, company equipment, daily reporting, paid leave, one client. Without a written assignment the firmware's copyright sits with Mikael (the Swedish employee-software rule in 40 a § upphovsrättslagen only helps if he is an employee, which is exactly the point Volt does not want to argue in diligence). Recommendation: an IP assignment and confidentiality agreement now, and a proper employment contract."
+    },
     {
       "id": "voice-001",
       "category": "voice",
@@ -1454,6 +2717,391 @@
   ],
   "pairs": [
     {
+      "category": "apps",
+      "slug": "lovable-vs-bolt-new",
+      "a": "lovable",
+      "b": "bolt-new",
+      "verdict": null
+    },
+    {
+      "category": "apps",
+      "slug": "lovable-vs-v0",
+      "a": "lovable",
+      "b": "v0",
+      "verdict": null
+    },
+    {
+      "category": "apps",
+      "slug": "lovable-vs-replit-agent",
+      "a": "lovable",
+      "b": "replit-agent",
+      "verdict": null
+    },
+    {
+      "category": "apps",
+      "slug": "lovable-vs-base44",
+      "a": "lovable",
+      "b": "base44",
+      "verdict": null
+    },
+    {
+      "category": "apps",
+      "slug": "bolt-new-vs-v0",
+      "a": "bolt-new",
+      "b": "v0",
+      "verdict": null
+    },
+    {
+      "category": "apps",
+      "slug": "bolt-new-vs-replit-agent",
+      "a": "bolt-new",
+      "b": "replit-agent",
+      "verdict": null
+    },
+    {
+      "category": "apps",
+      "slug": "bolt-new-vs-base44",
+      "a": "bolt-new",
+      "b": "base44",
+      "verdict": null
+    },
+    {
+      "category": "apps",
+      "slug": "v0-vs-replit-agent",
+      "a": "v0",
+      "b": "replit-agent",
+      "verdict": null
+    },
+    {
+      "category": "apps",
+      "slug": "v0-vs-base44",
+      "a": "v0",
+      "b": "base44",
+      "verdict": null
+    },
+    {
+      "category": "apps",
+      "slug": "replit-agent-vs-base44",
+      "a": "replit-agent",
+      "b": "base44",
+      "verdict": null
+    },
+    {
+      "category": "legal",
+      "slug": "harvey-vs-legora",
+      "a": "harvey",
+      "b": "legora",
+      "verdict": null
+    },
+    {
+      "category": "legal",
+      "slug": "harvey-vs-llama-3.2-3b-instruct",
+      "a": "harvey",
+      "b": "llama-3.2-3b-instruct",
+      "verdict": null
+    },
+    {
+      "category": "legal",
+      "slug": "harvey-vs-qwen2.5-7b-instruct",
+      "a": "harvey",
+      "b": "qwen2.5-7b-instruct",
+      "verdict": null
+    },
+    {
+      "category": "legal",
+      "slug": "harvey-vs-phi-4-mini",
+      "a": "harvey",
+      "b": "phi-4-mini",
+      "verdict": null
+    },
+    {
+      "category": "legal",
+      "slug": "harvey-vs-gemma-3-4b-it",
+      "a": "harvey",
+      "b": "gemma-3-4b-it",
+      "verdict": null
+    },
+    {
+      "category": "legal",
+      "slug": "harvey-vs-mistral-7b-instruct",
+      "a": "harvey",
+      "b": "mistral-7b-instruct",
+      "verdict": null
+    },
+    {
+      "category": "legal",
+      "slug": "harvey-vs-gpt",
+      "a": "harvey",
+      "b": "gpt",
+      "verdict": null
+    },
+    {
+      "category": "legal",
+      "slug": "harvey-vs-claude",
+      "a": "harvey",
+      "b": "claude",
+      "verdict": null
+    },
+    {
+      "category": "legal",
+      "slug": "harvey-vs-gemini",
+      "a": "harvey",
+      "b": "gemini",
+      "verdict": null
+    },
+    {
+      "category": "legal",
+      "slug": "legora-vs-llama-3.2-3b-instruct",
+      "a": "legora",
+      "b": "llama-3.2-3b-instruct",
+      "verdict": null
+    },
+    {
+      "category": "legal",
+      "slug": "legora-vs-qwen2.5-7b-instruct",
+      "a": "legora",
+      "b": "qwen2.5-7b-instruct",
+      "verdict": null
+    },
+    {
+      "category": "legal",
+      "slug": "legora-vs-phi-4-mini",
+      "a": "legora",
+      "b": "phi-4-mini",
+      "verdict": null
+    },
+    {
+      "category": "legal",
+      "slug": "legora-vs-gemma-3-4b-it",
+      "a": "legora",
+      "b": "gemma-3-4b-it",
+      "verdict": null
+    },
+    {
+      "category": "legal",
+      "slug": "legora-vs-mistral-7b-instruct",
+      "a": "legora",
+      "b": "mistral-7b-instruct",
+      "verdict": null
+    },
+    {
+      "category": "legal",
+      "slug": "legora-vs-gpt",
+      "a": "legora",
+      "b": "gpt",
+      "verdict": null
+    },
+    {
+      "category": "legal",
+      "slug": "legora-vs-claude",
+      "a": "legora",
+      "b": "claude",
+      "verdict": null
+    },
+    {
+      "category": "legal",
+      "slug": "legora-vs-gemini",
+      "a": "legora",
+      "b": "gemini",
+      "verdict": null
+    },
+    {
+      "category": "legal",
+      "slug": "llama-3.2-3b-instruct-vs-qwen2.5-7b-instruct",
+      "a": "llama-3.2-3b-instruct",
+      "b": "qwen2.5-7b-instruct",
+      "verdict": null
+    },
+    {
+      "category": "legal",
+      "slug": "llama-3.2-3b-instruct-vs-phi-4-mini",
+      "a": "llama-3.2-3b-instruct",
+      "b": "phi-4-mini",
+      "verdict": null
+    },
+    {
+      "category": "legal",
+      "slug": "llama-3.2-3b-instruct-vs-gemma-3-4b-it",
+      "a": "llama-3.2-3b-instruct",
+      "b": "gemma-3-4b-it",
+      "verdict": null
+    },
+    {
+      "category": "legal",
+      "slug": "llama-3.2-3b-instruct-vs-mistral-7b-instruct",
+      "a": "llama-3.2-3b-instruct",
+      "b": "mistral-7b-instruct",
+      "verdict": null
+    },
+    {
+      "category": "legal",
+      "slug": "llama-3.2-3b-instruct-vs-gpt",
+      "a": "llama-3.2-3b-instruct",
+      "b": "gpt",
+      "verdict": null
+    },
+    {
+      "category": "legal",
+      "slug": "llama-3.2-3b-instruct-vs-claude",
+      "a": "llama-3.2-3b-instruct",
+      "b": "claude",
+      "verdict": null
+    },
+    {
+      "category": "legal",
+      "slug": "llama-3.2-3b-instruct-vs-gemini",
+      "a": "llama-3.2-3b-instruct",
+      "b": "gemini",
+      "verdict": null
+    },
+    {
+      "category": "legal",
+      "slug": "qwen2.5-7b-instruct-vs-phi-4-mini",
+      "a": "qwen2.5-7b-instruct",
+      "b": "phi-4-mini",
+      "verdict": null
+    },
+    {
+      "category": "legal",
+      "slug": "qwen2.5-7b-instruct-vs-gemma-3-4b-it",
+      "a": "qwen2.5-7b-instruct",
+      "b": "gemma-3-4b-it",
+      "verdict": null
+    },
+    {
+      "category": "legal",
+      "slug": "qwen2.5-7b-instruct-vs-mistral-7b-instruct",
+      "a": "qwen2.5-7b-instruct",
+      "b": "mistral-7b-instruct",
+      "verdict": null
+    },
+    {
+      "category": "legal",
+      "slug": "qwen2.5-7b-instruct-vs-gpt",
+      "a": "qwen2.5-7b-instruct",
+      "b": "gpt",
+      "verdict": null
+    },
+    {
+      "category": "legal",
+      "slug": "qwen2.5-7b-instruct-vs-claude",
+      "a": "qwen2.5-7b-instruct",
+      "b": "claude",
+      "verdict": null
+    },
+    {
+      "category": "legal",
+      "slug": "qwen2.5-7b-instruct-vs-gemini",
+      "a": "qwen2.5-7b-instruct",
+      "b": "gemini",
+      "verdict": null
+    },
+    {
+      "category": "legal",
+      "slug": "phi-4-mini-vs-gemma-3-4b-it",
+      "a": "phi-4-mini",
+      "b": "gemma-3-4b-it",
+      "verdict": null
+    },
+    {
+      "category": "legal",
+      "slug": "phi-4-mini-vs-mistral-7b-instruct",
+      "a": "phi-4-mini",
+      "b": "mistral-7b-instruct",
+      "verdict": null
+    },
+    {
+      "category": "legal",
+      "slug": "phi-4-mini-vs-gpt",
+      "a": "phi-4-mini",
+      "b": "gpt",
+      "verdict": null
+    },
+    {
+      "category": "legal",
+      "slug": "phi-4-mini-vs-claude",
+      "a": "phi-4-mini",
+      "b": "claude",
+      "verdict": null
+    },
+    {
+      "category": "legal",
+      "slug": "phi-4-mini-vs-gemini",
+      "a": "phi-4-mini",
+      "b": "gemini",
+      "verdict": null
+    },
+    {
+      "category": "legal",
+      "slug": "gemma-3-4b-it-vs-mistral-7b-instruct",
+      "a": "gemma-3-4b-it",
+      "b": "mistral-7b-instruct",
+      "verdict": null
+    },
+    {
+      "category": "legal",
+      "slug": "gemma-3-4b-it-vs-gpt",
+      "a": "gemma-3-4b-it",
+      "b": "gpt",
+      "verdict": null
+    },
+    {
+      "category": "legal",
+      "slug": "gemma-3-4b-it-vs-claude",
+      "a": "gemma-3-4b-it",
+      "b": "claude",
+      "verdict": null
+    },
+    {
+      "category": "legal",
+      "slug": "gemma-3-4b-it-vs-gemini",
+      "a": "gemma-3-4b-it",
+      "b": "gemini",
+      "verdict": null
+    },
+    {
+      "category": "legal",
+      "slug": "mistral-7b-instruct-vs-gpt",
+      "a": "mistral-7b-instruct",
+      "b": "gpt",
+      "verdict": null
+    },
+    {
+      "category": "legal",
+      "slug": "mistral-7b-instruct-vs-claude",
+      "a": "mistral-7b-instruct",
+      "b": "claude",
+      "verdict": null
+    },
+    {
+      "category": "legal",
+      "slug": "mistral-7b-instruct-vs-gemini",
+      "a": "mistral-7b-instruct",
+      "b": "gemini",
+      "verdict": null
+    },
+    {
+      "category": "legal",
+      "slug": "gpt-vs-claude",
+      "a": "gpt",
+      "b": "claude",
+      "verdict": null
+    },
+    {
+      "category": "legal",
+      "slug": "gpt-vs-gemini",
+      "a": "gpt",
+      "b": "gemini",
+      "verdict": null
+    },
+    {
+      "category": "legal",
+      "slug": "claude-vs-gemini",
+      "a": "claude",
+      "b": "gemini",
+      "verdict": null
+    },
+    {
       "category": "voice",
       "slug": "elevenlabs-vs-openai-tts",
       "a": "elevenlabs",
@@ -2326,11 +3974,18 @@
   ],
   "previous_holders": {
     "voice": {
-      "run_at": "2026-09-18T03:38:46.832Z",
+      "run_at": "2026-09-18T04:16:26.762Z",
       "holders": {
         "voice-001": "piper",
         "voice-002": "piper",
-        "voice-003": "piper"
+        "voice-003": "piper",
+        "voice-004": "piper",
+        "voice-005": "piper",
+        "voice-006": "piper",
+        "voice-007": "piper",
+        "voice-008": "piper",
+        "voice-009": "piper",
+        "voice-010": "piper"
       }
     }
   }

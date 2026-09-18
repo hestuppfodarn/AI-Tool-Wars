@@ -71,9 +71,9 @@ code { font: 0.9em ui-monospace, SFMono-Regular, Menlo, monospace; background: v
 .wrap { max-width: var(--max); margin: 0 auto; padding: 0 16px; }
 
 .nav { border-bottom: 1px solid var(--border); background: var(--surface); }
-.nav .wrap { display: flex; align-items: center; justify-content: space-between; height: 56px; gap: 16px; }
+.nav .wrap { display: flex; align-items: center; justify-content: space-between; min-height: 56px; gap: 12px 16px; flex-wrap: wrap; padding-top: 8px; padding-bottom: 8px; }
 .nav .brand { font-weight: 700; color: var(--text); letter-spacing: -0.01em; }
-.nav ul { list-style: none; display: flex; gap: 18px; margin: 0; padding: 0; }
+.nav ul { list-style: none; display: flex; flex-wrap: wrap; gap: 6px 14px; margin: 0; padding: 0; }
 .nav a { color: var(--muted); font-size: 0.95rem; }
 .nav a:hover { color: var(--text); text-decoration: none; }
 
@@ -92,6 +92,8 @@ main { padding: 32px 0 64px; }
 .chip.pending { border-color: var(--warn); color: var(--warn); }
 .chip.ok { border-color: var(--good); color: var(--good); }
 .chip.verified { border-color: var(--accent); color: var(--accent); }
+.chip.challenge { border-color: var(--bar-b); color: var(--bar-b); font-variant-numeric: tabular-nums; }
+.chip.seat { border-color: var(--muted); color: var(--muted); }
 
 table { width: 100%; border-collapse: collapse; font-size: 0.95rem; }
 th, td { text-align: left; padding: 10px 8px; border-bottom: 1px solid var(--border); vertical-align: top; }
@@ -137,6 +139,33 @@ footer p { max-width: 80ch; }
 
 .list-tight { padding-left: 1.2em; margin: 0.4em 0 1em; }
 .list-tight li { margin-bottom: 0.3em; }
+
+/* Text outputs: excerpt plus link to the full file; the embedded document under a fold. */
+.excerpt pre, .doc pre { margin: 0; white-space: pre-wrap; overflow-wrap: anywhere; font: 0.85rem/1.5 ui-monospace, SFMono-Regular, Menlo, monospace; background: var(--surface-2); border-radius: 6px; padding: 10px 12px; max-height: 320px; overflow: auto; }
+.excerpt { display: grid; gap: 6px; }
+.doc summary { cursor: pointer; }
+.doc[open] summary { margin-bottom: 6px; }
+.prompt-doc { display: grid; gap: 6px; color: var(--muted); font-size: 0.925rem; }
+.prompt-doc pre { color: var(--text); }
+.hits { list-style: none; margin: 6px 0 0; padding: 0; display: grid; gap: 3px; }
+.hits li span:first-child { display: inline-block; min-width: 3.2em; font-weight: 600; text-transform: uppercase; font-size: 0.7rem; letter-spacing: 0.04em; }
+.hits li.hit span:first-child { color: var(--good); }
+.hits li.miss span:first-child { color: var(--warn); }
+
+/* Standing challenges: the day counter is the hero. */
+.counter { display: grid; gap: 4px; padding: 20px 22px; border-radius: var(--radius); border: 1px solid color-mix(in srgb, var(--bar-b) 45%, var(--border)); background: color-mix(in srgb, var(--bar-b) 8%, var(--surface)); margin: 1rem 0 1.5rem; }
+.counter .n { font-size: clamp(3rem, 9vw, 5.5rem); line-height: 1; font-weight: 700; letter-spacing: -0.03em; font-variant-numeric: tabular-nums; color: var(--bar-b); }
+.counter .l { color: var(--muted); font-size: 0.95rem; }
+.terms { border-left: 4px solid var(--bar-b); padding: 4px 0 4px 16px; margin: 0 0 1em; font-size: 1.1rem; }
+.share { display: grid; gap: 8px; }
+.share textarea { width: 100%; min-height: 72px; font: 0.9rem/1.45 ui-sans-serif, system-ui, sans-serif; color: var(--text); background: var(--surface-2); border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px; resize: vertical; }
+.share .row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+.btn.secondary { background: var(--surface); color: var(--accent); border: 1px solid var(--accent); }
+.challenge-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+.challenge-list li { display: grid; gap: 4px 16px; grid-template-columns: 1fr; padding: 12px 0; border-bottom: 1px solid var(--border); align-items: center; }
+@media (min-width: 640px) { .challenge-list li { grid-template-columns: minmax(0, 1fr) auto auto; } }
+.challenge-list .days { font-variant-numeric: tabular-nums; font-weight: 700; font-size: 1.4rem; color: var(--bar-b); white-space: nowrap; }
+.challenge-list .days.seat { color: var(--muted); font-size: 0.95rem; font-weight: 500; }
 
 /* The front: one tile per prompt. 6 columns on desktop, 3 on phones. */
 .front { display: grid; gap: 6px; grid-template-columns: repeat(3, minmax(0, 1fr)); margin: 12px 0 4px; }

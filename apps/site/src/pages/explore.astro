@@ -2,7 +2,7 @@
 import Base from '../layouts/Base.astro';
 import StatusChip from '../components/StatusChip.astro';
 import { loadSnapshot, pairsIn, toolsIn, toolBySlug, ratingsIn } from '../lib/snapshot';
-import { href, SITE_NAME } from '../lib/site';
+import { href, SITE_NAME, modalityWords } from '../lib/site';
 
 const snap = loadSnapshot();
 ---
@@ -20,8 +20,10 @@ const snap = loadSnapshot();
     const ratings = ratingsIn(snap, c.slug);
     return (
       <section>
-        <h2><a href={href(`/${c.slug}/`)}>{c.name}</a></h2>
+        <h2><a href={href(`/${c.slug}/`)}>{c.name}</a> <span class="chip">{c.output_modality}</span></h2>
         <p class="muted">{c.description}</p>
+        {(() => { const ch = tools.filter((t) => t.status === 'challenged').length; const se = tools.filter((t) => t.status === 'seat_needed').length; const pr = tools.filter((t) => t.proxy).length;
+          return (ch + se + pr) > 0 && <p class="small muted">{tools.length} tools: {ratings.length} scored{ch > 0 && <span>, {ch} under standing challenge</span>}{se > 0 && <span>, {se} waiting on a seat</span>}{pr > 0 && <span>, {pr} proxies</span>}. Outputs are {modalityWords(c.output_modality).outputs}. <a href={href('/challenges/')}>Challenges</a>.</p>; })()}
         <div class="grid">
           {tools.map((t) => {
             const r = ratings.find((x) => x.tool === t.slug);
@@ -29,7 +31,7 @@ const snap = loadSnapshot();
               <div class="card">
                 <div style="display:flex;justify-content:space-between;gap:8px;align-items:center">
                   <strong><a href={href(`/${c.slug}/tools/${t.slug}/`)}>{t.name}</a></strong>
-                  <StatusChip status={t.status} />
+                  <StatusChip status={t.status} asked_on={t.challenge?.asked_on} />
                 </div>
                 <p class="small muted" style="margin:6px 0 0">{r ? `#${r.rank} · composite ${r.composite.toFixed(1)}` : t.vendor}</p>
               </div>

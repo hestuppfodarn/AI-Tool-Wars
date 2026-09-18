@@ -1,0 +1,52 @@
+[
+  {
+    "slug": "lovable",
+    "name": "Lovable",
+    "vendor": "Lovable",
+    "website": "https://lovable.dev",
+    "description": "Prompt-to-web-app builder producing React and Supabase projects with one-click deploy. Paid seat, no public API.",
+    "adapter": null,
+    "status": "seat_needed",
+    "seat_url": "https://lovable.dev/pricing"
+  },
+  {
+    "slug": "bolt-new",
+    "name": "Bolt.new",
+    "vendor": "StackBlitz",
+    "website": "https://bolt.new",
+    "description": "In-browser AI agent that scaffolds, runs and deploys full-stack web apps from a prompt. Paid seat, no public API.",
+    "adapter": null,
+    "status": "seat_needed",
+    "seat_url": "https://bolt.new/pricing"
+  },
+  {
+    "slug": "v0",
+    "name": "v0",
+    "vendor": "Vercel",
+    "website": "https://v0.app",
+    "description": "Vercel's generative UI and app builder producing Next.js and shadcn/ui code from prompts and screenshots. Paid seat for anything beyond the free tier, no public API for the builder itself.",
+    "adapter": null,
+    "status": "seat_needed",
+    "seat_url": "https://v0.app/pricing"
+  },
+  {
+    "slug": "replit-agent",
+    "name": "Replit Agent",
+    "vendor": "Replit",
+    "website": "https://replit.com",
+    "description": "Agent inside Replit that plans, builds, tests and deploys apps from a natural-language brief. Paid seat, no public API for the agent.",
+    "adapter": null,
+    "status": "seat_needed",
+    "seat_url": "https://replit.com/pricing"
+  },
+  {
+    "slug": "base44",
+    "name": "Base44",
+    "vendor": "Base44 (Wix)",
+    "website": "https://base44.com",
+    "description": "No-code AI app builder with built-in database, auth and hosting, aimed at internal tools. Paid seat, no public API for the builder.",
+    "adapter": null,
+    "status": "seat_needed",
+    "seat_url": "https://base44.com/pricing"
+  }
+]

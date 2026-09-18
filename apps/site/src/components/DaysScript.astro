@@ -1,0 +1,20 @@
+---
+// Keeps every [data-asked] counter on the page current after the static build:
+// whole UTC days from the asked_on date to now, recomputed once a minute.
+---
+<script is:inline>
+(function () {
+  var els = document.querySelectorAll('[data-asked]');
+  if (!els.length) return;
+  function tick() {
+    var now = Date.now();
+    els.forEach(function (el) {
+      var p = el.getAttribute('data-asked').split('-');
+      var d = Math.max(0, Math.floor((now - Date.UTC(+p[0], +p[1] - 1, +p[2])) / 864e5));
+      el.querySelectorAll('[data-days]').forEach(function (n) { n.textContent = String(d); });
+    });
+  }
+  tick();
+  setInterval(tick, 60000);
+})();
+</script>

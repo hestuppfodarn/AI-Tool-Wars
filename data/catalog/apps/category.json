@@ -1,0 +1,31 @@
+{
+  "slug": "apps",
+  "name": "AI App Builders",
+  "description": "Prompt-to-app builders compared on the same six briefs: does the generated app run, does it look like the brief, did it follow the instructions, and how long did it take. Every builder here needs a paid seat and has no public API, so the bank waits for one.",
+  "output_modality": "app",
+  "metrics": [
+    {
+      "key": "works",
+      "label": "Works",
+      "description": "The generated app is opened in a headless browser and the brief's acceptance checks are run: the page loads without console errors, the named controls exist, and the scripted interaction (add a row, submit the form, switch the language) produces the expected DOM state. 10 = every check passes."
+    },
+    {
+      "key": "visual",
+      "label": "Visual match",
+      "description": "Screenshots at 390 and 1280 px are compared with the brief's layout requirements (sections present, responsive, no horizontal overflow, contrast) by a fixed checklist, and rated by a model jury that never sees the builder's name."
+    },
+    {
+      "key": "instructions",
+      "label": "Instruction following",
+      "description": "The brief's explicit constraints (language of the copy, named fields, currency format, no external services) checked one by one against the delivered app and its source. Weighted hits out of 10."
+    },
+    {
+      "key": "velocity",
+      "label": "Speed",
+      "description": "Wall-clock time from submitting the brief to a deployable preview, ranked against every other builder on the same brief. 10 = fastest, 1 = slowest."
+    }
+  ],
+  "active_prompts": 6,
+  "runner": null,
+  "runner_note": "No runner yet: every tool in this category is a seat-gated product without an API. Runs start when a seat is supplied (see each tool's seat_url)."
+}

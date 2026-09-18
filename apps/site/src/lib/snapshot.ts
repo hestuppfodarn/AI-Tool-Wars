@@ -17,9 +17,19 @@ export const CategorySchema = z.object({
   slug: z.string(),
   name: z.string(),
   description: z.string(),
-  output_modality: z.enum(['audio', 'text', 'image', 'video']),
+  output_modality: z.enum(['audio', 'text', 'image', 'video', 'app']),
   metrics: z.array(Metric).min(1),
 });
+
+// A standing challenge: the vendor has no public API, we asked for a seat on
+// `asked_on` under `terms`, and the site counts the days until they answer.
+export const ChallengeSchema = z.object({
+  asked_on: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+  terms: z.string(),
+  contact_hint: z.string().nullable().optional(),
+});
+
+export const TOOL_STATUSES = ['pending', 'executed', 'benchmarked', 'verified', 'challenged', 'seat_needed'] as const;
 
 export const ToolSchema = z.object({
   slug: z.string(),
@@ -28,7 +38,28 @@ export const ToolSchema = z.object({
   website: z.string().url(),
   description: z.string(),
   category: z.string(),
-  status: z.enum(['pending', 'executed', 'benchmarked', 'verified']),
+  // pending: no runs yet. executed: outputs, no scores. benchmarked: scored. verified: vendor key.
+  // challenged: no public API, standing challenge page. seat_needed: paid seat and no API, no runner.
+  status: z.enum(TOOL_STATUSES),
+  challenge: ChallengeSchema.optional(),
+  // A general-purpose model standing in for the category's products, never sold as one of them.
+  proxy: z.boolean().optional(),
+  proxy_note: z.string().optional(),
+  seat_url: z.string().url().optional(),
+});
+
+// One machine-checkable rubric item, as scripts/score-text.py reads it (contract in
+// data/catalog/<category>/category.json). Extra per-kind options are passed through.
+export const RubricItemSchema = z.object({
+  id: z.string(),
+  kind: z.enum(['must_include', 'must_not_include', 'regex', 'max_words', 'min_words', 'language', 'format_json', 'format_markdown_table', 'cites_only']),
+  value: z.union([z.string(), z.number(), z.boolean(), z.array(z.string())]),
+  weight: z.number().optional(),
+  match: z.string().optional(),
+  flags: z.string().optional(),
+  min: z.number().optional(),
+  pattern: z.string().optional(),
+  note: z.string().optional(),
 });
 
 export const PromptSchema = z.object({
@@ -41,6 +72,9 @@ export const PromptSchema = z.object({
   text: z.string(),
   instructions: z.string().optional(),
   constraints: z.array(z.string()),
+  // Text categories only: the machine-checkable rubric scripts/score-text.py runs, and a reader note.
+  rubric: z.array(RubricItemSchema).optional(),
+  reference: z.string().optional(),
 });
 
 export const RunSchema = z.object({
@@ -49,6 +83,11 @@ export const RunSchema = z.object({
   prompt_id: z.string(),
   run_at: z.string(),
   audio_url: z.string().nullable(),
+  // Text categories: the output file copied under public/runs/, and its first 600 characters.
+  output_url: z.string().optional(),
+  output_excerpt: z.string().optional(),
+  output_chars: z.number().int().optional(),
+  rubric_hits: z.array(z.object({ id: z.string(), hit: z.boolean(), note: z.string().optional() })).optional(),
   transcript: z.string().nullable().optional(),
   ttft_ms: z.number().nullable(),
   latency_ms: z.number().nullable(),
@@ -109,6 +148,8 @@ export type Prompt = z.infer<typeof PromptSchema>;
 export type Run = z.infer<typeof RunSchema>;
 export type Rating = z.infer<typeof RatingSchema>;
 export type Pair = z.infer<typeof PairSchema>;
+export type ToolStatus = Tool['status'];
+export type RubricItem = z.infer<typeof RubricItemSchema>;
 
 // ---------------------------------------------------------------------------
 // Loader. SNAPSHOT=demo swaps in the fictional dataset for layout previews.
@@ -175,6 +216,11 @@ export function pairsFor(s: Snapshot, category: string, tool: string): Pair[] {
 
 export function ratingFor(s: Snapshot, category: string, tool: string): Rating | null {
   return s.ratings.find((r) => r.category === category && r.tool === tool) ?? null;
+}
+
+/** Tools with a standing challenge or waiting on a seat, across every category, catalog order. */
+export function challengedTools(s: Snapshot): Tool[] {
+  return s.tools.filter((t) => t.status === 'challenged' || t.status === 'seat_needed');
 }
 
 export function ratingsIn(s: Snapshot, category: string): Rating[] {

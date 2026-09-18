@@ -1,7 +1,19 @@
 ---
-interface Props { status: 'pending' | 'executed' | 'benchmarked' | 'verified'; }
-const { status } = Astro.props;
-const label = { pending: 'Benchmark pending', executed: 'Outputs recorded, scoring pending', benchmarked: 'Benchmarked', verified: 'Vendor verified' }[status];
-const cls = { pending: 'pending', executed: 'pending', benchmarked: 'ok', verified: 'verified' }[status];
+import type { ToolStatus } from '../lib/snapshot';
+import { daysSince } from '../lib/site';
+
+// `asked_on` (challenged tools) turns the chip into a day counter; DaysScript keeps it live in the browser.
+interface Props { status: ToolStatus; asked_on?: string | null; }
+const { status, asked_on = null } = Astro.props;
+const label: Record<ToolStatus, string> = {
+  pending: 'Benchmark pending', executed: 'Outputs recorded, scoring pending', benchmarked: 'Benchmarked',
+  verified: 'Vendor verified', challenged: 'Challenged', seat_needed: 'Seat needed',
+};
+const cls: Record<ToolStatus, string> = { pending: 'pending', executed: 'pending', benchmarked: 'ok', verified: 'verified', challenged: 'challenge', seat_needed: 'seat' };
+const days = status === 'challenged' && asked_on ? daysSince(asked_on) : null;
 ---
-<span class={`chip ${cls}`}>{label}</span>
+{days != null ? (
+  <span class={`chip ${cls[status]}`} data-asked={asked_on}>{label[status]} · day <span data-days>{days}</span></span>
+) : (
+  <span class={`chip ${cls[status]}`}>{label[status]}</span>
+)}

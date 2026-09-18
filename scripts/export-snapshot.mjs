@@ -3,9 +3,15 @@
 //
 // Today: reads data/catalog/<category>/{category,tools,prompts}.json plus any
 // recorded runs under data/runs/<category>/<tool>/runs.json (written by
-// scripts/run-voice.mjs). Runs carry audio + timings but no scores until the
-// scorer exists, so tools with runs render as "outputs recorded, scoring pending".
-// Audio files are copied into apps/site/public/runs/ (gitignored) at export time.
+// scripts/run-voice.mjs, scripts/run-open-tts.py, scripts/run-open-llm.py).
+// Runs carry an output (audio file, or a text file for text categories) plus
+// timings; scores arrive from the category's scorer. Output files are copied
+// into apps/site/public/runs/ (gitignored) at export time; text runs also get
+// an `output_excerpt` (first 600 chars) so list pages need not fetch the file.
+//
+// Tool status comes from the catalog when set: "challenged" (no public API, a
+// standing challenge page counts the days since we asked), "seat_needed" (a
+// paid seat and no API), otherwise "pending" until runs and scores exist.
 //
 // Runner phase: when DATABASE_URL is set this script will read canonical
 // executions + scores from Postgres instead (see docs/roadmap.md). Until that
@@ -27,6 +33,8 @@ if (process.env.DATABASE_URL) {
 }
 
 const readJson = (p) => JSON.parse(readFileSync(p, 'utf8'));
+const TOOL_STATUSES = new Set(['pending', 'executed', 'benchmarked', 'verified', 'challenged', 'seat_needed']);
+const EXCERPT_CHARS = 600;
 
 export function pairSlug(a, b) {
   return `${a}-vs-${b}`;
@@ -53,9 +61,15 @@ export function buildFromCatalog() {
     });
 
     for (const t of catTools) {
+      const status = t.status ?? 'pending';
+      if (!TOOL_STATUSES.has(status)) throw new Error(`${category.slug}/${t.slug}: unknown status "${status}"`);
+      if (status === 'challenged' && !t.challenge?.asked_on) throw new Error(`${category.slug}/${t.slug}: challenged tools need challenge.asked_on`);
       tools.push({
         slug: t.slug, name: t.name, vendor: t.vendor, website: t.website,
-        description: t.description, category: category.slug, status: 'pending',
+        description: t.description, category: category.slug, status,
+        ...(t.challenge ? { challenge: { asked_on: t.challenge.asked_on, terms: t.challenge.terms, contact_hint: t.challenge.contact_hint ?? null } } : {}),
+        ...(t.proxy ? { proxy: true, ...(t.proxy_note ? { proxy_note: t.proxy_note } : {}) } : {}),
+        ...(t.seat_url ? { seat_url: t.seat_url } : {}),
       });
     }
 
@@ -65,6 +79,9 @@ export function buildFromCatalog() {
       prompts.push({
         id: p.id, category: category.slug, rank: p.rank, title: p.title, language: p.language,
         tags: p.tags ?? [], text: p.text, instructions: p.instructions, constraints: p.constraints ?? [],
+        // Text categories: the machine-checkable rubric (contract in category.json) and a reader note.
+        ...(Array.isArray(p.rubric) ? { rubric: p.rubric } : {}),
+        ...(p.reference ? { reference: p.reference } : {}),
       });
     }
 
@@ -147,7 +164,7 @@ function addVelocity(runs) {
     groups.get(k).push(r);
   }
   for (const group of groups.values()) {
-    if (group.length < 2) { for (const r of group) r.scores.velocity = null; continue; }
+    if (group.length < 2) { for (const r of group) delete r.scores.velocity; continue; }   // schema: scores hold numbers only
     const rankScore = (key) => {
       const sorted = group.slice().sort((a, b) => a[key] - b[key]);
       const n = sorted.length;
@@ -220,7 +237,27 @@ function buildVerdict(pair, ratings, tools, categories, prompts) {
   };
 }
 
-/** Merge data/runs/<category>/<tool>/runs.json files; copies audio to the site's public dir. */
+/** scripts/score-text.py writes rubric_results [{id, kind, group, weight, pass, detail}]; the site shows {id, hit, note}. */
+function rubricHits(r) {
+  const src = Array.isArray(r.rubric_results) ? r.rubric_results : Array.isArray(r.rubric_hits) ? r.rubric_hits : null;
+  if (!src || !src.length) return null;
+  return src.map((h) => {
+    const hit = typeof h.pass === 'boolean' ? h.pass : !!h.hit;
+    const note = h.detail ?? h.note;
+    return { id: String(h.id), hit, ...(note ? { note: String(note) } : {}) };
+  });
+}
+
+/** First EXCERPT_CHARS characters of a text output, cut on a word boundary, with an ellipsis when cut. */
+function excerpt(text) {
+  const t = text.replace(/\r\n/g, '\n').trim();
+  if (t.length <= EXCERPT_CHARS) return t;
+  const cut = t.slice(0, EXCERPT_CHARS);
+  const sp = cut.lastIndexOf(' ');
+  return (sp > EXCERPT_CHARS * 0.6 ? cut.slice(0, sp) : cut) + '…';
+}
+
+/** Merge data/runs/<category>/<tool>/runs.json files; copies audio and text outputs to the site's public dir. */
 function collectRuns(tools, prompts) {
   const out = [];
   rmSync(publicRunsDir, { recursive: true, force: true });
@@ -238,9 +275,17 @@ function collectRuns(tools, prompts) {
         if (!activeIds.has(r.prompt_id)) continue;
         const success = r.status === 'success';
         if (success) successes++;
+        const outputFile = success && typeof r.output === 'string' ? join(runsDir, cat.name, toolDir.name, r.output) : null;
+        const outputText = outputFile && existsSync(outputFile) ? readFileSync(outputFile, 'utf8') : null;
         out.push({
           category: cat.name, tool: tool.slug, prompt_id: r.prompt_id, run_at: r.run_at,
           audio_url: success && r.audio ? `runs/${cat.name}/${tool.slug}/${r.audio}` : null,
+          ...(outputText != null ? {
+            output_url: `runs/${cat.name}/${tool.slug}/${r.output}`,
+            output_excerpt: excerpt(outputText),
+            output_chars: typeof r.output_chars === 'number' ? r.output_chars : outputText.length,
+          } : {}),
+          ...(rubricHits(r) ? { rubric_hits: rubricHits(r) } : {}),
           transcript: r.transcript ?? null,
           ttft_ms: success ? r.ttft_ms ?? null : null,
           latency_ms: success ? r.latency_ms ?? null : null,

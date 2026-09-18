@@ -1,6 +1,7 @@
 {
   "tools": "kokoro,piper,kittentts,speecht5,melotts,xtts-v2",
+  "categories": "",
   "limit": "",
   "force": false,
-  "note": "Full 30-prompt bank on the light and medium open models. Requested 2026-09-18T03:20:19Z"
+  "note": "Full 30-prompt bank on the light and medium open models. Requested 2026-09-18T03:20:19Z. `categories` (optional, comma-separated, empty = every category) restricts which data/catalog/<category>/ are planned; `tools` may also use category/slug."
 }

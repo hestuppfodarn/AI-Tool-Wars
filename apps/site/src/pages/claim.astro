@@ -1,0 +1,403 @@
+---
+// Claim page: sign in with a magic link, claim a tool, add an API key, watch
+// it validate. Talks to Supabase directly from the browser (anon key + RLS);
+// the key goes to the submit_api_key RPC and nowhere else. Without a backend
+// configured the same layout renders in a "claims open soon" state.
+import { existsSync, readFileSync } from 'node:fs';
+import { dirname, join, resolve } from 'node:path';
+import Base from '../layouts/Base.astro';
+import { loadSnapshot, toolsIn } from '../lib/snapshot';
+import { CONTACT_EMAIL, SITE_NAME, href } from '../lib/site';
+import { supabaseConfig, claimsEnabled } from '../lib/supabase';
+
+const snap = loadSnapshot();
+
+// Which catalog tools are open weights (no key to give). Read from the catalog
+// because the snapshot does not carry the adapter.
+function repoRoot(): string {
+  let dir = resolve(process.cwd());
+  for (let i = 0; i < 6; i++) {
+    if (existsSync(join(dir, 'data', 'catalog'))) return dir;
+    const parent = dirname(dir);
+    if (parent === dir) break;
+    dir = parent;
+  }
+  return dir;
+}
+const openWeights = new Set<string>();
+for (const c of snap.categories) {
+  const file = join(repoRoot(), 'data', 'catalog', c.slug, 'tools.json');
+  if (!existsSync(file)) continue;
+  for (const t of JSON.parse(readFileSync(file, 'utf8')) as Array<{ slug: string; adapter?: string; open_weights?: boolean }>) {
+    // Same rule as scripts/seed-supabase-tools.mjs isOpenWeights().
+    if (t.open_weights === true || /^open([-:]|$)/.test(String(t.adapter ?? ''))) openWeights.add(t.slug);
+  }
+}
+
+const catalog = snap.categories.map((c) => ({
+  slug: c.slug,
+  name: c.name,
+  tools: toolsIn(snap, c.slug).map((t) => ({ slug: t.slug, name: t.name, vendor: t.vendor, website: t.website, status: t.status, open: openWeights.has(t.slug) })),
+}));
+
+const statusLabel: Record<string, string> = { pending: 'Benchmark pending', executed: 'Outputs recorded', benchmarked: 'Benchmarked', verified: 'Vendor verified' };
+const statusClass: Record<string, string> = { pending: 'pending', executed: 'pending', benchmarked: 'ok', verified: 'verified' };
+
+const clientConfig = claimsEnabled
+  ? { url: supabaseConfig.url, anonKey: supabaseConfig.anonKey, contact: CONTACT_EMAIL, base: href('/claim/') }
+  : { url: '', anonKey: '', contact: CONTACT_EMAIL, base: href('/claim/') };
+const noLt = (s: string) => s.replace(/</g, '\\u003c');
+---
+<Base title="Claim your tool" description={`Vendors: sign in, claim your listing on ${SITE_NAME}, add an API key so the benchmark runs on your account.`} canonicalPath="/claim/">
+  <div class="claim" data-enabled={claimsEnabled ? 'true' : 'false'}>
+    <h1>Claim your tool</h1>
+    <p class="lede">Sign in, claim the listing, hand over a key. From then on the prompts run on your account, the listing gets the <em>vendor verified</em> mark and you choose the voice per language. Claiming changes who pays for the run, not the rank.</p>
+
+    {!claimsEnabled && (
+      <div class="pending-box" id="soon">
+        <strong>Claims open soon.</strong> The sign-in backend is not connected on this build. Until it is, email
+        <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a> from a company address and we take it from there.
+      </div>
+    )}
+
+    <section class="step card" id="auth">
+      <h2><span class="n">1</span> Sign in</h2>
+      <form id="auth-form" autocomplete="on">
+        <label for="email">Work email</label>
+        <div class="row">
+          <input id="email" name="email" type="email" required placeholder="you@yourcompany.com" disabled={!claimsEnabled} />
+          <button class="btn" type="submit" disabled={!claimsEnabled}>Send magic link</button>
+        </div>
+        <p class="small muted">No password. A link arrives by email and signs you in on this device. Use the address on the company domain: that is what verifies the claim without a DNS record.</p>
+      </form>
+      <div id="auth-state" class="small" hidden></div>
+    </section>
+
+    <section class="step card" id="pick">
+      <h2><span class="n">2</span> Pick your tool</h2>
+      {catalog.map((c) => (
+        <div class="group">
+          <h3>{c.name}</h3>
+          <ul class="tools">
+            {c.tools.map((t) => (
+              <li>
+                <button type="button" class="tool" data-slug={t.slug} data-category={c.slug} data-name={t.name} data-open={t.open ? 'true' : 'false'} data-website={t.website} disabled={!claimsEnabled}>
+                  <span class="name">{t.name}</span>
+                  <span class="vendor muted small">{t.vendor}</span>
+                  <span class="chips">
+                    <span class={`chip ${statusClass[t.status]}`}>{statusLabel[t.status]}</span>
+                    {t.open && <span class="chip">Open weights</span>}
+                    <span class="chip live" data-live-for={t.slug} hidden></span>
+                    <span class="chip mine" data-mine-for={t.slug} hidden></span>
+                  </span>
+                </button>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))}
+    </section>
+
+    <section class="step card" id="claim-step">
+      <h2><span class="n">3</span> Claim it</h2>
+      <div id="claim-body" class="small muted">Pick a tool above.</div>
+    </section>
+
+    <section class="step card" id="key-step">
+      <h2><span class="n">4</span> Add an API key</h2>
+      <div id="key-body" class="small muted">A verified claim unlocks this step.</div>
+    </section>
+
+    <section class="step card" id="status-step">
+      <h2><span class="n">5</span> Status</h2>
+      <div id="status-body" class="small muted">Nothing yet.</div>
+    </section>
+
+    <p class="small muted">
+      The key is written straight into an encrypted vault and checked once against the vendor with a five-word request. Nobody at {SITE_NAME} can read it back. The benchmark runner can, for as long as one run takes.
+      How the runs work is in the <a href={href('/methodology/')}>methodology</a>; the whole claims design is in the repo under <code>docs/claims.md</code>.
+    </p>
+  </div>
+
+  <script id="claim-config" type="application/json" set:html={noLt(JSON.stringify(clientConfig))}></script>
+
+  <script is:inline type="module">
+    const cfg = JSON.parse(document.getElementById('claim-config').textContent);
+    if (cfg.url) {
+      const { createClient } = await import('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm');
+      const sb = createClient(cfg.url, cfg.anonKey, { auth: { flowType: 'pkce', persistSession: true, detectSessionInUrl: true } });
+
+      const $ = (s, r = document) => r.querySelector(s);
+      const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+      const chip = (cls, text) => `<span class="chip ${cls}">${esc(text)}</span>`;
+      const when = (iso) => (iso ? new Date(iso).toLocaleString('en-GB', { dateStyle: 'medium', timeStyle: 'short' }) : '');
+      const err = (e) => esc(e?.message ?? e?.error ?? String(e));
+
+      const state = { user: null, tools: new Map(), live: new Map(), claims: new Map(), keys: [], selected: null, busy: false };
+
+      // ---- auth ---------------------------------------------------------
+      const authForm = $('#auth-form');
+      const authState = $('#auth-state');
+      authForm.addEventListener('submit', async (ev) => {
+        ev.preventDefault();
+        const email = $('#email').value.trim();
+        const btn = authForm.querySelector('button');
+        btn.disabled = true;
+        const { error } = await sb.auth.signInWithOtp({ email, options: { emailRedirectTo: location.origin + cfg.base } });
+        btn.disabled = false;
+        authState.hidden = false;
+        authState.innerHTML = error ? `<span class="bad">Could not send the link: ${err(error)}</span>` : `Link sent to <strong>${esc(email)}</strong>. Open it on this device. It expires in an hour.`;
+      });
+      authState.addEventListener('click', async (ev) => {
+        if (ev.target.id !== 'signout') return;
+        await sb.auth.signOut();
+        state.user = null; state.claims.clear(); state.keys = [];
+        renderAuth(); renderMine(); renderSelected();
+      });
+      function renderAuth() {
+        if (state.user) {
+          authForm.hidden = true;
+          authState.hidden = false;
+          authState.innerHTML = `Signed in as <strong>${esc(state.user.email)}</strong> · <a href="#" id="signout">Sign out</a>`;
+        } else {
+          authForm.hidden = false;
+        }
+      }
+
+      // ---- data ---------------------------------------------------------
+      async function loadPublic() {
+        const [{ data: tools, error: e1 }, { data: live, error: e2 }] = await Promise.all([
+          sb.from('tools').select('slug,category_slug,name,domain,claimable,key_adapter'),
+          sb.from('tool_claim_status').select('tool_slug,claimed,key_active'),
+        ]);
+        if (e1 || e2) console.warn('claims: could not read tools', e1 ?? e2);
+        for (const t of tools ?? []) state.tools.set(t.slug, t);
+        for (const s of live ?? []) state.live.set(s.tool_slug, s);
+        for (const el of document.querySelectorAll('[data-live-for]')) {
+          const s = state.live.get(el.dataset.liveFor);
+          if (s?.key_active) { el.hidden = false; el.className = 'chip verified'; el.textContent = 'Vendor key active'; }
+          else if (s?.claimed) { el.hidden = false; el.className = 'chip ok'; el.textContent = 'Claimed'; }
+        }
+      }
+      async function loadMine() {
+        if (!state.user) return;
+        const [{ data: claims }, { data: keys }] = await Promise.all([
+          sb.from('tool_claims').select('id,tool_slug,status,verification,dns_token,verified_at,created_at').order('created_at'),
+          sb.from('vendor_api_keys').select('id,tool_slug,adapter,key_last4,status,validated_at,last_error,created_at').order('created_at', { ascending: false }),
+        ]);
+        state.claims.clear();
+        for (const c of claims ?? []) state.claims.set(c.tool_slug, c);
+        state.keys = keys ?? [];
+        renderMine();
+      }
+      function renderMine() {
+        for (const el of document.querySelectorAll('[data-mine-for]')) {
+          const c = state.claims.get(el.dataset.mineFor);
+          el.hidden = !c;
+          if (c) { el.className = `chip ${c.status === 'verified' ? 'verified' : 'pending'}`; el.textContent = c.status === 'verified' ? 'Yours' : 'Yours, pending'; }
+        }
+      }
+
+      // ---- picking ------------------------------------------------------
+      for (const b of document.querySelectorAll('button.tool')) {
+        b.addEventListener('click', () => select(b.dataset.slug));
+      }
+      function select(slug) {
+        state.selected = slug;
+        for (const b of document.querySelectorAll('button.tool')) b.classList.toggle('selected', b.dataset.slug === slug);
+        renderSelected();
+        $('#claim-step').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+
+      // ---- claim / key / status panels ---------------------------------
+      const claimBody = $('#claim-body'), keyBody = $('#key-body'), statusBody = $('#status-body');
+
+      function renderSelected() {
+        const slug = state.selected;
+        if (!slug) return;
+        const btn = document.querySelector(`button.tool[data-slug="${CSS.escape(slug)}"]`);
+        const name = btn.dataset.name;
+        const t = state.tools.get(slug);
+        const claim = state.claims.get(slug);
+
+        claimBody.className = '';
+        if (btn.dataset.open === 'true' || (t && !t.claimable)) {
+          claimBody.innerHTML = `<p><strong>${esc(name)}</strong> is open weights and runs on our CPU. There is no account to run it on, so there is nothing to claim. If you publish the weights and want to talk, write to <a href="mailto:${esc(cfg.contact)}">${esc(cfg.contact)}</a>.</p>`;
+          keyBody.innerHTML = 'Not applicable.'; statusBody.innerHTML = 'Not applicable.';
+          return;
+        }
+        if (!t) {
+          claimBody.innerHTML = `<p><strong>${esc(name)}</strong> is not in the claims register yet (the catalog seed has not run for it). Email <a href="mailto:${esc(cfg.contact)}">${esc(cfg.contact)}</a>.</p>`;
+          keyBody.innerHTML = 'Waiting on the register.'; statusBody.innerHTML = 'Nothing yet.';
+          return;
+        }
+        if (!state.user) {
+          claimBody.innerHTML = `<p>Sign in above to claim <strong>${esc(name)}</strong>. An address on <code>${esc(t.domain ?? 'the company domain')}</code> verifies on the spot; any other address gets a DNS record to publish.</p>`;
+          keyBody.innerHTML = 'A verified claim unlocks this step.'; statusBody.innerHTML = 'Nothing yet.';
+          return;
+        }
+        if (!claim) {
+          claimBody.innerHTML = `<p>Claim <strong>${esc(name)}</strong> as <strong>${esc(state.user.email)}</strong>.</p>
+            <p><button class="btn" id="do-claim" type="button">Claim ${esc(name)}</button></p>
+            <p class="muted">Auto-verified if your email domain is <code>${esc(t.domain ?? '—')}</code> or a parent or subdomain of it. Otherwise you get a DNS TXT record to publish.</p>`;
+          $('#do-claim').addEventListener('click', doClaim);
+          keyBody.innerHTML = 'A verified claim unlocks this step.'; statusBody.innerHTML = 'Nothing yet.';
+          return;
+        }
+        if (claim.status === 'pending') {
+          claimBody.innerHTML = `<p>${chip('pending', 'Pending')} Your address is not on <code>${esc(t.domain ?? '—')}</code>, so prove control of the domain with a DNS record:</p>
+            <pre class="dns">TXT  ${esc(t.domain ?? '—')}  toolwars-verify=${esc(claim.dns_token)}</pre>
+            <p class="muted">Also accepted on <code>_toolwars.${esc(t.domain ?? '—')}</code>. Propagation takes minutes to an hour.</p>
+            <p><button class="btn" id="check-dns" type="button">Check DNS</button> <span id="dns-result" class="muted"></span></p>
+            <p class="muted">No access to DNS? Email <a href="mailto:${esc(cfg.contact)}?subject=${encodeURIComponent('Manual claim: ' + name)}">${esc(cfg.contact)}</a> from the company domain and a person reads it on Monday.</p>`;
+          $('#check-dns').addEventListener('click', checkDns);
+          keyBody.innerHTML = 'A verified claim unlocks this step.'; statusBody.innerHTML = 'Nothing yet.';
+          return;
+        }
+        if (claim.status === 'rejected') {
+          claimBody.innerHTML = `<p>${chip('pending', 'Rejected')} This claim was rejected. Write to <a href="mailto:${esc(cfg.contact)}">${esc(cfg.contact)}</a> if that is wrong.</p>`;
+          keyBody.innerHTML = 'Not available.'; statusBody.innerHTML = 'Nothing yet.';
+          return;
+        }
+        claimBody.innerHTML = `<p>${chip('verified', 'Verified')} <strong>${esc(name)}</strong> is yours, via ${claim.verification === 'email_domain' ? 'email domain' : claim.verification === 'dns_txt' ? 'DNS record' : 'manual review'} on ${esc(when(claim.verified_at))}.</p>`;
+        renderKeyForm(t, name);
+        renderStatus(slug);
+      }
+
+      function renderKeyForm(t, name) {
+        keyBody.className = '';
+        if (!t.key_adapter) {
+          keyBody.innerHTML = `<p>We cannot run a vendor key for <strong>${esc(name)}</strong> yet: this API needs signed requests and the adapter is not written. Your claim stands; this form appears when the adapter lands.</p>`;
+          return;
+        }
+        const live = state.keys.find((k) => k.tool_slug === t.slug && (k.status === 'active' || k.status === 'pending_validation'));
+        keyBody.innerHTML = `
+          <form id="key-form" autocomplete="off">
+            <label for="api-key">API key for ${esc(name)} <span class="muted">(adapter: <code>${esc(t.key_adapter)}</code>)</span></label>
+            <div class="row">
+              <input id="api-key" name="api-key" type="password" required minlength="8" autocomplete="off" spellcheck="false" placeholder="paste the key" />
+              <button class="btn" type="submit">${live ? 'Replace key' : 'Submit key'}</button>
+            </div>
+            <p class="muted">Sent once to the vault. Not kept in this page, not in your browser, not in any log. ${live ? 'Submitting a new key revokes the current one.' : ''} Make it a key you can revoke on your side; a small monthly cap is sensible, the bank is thirty prompts a week.</p>
+            <p id="key-result" class="muted"></p>
+          </form>`;
+        $('#key-form').addEventListener('submit', submitKey);
+      }
+
+      function renderStatus(slug) {
+        statusBody.className = '';
+        const keys = state.keys.filter((k) => k.tool_slug === slug);
+        if (!keys.length) { statusBody.innerHTML = 'No key yet.'; return; }
+        const label = { pending_validation: ['pending', 'Pending validation'], active: ['verified', 'Active'], invalid: ['pending', 'Invalid'], revoked: ['', 'Revoked'] };
+        statusBody.innerHTML = `<ul class="keys">${keys.map((k) => {
+          const [cls, text] = label[k.status] ?? ['', k.status];
+          const actions = k.status === 'revoked' ? '' : `
+            ${k.status !== 'active' ? `<button type="button" class="btn small" data-recheck="${esc(k.id)}">Re-check</button>` : ''}
+            <button type="button" class="btn small ghost" data-revoke="${esc(k.id)}">Revoke</button>`;
+          return `<li>
+            <span>${chip(cls, text)} <code>····${esc(k.key_last4)}</code> <span class="muted">${esc(k.adapter)} · added ${esc(when(k.created_at))}${k.validated_at ? ' · validated ' + esc(when(k.validated_at)) : ''}</span></span>
+            ${k.last_error ? `<span class="bad">${esc(k.last_error)}</span>` : ''}
+            <span class="actions">${actions}</span>
+          </li>`;
+        }).join('')}</ul>`;
+        for (const b of statusBody.querySelectorAll('[data-recheck]')) b.addEventListener('click', () => validate(b.dataset.recheck));
+        for (const b of statusBody.querySelectorAll('[data-revoke]')) b.addEventListener('click', () => revoke(b.dataset.revoke));
+      }
+
+      // ---- actions ------------------------------------------------------
+      async function doClaim() {
+        const b = $('#do-claim'); b.disabled = true;
+        const { error } = await sb.rpc('claim_tool', { p_tool_slug: state.selected });
+        if (error) { b.disabled = false; claimBody.insertAdjacentHTML('beforeend', `<p class="bad">${err(error)}</p>`); return; }
+        await Promise.all([loadMine(), loadPublic()]);
+        renderSelected();
+      }
+
+      async function checkDns() {
+        const b = $('#check-dns'), out = $('#dns-result');
+        b.disabled = true; out.textContent = 'Looking up…';
+        const claim = state.claims.get(state.selected);
+        const { data, error } = await sb.functions.invoke('verify-dns', { body: { claim_id: claim.id } });
+        b.disabled = false;
+        if (error || !data) { out.innerHTML = `<span class="bad">Check failed: ${err(error ?? 'no response')}</span>`; return; }
+        if (data.verified) { await Promise.all([loadMine(), loadPublic()]); renderSelected(); return; }
+        out.innerHTML = `<span class="bad">Not found yet.</span> ${esc(data.error ?? data.hint ?? '')}`;
+      }
+
+      async function submitKey(ev) {
+        ev.preventDefault();
+        const input = $('#api-key'), out = $('#key-result'), b = ev.target.querySelector('button');
+        const key = input.value;
+        input.value = '';                       // out of the DOM before anything else happens
+        b.disabled = true; out.textContent = 'Storing…';
+        const t = state.tools.get(state.selected);
+        const { data: keyId, error } = await sb.rpc('submit_api_key', { p_tool_slug: t.slug, p_api_key: key, p_adapter: t.key_adapter });
+        if (error) { b.disabled = false; out.innerHTML = `<span class="bad">${err(error)}</span>`; return; }
+        out.textContent = 'Stored. Checking it against the vendor…';
+        await loadMine(); renderStatus(t.slug);
+        await validate(keyId);
+        b.disabled = false; out.textContent = '';
+        renderKeyForm(t, document.querySelector(`button.tool[data-slug="${CSS.escape(t.slug)}"]`).dataset.name);
+      }
+
+      async function validate(keyId) {
+        const { data, error } = await sb.functions.invoke('validate-key', { body: { key_id: keyId } });
+        if (error) console.warn('validate-key', error);
+        await Promise.all([loadMine(), loadPublic()]);
+        renderStatus(state.selected);
+        return data;
+      }
+
+      async function revoke(keyId) {
+        if (!confirm('Revoke this key? The benchmark falls back to our account for this tool.')) return;
+        const { error } = await sb.rpc('revoke_api_key', { p_key_id: keyId });
+        if (error) { statusBody.insertAdjacentHTML('beforeend', `<p class="bad">${err(error)}</p>`); return; }
+        await Promise.all([loadMine(), loadPublic()]);
+        renderSelected();
+      }
+
+      // ---- boot ---------------------------------------------------------
+      sb.auth.onAuthStateChange((_ev, session) => {
+        state.user = session?.user ?? null;
+        renderAuth();
+        loadMine().then(renderSelected);
+      });
+      const { data: { session } } = await sb.auth.getSession();
+      state.user = session?.user ?? null;
+      renderAuth();
+      await loadPublic();
+      await loadMine();
+      const want = new URLSearchParams(location.search).get('tool');
+      if (want && document.querySelector(`button.tool[data-slug="${CSS.escape(want)}"]`)) select(want);
+      if (location.search) history.replaceState(null, '', location.pathname);   // drop ?code= / ?tool= from the bar
+    }
+  </script>
+
+  <style is:global>
+    .claim .step { margin-top: 1.25rem; }
+    .claim .step h2 { margin-top: 0; font-size: 1.15rem; display: flex; align-items: center; gap: 10px; }
+    .claim .step .n { display: inline-grid; place-items: center; width: 26px; height: 26px; border-radius: 50%; background: var(--accent); color: #fff; font-size: 0.85rem; font-weight: 700; }
+    .claim label { display: block; font-weight: 600; font-size: 0.9rem; margin-bottom: 6px; }
+    .claim .row { display: flex; gap: 8px; flex-wrap: wrap; }
+    .claim input[type="email"], .claim input[type="password"] { flex: 1 1 260px; min-width: 0; font: inherit; padding: 9px 12px; border: 1px solid var(--border); border-radius: 8px; background: var(--surface); color: var(--text); }
+    .claim input:focus { outline: 2px solid var(--accent-soft); border-color: var(--accent); }
+    .claim .btn { border: 0; cursor: pointer; font: inherit; }
+    .claim .btn[disabled], .claim .tool[disabled] { opacity: 0.55; cursor: not-allowed; }
+    .claim .btn.small { padding: 6px 10px; font-size: 0.85rem; }
+    .claim .btn.ghost { background: var(--surface-2); color: var(--text); border: 1px solid var(--border); }
+    .claim .group h3 { margin: 1rem 0 0.4rem; }
+    .claim .tools { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); }
+    .claim .tool { width: 100%; text-align: left; font: inherit; color: var(--text); background: var(--surface-2); border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px; display: grid; gap: 4px; cursor: pointer; }
+    .claim .tool:hover { border-color: var(--accent); }
+    .claim .tool.selected { border-color: var(--accent); background: var(--accent-soft); }
+    .claim .tool .name { font-weight: 600; }
+    .claim .tool .chips { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 2px; }
+    .claim .dns { overflow-x: auto; padding: 10px 12px; background: var(--surface-2); border: 1px solid var(--border); border-radius: 8px; font: 0.9rem ui-monospace, SFMono-Regular, Menlo, monospace; }
+    .claim .keys { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+    .claim .keys li { display: grid; gap: 4px; padding-bottom: 10px; border-bottom: 1px solid var(--border); }
+    .claim .keys .actions { display: flex; gap: 6px; }
+    .claim .bad { color: var(--warn); }
+    .claim #auth-state { margin-top: 6px; }
+    .claim .pending-box { margin: 0 0 1rem; }
+  </style>
+</Base>

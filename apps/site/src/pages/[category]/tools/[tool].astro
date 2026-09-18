@@ -3,7 +3,8 @@ import Base from '../../../layouts/Base.astro';
 import StatusChip from '../../../components/StatusChip.astro';
 import ClaimCta from '../../../components/ClaimCta.astro';
 import { loadSnapshot, categoryBySlug, toolBySlug, pairsFor, ratingFor, promptsIn, runFor } from '../../../lib/snapshot';
-import { href, fmtScore, fmtMs, asset, absolute } from '../../../lib/site';
+import DaysScript from '../../../components/DaysScript.astro';
+import { href, fmtScore, fmtMs, asset, absolute, daysSince, fmtDate } from '../../../lib/site';
 
 export function getStaticPaths() {
   return loadSnapshot().tools.map((t) => ({ params: { category: t.category, tool: t.slug } }));
@@ -15,11 +16,13 @@ const rating = ratingFor(snap, category.slug, tool.slug);
 const pairs = pairsFor(snap, category.slug, tool.slug);
 const prompts = promptsIn(snap, category.slug);
 const runs = prompts.map((p) => ({ p, run: runFor(snap, category.slug, tool.slug, p.id) }));
+const isText = category.output_modality === 'text';
 ---
 <Base title={`${tool.name} review: ${category.name.replace(/\s*\(.*\)$/, '')} benchmark`} description={`${tool.name} by ${tool.vendor} on the ${category.name} benchmark: outputs on ${prompts.length} public prompts, speed, and scores versus every competitor.`} canonicalPath={`/${category.slug}/tools/${tool.slug}/`}>
   <p class="small muted"><a href={href(`/${category.slug}/`)}>{category.name}</a> · tool</p>
-  <h1>{tool.name} <StatusChip status={tool.status} /></h1>
+  <h1>{tool.name} <StatusChip status={tool.status} asked_on={tool.challenge?.asked_on} /></h1>
   <p class="lede">{tool.description}</p>
+  {tool.proxy && <p class="small muted"><strong>Proxy.</strong> {tool.proxy_note ?? 'A general-purpose model, not a product in this category.'}</p>}
   <p class="small muted">By {tool.vendor} · <a href={tool.website} rel="nofollow noopener">{tool.website.replace(/^https?:\/\//, '')}</a></p>
 
   <h2>Score</h2>
@@ -36,6 +39,13 @@ const runs = prompts.map((p) => ({ p, run: runFor(snap, category.slug, tool.slug
         </tr></tbody>
       </table></div>
     </div>
+  ) : tool.status === 'challenged' && tool.challenge ? (
+    <div class="card" style="border-left:4px solid var(--bar-b)">
+      <strong>Challenged, <span data-asked={tool.challenge.asked_on}>day <span data-days>{daysSince(tool.challenge.asked_on)}</span></span>.</strong> {tool.name} has no public API. We asked {tool.vendor} for one seat on {fmtDate(tool.challenge.asked_on)} under the terms “{tool.challenge.terms}”. No reply yet, so no score; nothing here is estimated.
+      <p style="margin:10px 0 0"><a class="btn" href={href(`/challenge/${tool.slug}/`)}>The standing challenge</a></p>
+    </div>
+  ) : tool.status === 'seat_needed' ? (
+    <div class="pending-box"><strong>Seat needed.</strong> {tool.name} is a paid product with no API. The {prompts.length}-brief {category.name} bank is published; runs start the day a seat is supplied.{tool.seat_url && <span> <a href={tool.seat_url} rel="nofollow noopener">Seats</a>.</span>} <a href={href('/challenges/')}>All challenges</a>.</div>
   ) : (
     <div class="pending-box"><strong>Benchmark not yet run.</strong> {tool.name} is in the {category.name} bank and will be scored on the same {prompts.length} prompts as every other tool.</div>
   )}
@@ -55,13 +65,18 @@ const runs = prompts.map((p) => ({ p, run: runFor(snap, category.slug, tool.slug
   <h2>Outputs</h2>
   <div class="table-wrap card" style="padding:0">
     <table>
-      <thead><tr><th>#</th><th>Prompt</th><th>Output</th><th class="num">TTFB</th><th class="num">Total</th><th class="num">Score</th></tr></thead>
+      <thead><tr><th>#</th><th>Prompt</th><th>Output</th><th class="num">{isText ? 'First token' : 'TTFB'}</th><th class="num">Total</th><th class="num">Score</th></tr></thead>
       <tbody>
         {runs.map(({ p, run }) => (
           <tr>
             <td class="num">{p.rank}</td>
             <td><strong>{p.title}</strong><div class="small muted">{p.language}</div></td>
-            <td>{run && run.status === 'error' ? <span class="chip pending" title={run.error ?? ''}>failed</span> : run && run.audio_url ? <audio controls preload="none" src={asset(run.audio_url)} style="width:220px;height:32px"></audio> : <span class="chip pending">pending</span>}</td>
+            <td>{run && run.status === 'error' ? <span class="chip pending" title={run.error ?? ''}>failed</span>
+              : run && run.audio_url ? <audio controls preload="none" src={asset(run.audio_url)} style="width:220px;height:32px"></audio>
+              : run && run.output_url ? <div class="excerpt" style="max-width:420px"><pre style="max-height:120px">{run.output_excerpt ?? ''}</pre><a class="small" href={asset(run.output_url)}>Read full output{run.output_chars != null && <span class="muted"> ({run.output_chars.toLocaleString('en-GB')} chars)</span>}</a></div>
+              : tool.status === 'challenged' ? <StatusChip status="challenged" asked_on={tool.challenge?.asked_on} />
+              : tool.status === 'seat_needed' ? <StatusChip status="seat_needed" />
+              : <span class="chip pending">pending</span>}</td>
             <td class="num">{run?.status === 'success' ? fmtMs(run.ttft_ms) : '–'}</td>
             <td class="num">{run?.status === 'success' ? fmtMs(run.latency_ms) : '–'}</td>
             <td class="num">{run?.composite != null ? fmtScore(run.composite) : '–'}</td>
@@ -72,4 +87,5 @@ const runs = prompts.map((p) => ({ p, run: runFor(snap, category.slug, tool.slug
   </div>
 
   <ClaimCta tools={[tool]} category={category} />
+  <DaysScript />
 </Base>

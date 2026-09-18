@@ -5,9 +5,11 @@ import ClaimCta from '../../components/ClaimCta.astro';
 import Front from '../../components/Front.astro';
 import Territory from '../../components/Territory.astro';
 import Movements from '../../components/Movements.astro';
+import DaysScript from '../../components/DaysScript.astro';
+import PromptDoc from '../../components/PromptDoc.astro';
 import { loadSnapshot, categoryBySlug, toolsIn, pairsIn, promptsIn, ratingsIn, toolBySlug, lastRunAt } from '../../lib/snapshot';
 import { territory } from '../../lib/front';
-import { href, fmtScore, fmtMs, fmtDate } from '../../lib/site';
+import { href, fmtScore, fmtMs, fmtDate, daysSince, modalityWords } from '../../lib/site';
 
 export function getStaticPaths() {
   return loadSnapshot().categories.map((c) => ({ params: { category: c.slug } }));
@@ -22,10 +24,28 @@ const ranked = ratings.length > 0;
 const last = lastRunAt(snap, category.slug, tools.map((t) => t.slug));
 const held = new Map(territory(snap, category.slug).map((r) => [r.tool, r.held]));
 const previous = snap.previous_holders?.[category.slug] ?? null;
+const challenged = tools.filter((t) => t.status === 'challenged');
+const seats = tools.filter((t) => t.status === 'seat_needed');
+const proxies = tools.filter((t) => t.proxy);
+const words = modalityWords(category.output_modality);
+const isText = category.output_modality === 'text';
 ---
 <Base title={`${category.name}: leaderboard and comparisons`} description={category.description} canonicalPath={`/${category.slug}/`}>
   <h1>{category.name}</h1>
   <p class="lede">{category.description}</p>
+  {(challenged.length > 0 || seats.length > 0) && (
+    <div class="card" style="border-left:4px solid var(--bar-b)">
+      {challenged.length > 0 && (
+        <p style="margin:0 0 6px"><strong>Standing challenges.</strong> {challenged.map((t, i) => <span>{i > 0 ? ' ' : ''}<a href={href(`/challenge/${t.slug}/`)}>{t.name}</a>: no public API, asked {fmtDate(t.challenge!.asked_on)}, <span data-asked={t.challenge!.asked_on}>day <span data-days>{daysSince(t.challenge!.asked_on)}</span></span>.</span>)} The prompts below are the ones they would run. <a href={href('/challenges/')}>All challenges</a>.</p>
+      )}
+      {seats.length > 0 && (
+        <p style="margin:0 0 6px"><strong>Seat needed.</strong> {seats.map((t) => t.name).join(', ')}: paid products with no API. The bank is published; runs start when a seat is supplied. <a href={href('/challenges/')}>All challenges</a>.</p>
+      )}
+      {proxies.length > 0 && (
+        <p class="small muted" style="margin:0">Proxies: {proxies.map((t) => t.name).join(', ')} are general-purpose models, not {category.name} products. They run the same prompts so the bank has a floor; they are labelled as proxies everywhere they appear.</p>
+      )}
+    </div>
+  )}
 
   <h2>The front</h2>
   <p class="small muted">Each of the {prompts.length} prompts is a piece of territory. The tool with the highest composite on a prompt holds it; the number is its margin over the runner-up. Hover or tap a tile for the top three.</p>
@@ -45,7 +65,7 @@ const previous = snap.previous_holders?.[category.slug] ?? null;
         <tr>
           <th>#</th><th>Tool</th><th>Status</th>
           {category.metrics.map((m) => <th class="num">{m.label}</th>)}
-          <th class="num">Composite</th><th class="num">Territory</th><th class="num">Median TTFB</th>
+          <th class="num">Composite</th><th class="num">Territory</th><th class="num">{isText ? 'Median first token' : 'Median TTFB'}</th>
         </tr>
       </thead>
       <tbody>
@@ -53,8 +73,8 @@ const previous = snap.previous_holders?.[category.slug] ?? null;
           .map(({ t, r }, i) => (
           <tr>
             <td class="num">{r ? r.rank : '–'}</td>
-            <td><a href={href(`/${category.slug}/tools/${t.slug}/`)}>{t.name}</a><div class="small muted">{t.vendor}</div></td>
-            <td><StatusChip status={t.status} /></td>
+            <td><a href={href(`/${category.slug}/tools/${t.slug}/`)}>{t.name}</a><div class="small muted">{t.vendor}{t.proxy && ' · proxy'}</div></td>
+            <td>{t.status === 'challenged' ? <a href={href(`/challenge/${t.slug}/`)} style="text-decoration:none"><StatusChip status={t.status} asked_on={t.challenge?.asked_on} /></a> : <StatusChip status={t.status} />}</td>
             {category.metrics.map((m) => <td class="num">{r ? fmtScore(r.scores[m.key]) : '–'}</td>)}
             <td class="num"><strong>{r ? fmtScore(r.composite) : '–'}</strong></td>
             <td class="num terr">{r ? <span>{held.get(t.slug) ?? 0}<span class="muted"> / {prompts.length}</span></span> : '–'}</td>
@@ -85,16 +105,20 @@ const previous = snap.previous_holders?.[category.slug] ?? null;
       <thead><tr><th>#</th><th>Prompt</th><th>Language</th><th>Checks</th></tr></thead>
       <tbody>
         {prompts.map((p) => (
-          <tr>
+          <tr id={p.id}>
             <td class="num">{p.rank}</td>
-            <td><strong>{p.title}</strong><div class="small muted">“{p.text}”</div></td>
+            <td><strong>{p.title}</strong><PromptDoc prompt={p} modality={category.output_modality} compact /></td>
             <td><span class="chip">{p.language}</span></td>
-            <td class="small">{p.constraints.join(' · ')}</td>
+            <td class="small">{p.constraints.join(' · ')}{p.rubric && <div class="muted" style="margin-top:4px">{p.rubric.length} machine-checked items</div>}</td>
           </tr>
         ))}
       </tbody>
     </table>
   </div>
 
+  {isText && proxies.length > 0 && (
+    <p class="small muted">Outputs: every {words.noun} is published in full on the head-to-head and tool pages ({words.outputs}, with the rubric hit by hit once scored).</p>
+  )}
   <ClaimCta tools={tools} category={category} />
+  <DaysScript />
 </Base>

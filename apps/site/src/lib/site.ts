@@ -30,6 +30,28 @@ export function fmtDate(iso: string | null): string {
   return new Date(iso).toLocaleDateString('en-GB', { year: 'numeric', month: 'short', day: 'numeric' });
 }
 
+/** Whole days from an ISO date (YYYY-MM-DD, UTC midnight) to now; never negative. */
+export function daysSince(isoDate: string, now: Date = new Date()): number {
+  const [y, m, d] = isoDate.split('-').map(Number);
+  const start = Date.UTC(y, m - 1, d);
+  return Math.max(0, Math.floor((now.getTime() - start) / 86_400_000));
+}
+
+/** "day 0", "day 21": the counter as it reads in the brand's copy. */
+export function fmtDay(n: number): string {
+  return `day ${n}`;
+}
+
+/** Copy nouns per output modality, so pages read "hear" for audio and "read" for text. */
+export function modalityWords(modality: string): { verb: string; noun: string; outputs: string } {
+  switch (modality) {
+    case 'audio': return { verb: 'Listen to', noun: 'clip', outputs: 'audio' };
+    case 'text': return { verb: 'Read', noun: 'answer', outputs: 'text outputs' };
+    case 'app': return { verb: 'Open', noun: 'app', outputs: 'generated apps' };
+    default: return { verb: 'See', noun: 'output', outputs: 'outputs' };
+  }
+}
+
 export function fmtMs(ms: number | null | undefined): string {
   if (ms == null) return '–';
   return ms >= 1000 ? `${(ms / 1000).toFixed(1)} s` : `${Math.round(ms)} ms`;

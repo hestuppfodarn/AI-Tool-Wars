@@ -1,0 +1,74 @@
+---
+// Every tool we cannot run because the vendor has not let us: standing challenges
+// (no public API, seat asked for, counter running) and seat-needed listings (paid
+// product, no API, no runner until a seat is supplied). Names named, days counted.
+import Base from '../layouts/Base.astro';
+import StatusChip from '../components/StatusChip.astro';
+import DaysScript from '../components/DaysScript.astro';
+import { loadSnapshot, challengedTools, promptsIn } from '../lib/snapshot';
+import { href, daysSince, fmtDate, SITE_NAME } from '../lib/site';
+
+const snap = loadSnapshot();
+const tools = challengedTools(snap);
+const challenged = tools.filter((t) => t.status === 'challenged').sort((a, b) => daysSince(b.challenge!.asked_on) - daysSince(a.challenge!.asked_on) || a.name.localeCompare(b.name));
+const seats = tools.filter((t) => t.status === 'seat_needed');
+const byCategory = (list: typeof tools) => snap.categories.map((c) => ({ c, list: list.filter((t) => t.category === c.slug) })).filter((x) => x.list.length);
+const longest = challenged[0] ? daysSince(challenged[0].challenge!.asked_on) : null;
+---
+<Base title="Challenges" description={`Tools ${SITE_NAME} cannot run because the vendor has no public API: standing challenges with a day counter, and products waiting on a seat.`} canonicalPath="/challenges/">
+  <h1>Challenges</h1>
+  <p class="lede">Every tool on this page is missing for one reason: we cannot get in. Each standing challenge is a public ask for one seat to run the category's public prompts and publish everything. The counter runs until the vendor answers. Pending is pending; it is not a prediction.</p>
+  {challenged.length > 0 && longest != null && (
+    <p class="small muted">{challenged.length} standing {challenged.length === 1 ? 'challenge' : 'challenges'}, longest running <span data-asked={challenged[0].challenge!.asked_on}>day <span data-days>{longest}</span></span> ({challenged[0].name}). {seats.length} {seats.length === 1 ? 'product' : 'products'} waiting on a seat.</p>
+  )}
+
+  <h2>Standing challenges</h2>
+  {challenged.length === 0 ? (
+    <div class="pending-box">No standing challenges in this snapshot.</div>
+  ) : byCategory(challenged).map(({ c, list }) => (
+    <section>
+      <h3><a href={href(`/${c.slug}/`)}>{c.name}</a> <span class="small muted">· {promptsIn(snap, c.slug).length} prompts</span></h3>
+      <ul class="challenge-list">
+        {list.map((t) => (
+          <li>
+            <div>
+              <strong><a href={href(`/challenge/${t.slug}/`)}>{t.name}</a></strong> <span class="small muted">by {t.vendor}</span>
+              <div class="small muted">Asked {fmtDate(t.challenge!.asked_on)}: “{t.challenge!.terms}”. No reply yet.</div>
+            </div>
+            <StatusChip status={t.status} asked_on={t.challenge!.asked_on} />
+            <div class="days" data-asked={t.challenge!.asked_on}>day <span data-days>{daysSince(t.challenge!.asked_on)}</span></div>
+          </li>
+        ))}
+      </ul>
+    </section>
+  ))}
+
+  <h2>Seat needed</h2>
+  <p class="muted small">Paid products with no API and no self-serve way to run a prompt bank. No counter yet: the ask starts when a seat is offered or bought. The briefs are published already.</p>
+  {seats.length === 0 ? (
+    <div class="pending-box">No seat-gated tools in this snapshot.</div>
+  ) : byCategory(seats).map(({ c, list }) => (
+    <section>
+      <h3><a href={href(`/${c.slug}/`)}>{c.name}</a> <span class="small muted">· {promptsIn(snap, c.slug).length} briefs</span></h3>
+      <ul class="challenge-list">
+        {list.map((t) => (
+          <li>
+            <div>
+              <strong><a href={href(`/${c.slug}/tools/${t.slug}/`)}>{t.name}</a></strong> <span class="small muted">by {t.vendor}</span>
+              <div class="small muted">{t.description}</div>
+            </div>
+            <StatusChip status={t.status} />
+            <div class="days seat">{t.seat_url ? <a href={t.seat_url} rel="nofollow noopener">seats</a> : 'no seat'}</div>
+          </li>
+        ))}
+      </ul>
+    </section>
+  ))}
+
+  <div class="cta">
+    <h3>Is one of these yours?</h3>
+    <p>One seat stops the counter. Runs execute on your account, every output is published, the score is whatever the prompts say. <a class="btn" href={href('/claim/')}>Claim your listing</a></p>
+  </div>
+  <p class="muted" style="margin-top:2rem">{challenged.length + seats.length} tools, {challenged.length + seats.length} closed doors, one form.</p>
+  <DaysScript />
+</Base>

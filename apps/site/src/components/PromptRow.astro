@@ -1,10 +1,14 @@
 ---
 import type { Prompt, Run, Tool } from '../lib/snapshot';
-import { asset, fmtMs, fmtScore } from '../lib/site';
+import StatusChip from './StatusChip.astro';
+import PromptDoc from './PromptDoc.astro';
+import { asset, fmtMs, fmtScore, href } from '../lib/site';
 
-interface Props { prompt: Prompt; a: Tool; b: Tool; runA: Run | null; runB: Run | null; }
-const { prompt, a, b, runA, runB } = Astro.props;
+interface Props { prompt: Prompt; a: Tool; b: Tool; runA: Run | null; runB: Run | null; modality?: string; }
+const { prompt, a, b, runA, runB, modality = 'audio' } = Astro.props;
 const sides = [ { key: 'a', tool: a, run: runA }, { key: 'b', tool: b, run: runB } ];
+const absent = (t: Tool) => t.status === 'challenged' || t.status === 'seat_needed';
+const hits = (run: Run) => run.rubric_hits ? `${run.rubric_hits.filter((h) => h.hit).length}/${run.rubric_hits.length} checks` : null;
 ---
 <div class="prompt-row" id={prompt.id}>
   <div class="head">
@@ -12,27 +16,39 @@ const sides = [ { key: 'a', tool: a, run: runA }, { key: 'b', tool: b, run: runB
     <span class="chip">{prompt.language}</span>
     {prompt.tags.map((t) => <span class="chip">{t}</span>)}
   </div>
-  <div class="text">“{prompt.text}”</div>
-  {prompt.instructions && <div class="text small">Direction: {prompt.instructions}</div>}
+  <PromptDoc prompt={prompt} modality={modality} />
   <div class="sides">
     {sides.map(({ key, tool, run }) => (
       <div class={`side ${key}`}>
-        <div class="who"><span><span class="dot"></span>{tool.name}</span>{!run && <span class="chip pending">pending</span>}</div>
-        {run && run.status === 'error' ? (
+        <div class="who">
+          <span><span class="dot"></span>{tool.name}</span>
+          {absent(tool) ? <StatusChip status={tool.status} asked_on={tool.challenge?.asked_on} /> : !run && <span class="chip pending">pending</span>}
+        </div>
+        {tool.status === 'challenged' ? (
+          <div class="muted small">No output: {tool.name} has no public API. We asked for a seat on {tool.challenge?.asked_on}; the counter runs until they answer. <a href={href(`/challenge/${tool.slug}/`)}>The standing challenge</a>.</div>
+        ) : tool.status === 'seat_needed' ? (
+          <div class="muted small">No output: {tool.name} needs a paid seat and has no API. The bank runs the day a seat is supplied.{tool.seat_url && <span> <a href={tool.seat_url} rel="nofollow noopener">Seats</a>.</span>}</div>
+        ) : run && run.status === 'error' ? (
           <div class="muted small">Vendor call failed: {run.error ?? 'unknown error'}. Failures are published, not hidden.</div>
         ) : run && run.audio_url ? (
           <audio controls preload="none" src={asset(run.audio_url)}></audio>
+        ) : run && run.output_url ? (
+          <div class="excerpt">
+            <pre>{run.output_excerpt ?? ''}</pre>
+            <a href={asset(run.output_url)} class="small">Read full output{run.output_chars != null && <span class="muted"> ({run.output_chars.toLocaleString('en-GB')} chars)</span>}</a>
+          </div>
         ) : run ? (
-          <div class="muted small">Run recorded, audio not available.</div>
+          <div class="muted small">Run recorded, output not available.</div>
         ) : (
           <div class="muted small">No output yet. This slot fills in automatically when the benchmark runs.</div>
         )}
         {run && run.status === 'success' && (
           <div class="stats">
-            <span>TTFB <strong>{fmtMs(run.ttft_ms)}</strong></span>
+            <span>{modality === 'text' ? 'First token' : 'TTFB'} <strong>{fmtMs(run.ttft_ms)}</strong></span>
             <span>Total <strong>{fmtMs(run.latency_ms)}</strong></span>
             {run.composite != null ? <span>Score <strong>{fmtScore(run.composite)}</strong></span> : <span>Score <strong>pending</strong></span>}
             {run.wer != null && <span>WER <strong>{(run.wer * 100).toFixed(0)}%</strong></span>}
+            {hits(run) && <span>Rubric <strong>{hits(run)}</strong></span>}
           </div>
         )}
         {run && run.status === 'success' && (run.transcript || run.judge_rationale) && (
@@ -40,6 +56,12 @@ const sides = [ { key: 'a', tool: a, run: runA }, { key: 'b', tool: b, run: runB
             <summary class="muted">Transcript and judge note</summary>
             {run.transcript && <p style="margin:6px 0 4px"><span class="muted">Heard:</span> “{run.transcript}”</p>}
             {run.judge_rationale && <p class="muted" style="margin:0">{run.judge_rationale}</p>}
+          </details>
+        )}
+        {run && run.status === 'success' && run.rubric_hits && run.rubric_hits.length > 0 && (
+          <details class="small">
+            <summary class="muted">Rubric, item by item</summary>
+            <ul class="hits">{run.rubric_hits.map((h) => <li class={h.hit ? 'hit' : 'miss'}><span>{h.hit ? 'hit' : 'miss'}</span> {h.id}{h.note && <span class="muted"> · {h.note}</span>}</li>)}</ul>
           </details>
         )}
       </div>

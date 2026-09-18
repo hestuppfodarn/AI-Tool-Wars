@@ -18,7 +18,9 @@ const snap = loadSnapshot();
     <div>
       <h3>{c.name}</h3>
       <ul class="list-tight">{c.metrics.map((m) => <li><strong>{m.label}.</strong> {m.description}</li>)}</ul>
-      <p class="small muted">Composite = mean of the metrics that have been computed for a run. Transcript accuracy maps word error rate to a score linearly: 0% → 10, 50% or worse → 1, after lowercasing, removing punctuation and stripping bracketed stage directions. Speed is a rank across tools on the same prompt: fastest 10, slowest 1, averaged over time to first byte and total time. Where an LLM jury is involved, several judge models score independently and their mean is used; the jury never sees which tool produced the output.</p>
+      {c.output_modality === 'audio' && <p class="small muted">Composite = mean of the metrics that have been computed for a run. Transcript accuracy maps word error rate to a score linearly: 0% → 10, 50% or worse → 1, after lowercasing, removing punctuation and stripping bracketed stage directions. Speed is a rank across tools on the same prompt: fastest 10, slowest 1, averaged over time to first byte and total time. Where an LLM jury is involved, several judge models score independently and their mean is used; the jury never sees which tool produced the output.</p>}
+      {c.output_modality === 'text' && <p class="small muted">Composite = mean of the metrics that have been computed for a run. Every prompt carries a rubric of machine-checkable items (substring, regex, word count, language, format); the contract is in <code>data/catalog/{c.slug}/category.json</code> and the scorer is <code>scripts/score-text.py</code>. No judge model is involved. Tools with no public API carry a standing challenge instead of a score; general-purpose models run the bank as labelled proxies.</p>}
+      {c.output_modality === 'app' && <p class="small muted">No runner exists for this category yet: every listed builder needs a paid seat and has no API. The briefs are published so the test is fixed before the first seat arrives.</p>}
     </div>
   ))}
 

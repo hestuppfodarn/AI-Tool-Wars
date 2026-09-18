@@ -7,17 +7,17 @@
     {
       "key": "accuracy",
       "label": "Rubric accuracy",
-      "description": "Every prompt ships with a machine-checkable rubric: facts, clause numbers, party names and figures the answer must contain, statements it must not contain (a fabricated case treated as real, a clause number that does not exist), and regular expressions for values that have to appear in a specific shape. The scorer normalises the output (lowercase, collapsed whitespace, straight quotes) and tests every must_include, must_not_include and regex item; accuracy = 10 x weighted hits / weighted items. No judge model, no estimate: a hit is a substring or a regex match."
+      "description": "Every prompt ships with a machine-checkable rubric: facts, clause numbers, party names and figures the answer must contain (must_include: substring on lowercased, whitespace-collapsed text, alternatives allowed), values that must appear in a specific shape and structural markers such as a bullet, a heading or a {+tracked change+} (regex, flags im), and citations that must stay inside the source (cites_only). accuracy = 1 + 9 x weighted passes / weighted items over those kinds, rounded to one decimal. No judge model, no estimate: a pass is a substring or a regex match."
     },
     {
       "key": "adherence",
       "label": "Constraint adherence",
-      "description": "The format, length and language rules of the prompt, checked deterministically: max_words and min_words on the whitespace-split word count, language on a stopword-ratio detector (sv/en/de/fr), format on a structural test (valid JSON, a Markdown table, a numbered list, headings, or tracked-change markup with [-deleted-] and {+inserted+} spans). adherence = 10 x weighted hits / weighted items among the max_words, min_words, language and format rubric items."
+      "description": "The prompt's constraints, checked deterministically: must_not_include (a fabricated case endorsed as real, a legalese word the brief banned, a clause number that does not exist), max_words and min_words on a Unicode word count that ignores markdown punctuation, language by a stopword vote (en/sv/de/fr/es), format_json (parses, and carries the required top-level keys) and format_markdown_table. adherence = 1 + 9 x weighted passes / weighted items over those kinds; null when a prompt has none."
     },
     {
       "key": "conciseness",
       "label": "Conciseness",
-      "description": "Useful content per word, from a formula rather than a judge. target = the prompt's target_words (or its max_words rubric item, else 300). density = accuracy fraction / max(1, words / target). conciseness = 10 x min(1, density), floored at 1. An answer that finds every fact inside the target length scores 10; the same facts at twice the length score 5; padding without facts scores 1."
+      "description": "Length against the brief, from a formula rather than a judge. target = the smallest max_words item in the prompt's rubric (400 when there is none). 10 when the output is at or under the target; linear down to 1 at three times the target; an empty output is 1. Facts are scored by accuracy, so this metric only measures whether the answer stayed the length the buyer asked for."
     },
     {
       "key": "velocity",
@@ -27,21 +27,39 @@
   ],
   "active_prompts": 10,
   "rubric_contract": {
-    "version": 1,
-    "summary": "prompts[].rubric is a list of items {id, type, value, weight?}. The scorer (scripts/score-text.py) evaluates every item against the run's output file and writes scores.accuracy, scores.adherence and scores.conciseness into runs.json. Velocity is added by the exporter from ttft_ms and latency_ms.",
-    "normalisation": "Before any check the output is: NFC-normalised, curly quotes and dashes mapped to straight ones, lowercased, whitespace collapsed to single spaces. Regex items run against the same normalised text with re.IGNORECASE | re.MULTILINE. Words = len(output.split()) on the raw output.",
-    "types": {
-      "must_include": "value: string or list of strings. Hit when the normalised output contains the normalised value; for a list, when it contains at least one of them (alternatives, e.g. 'clause 7.3' or '7.3'). Metric: accuracy.",
-      "must_not_include": "value: string or list of strings. Hit when none of the values occur in the normalised output. Metric: accuracy.",
-      "regex": "value: a Python regular expression. Hit when re.search finds a match in the normalised output. Metric: accuracy.",
-      "max_words": "value: integer. Hit when words <= value. Metric: adherence. Also sets the conciseness target when the prompt has no target_words.",
-      "min_words": "value: integer. Hit when words >= value. Metric: adherence.",
-      "language": "value: ISO 639-1 code (sv, en, de, fr). Hit when the detector's top language for the output equals the value. Detector: ratio of a fixed stopword list per language over the tokens; ties go to the prompt's language. Metric: adherence.",
-      "format": "value: one of json, markdown_table, numbered_list, bullet_list, headings, tracked_changes. json: the whole output, or the first ``` fenced block, parses with json.loads. markdown_table: at least one line matching ^\\|.*\\|$ plus a separator line of dashes and pipes. numbered_list: at least three lines starting with a number and a dot or bracket. bullet_list: at least three lines starting with -, * or •. headings: at least two lines starting with #. tracked_changes: at least one [-...-] deletion span and at least one {+...+} insertion span. Metric: adherence."
+    "version": 2,
+    "implemented_by": "scripts/score-text.py (deterministic, keyless); unit tests in scripts/tests/test_text_rubric.py",
+    "summary": "prompts[].rubric is a list of items {id, kind, value, weight?} plus per-kind options. The scorer checks every item against the run's <prompt-id>.md, writes scores.accuracy, scores.adherence, scores.conciseness (1-10, one decimal) and rubric_results into runs.json, and leaves scores.velocity null for the exporter to rank from ttft_ms and latency_ms.",
+    "normalisation": "must_include and must_not_include compare on lowercased, whitespace-collapsed text with curly quotes and dashes straightened. regex runs on the raw output with flags 'im' unless the item sets flags. Word count = Unicode word runs (7.2, don't and re-run are one word each; table pipes and markdown punctuation do not count).",
+    "groups": {
+      "accuracy": [
+        "must_include",
+        "regex",
+        "cites_only"
+      ],
+      "adherence": [
+        "must_not_include",
+        "max_words",
+        "min_words",
+        "language",
+        "format_json",
+        "format_markdown_table"
+      ]
     },
-    "weight": "Optional number, default 1. Per metric: score = 10 x sum(weight x hit) / sum(weight) over that metric's items, rounded to one decimal. A metric with no items is null (not 0).",
-    "conciseness": "target = prompt.target_words, else the max_words item's value, else 300. density = (accuracy / 10) / max(1, words / target). conciseness = max(1, round(10 x min(1, density), 1)). Null when accuracy is null.",
-    "failures": "A run with status != success gets no scores. An empty or whitespace-only output scores accuracy 0 (or 10 if the rubric has only must_not_include items), adherence per the rules, conciseness 1.",
-    "output_fields": "The runner writes output (file name, <prompt-id>.md), output_chars, ttft_ms, latency_ms, model, run_at, status, error. The scorer adds scores.{accuracy,adherence,conciseness}, rubric_hits: [{id, hit, note?}], words, scored_at."
+    "kinds": {
+      "must_include": "value: string or list of strings; passes when at least one alternative is present (\"match\": \"all\" requires every entry).",
+      "must_not_include": "value: string or list; passes when none is present.",
+      "regex": "value: pattern or list of patterns; passes when re.search matches any. Optional \"flags\" (default \"im\"). Also used for structure: a bullet line, a numbered line, a heading, a [-deleted-] or {+inserted+} span.",
+      "max_words": "value: int; passes when words <= value. The smallest max_words is the conciseness target.",
+      "min_words": "value: int; passes when words >= value.",
+      "language": "value: en | sv | de | fr | es (region tags reduced to the base); passes when the stopword vote picks that language outright, a tie fails.",
+      "format_json": "value: true, or a list of required top-level keys; the whole output, a ```json fence or the first {...}/[...] span must parse.",
+      "format_markdown_table": "value: true, an int (minimum data rows) or a list of header names; needs a header row, a |---| separator and data rows.",
+      "cites_only": "value: list of allowed references (Clause 4, Article 28(3), § 6); every citation the output makes must be one of them; \"min\" requires a citation count."
+    },
+    "weight": "Optional number, default 1. Per group: score = 1 + 9 x sum(weight x pass) / sum(weight), rounded to one decimal (halves up). A group with no items is null. An unknown kind is recorded as failed under adherence, so a typo lowers the score instead of vanishing.",
+    "conciseness": "target = min(max_words values) else 400. ratio = words / target. 10 when ratio <= 1; 10 - 9 x (ratio - 1) / 2 between 1 and 3; 1 at ratio >= 3 or for an empty output.",
+    "output_fields": "The runner writes output (<prompt-id>.md), output_chars, output_words, tokens_in, tokens_out, ttft_ms, latency_ms, tokens_per_s, model, run_at, status, error. The scorer adds scores.{accuracy,adherence,conciseness}, rubric_results: [{id, kind, group, weight, pass, detail}], output_words, target_words, scored_at. The exporter publishes each rubric_results entry as rubric_hits: [{id, hit, note}] and the output file as output_url plus a 600-character output_excerpt.",
+    "note_field": "An item's optional \"note\" is documentation for readers of the catalog; the scorer ignores it."
   }
 }

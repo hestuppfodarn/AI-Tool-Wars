@@ -1,0 +1,44 @@
+[
+  {
+    "id": "apps-001", "rank": 1, "title": "Invoice tracker with a Stripe-style table", "language": "en-US",
+    "tags": ["internal-tool", "table", "crud"],
+    "text": "Build an invoice tracker for a small agency. One page: a table of invoices (number, client, amount, currency, issued date, due date, status) styled like the Stripe dashboard payments table, with a filter by status (draft, sent, paid, overdue), a search box on client name, and an 'Add invoice' modal. Amounts are formatted per currency (USD, EUR, SEK). Overdue is computed from the due date, not stored. Seed it with 12 invoices across three clients.",
+    "instructions": "Front-end only, local state is fine. No external API calls. Must work on a 390 px wide phone without horizontal scroll.",
+    "constraints": ["Status filter with the four values", "Overdue derived from due date", "Per-currency formatting", "Add-invoice modal adds a row", "No horizontal scroll at 390 px"]
+  },
+  {
+    "id": "apps-002", "rank": 2, "title": "Landing page for a dog-walking service, in Swedish", "language": "sv-SE",
+    "tags": ["landing-page", "swedish", "marketing"],
+    "text": "Bygg en landningssida för 'Tassa Hundpromenader' i Uppsala. Sektioner: hero med rubrik och en knapp 'Boka en promenad', tre tjänster (30 minuter 149 kr, 60 minuter 249 kr, veckopaket 990 kr), tre kundomdömen (hitta på namn, inga riktiga personer), ett kontaktformulär med namn, e-post, hundens namn och ett meddelande, samt sidfot med adress och organisationsnummer. All text på svenska.",
+    "instructions": "Every visible string in Swedish, including form labels and the button. Prices in Swedish format (149 kr). Mobile first.",
+    "constraints": ["All copy in Swedish", "Three price points as specified", "Contact form with the four fields", "Footer with address and org number", "Mobile first"]
+  },
+  {
+    "id": "apps-003", "rank": 3, "title": "Habit tracker with weekly heatmap", "language": "en-GB",
+    "tags": ["consumer", "data", "charts"],
+    "text": "Build a habit tracker. The user adds up to eight habits, ticks them off per day, and sees a 12-week heatmap per habit (GitHub contribution style) plus a current-streak counter. Data persists in localStorage. Include an export to CSV button.",
+    "instructions": "No backend, no login. Keyboard accessible: every tick box reachable by tab and toggled with space.",
+    "constraints": ["Max eight habits", "12-week heatmap per habit", "Streak counter", "localStorage persistence", "CSV export"]
+  },
+  {
+    "id": "apps-004", "rank": 4, "title": "Restaurant booking form with capacity rules", "language": "en-GB",
+    "tags": ["form", "validation", "business-logic"],
+    "text": "Build a table-booking page for a 40-seat restaurant open Tuesday to Sunday, 17:00 to 22:00, with sittings every 30 minutes. A booking has name, phone, party size (1-8), date and sitting. The page must refuse Mondays, refuse a sitting when the seats already booked at that time plus the new party exceed 40, and show remaining seats per sitting for the chosen date. Seed it with existing bookings so at least two sittings on the coming Saturday are full.",
+    "instructions": "Client-side logic, seed data in code. Show validation messages inline, not as alerts.",
+    "constraints": ["Closed Mondays", "Capacity 40 per sitting enforced", "Party size 1-8", "Remaining seats shown per sitting", "Inline validation"]
+  },
+  {
+    "id": "apps-005", "rank": 5, "title": "Internal CRM with kanban pipeline", "language": "en-US",
+    "tags": ["internal-tool", "kanban", "crud"],
+    "text": "Build a small sales CRM: a contacts list (name, company, email, value in USD, stage) and a kanban board with five stages (Lead, Contacted, Proposal, Won, Lost) where cards can be dragged between columns. Each column shows the count and the total value. A detail drawer opens on click with editable fields and a notes log with timestamps. Seed with 15 contacts.",
+    "instructions": "Drag and drop must also work with keyboard (move left/right buttons on each card). Local state only.",
+    "constraints": ["Five stages", "Drag and drop between columns", "Column totals update", "Keyboard alternative to drag", "Detail drawer with notes log"]
+  },
+  {
+    "id": "apps-006", "rank": 6, "title": "Multilingual FAQ page with search", "language": "en-GB",
+    "tags": ["content", "i18n", "search"],
+    "text": "Build an FAQ page for an e-bike rental service with 20 questions grouped in four categories, a language switch between English and German that translates every visible string including the questions and answers, and an instant search box that filters questions as you type in the active language. Deep-link each question (URL hash opens it expanded).",
+    "instructions": "Both languages written out in full in the code; no translation API. Search must be accent-insensitive in German.",
+    "constraints": ["20 questions in four groups", "EN/DE switch translates everything", "Instant search in the active language", "Hash deep links", "No external services"]
+  }
+]

@@ -1,0 +1,42 @@
+# Supabase CLI configuration for the claims backend.
+# Hosted settings (auth site URL, redirect allowlist, magic-link provider) are
+# set on the project dashboard or by the setup workflow; the [auth] block below
+# only shapes `supabase start` locally. See docs/claims.md.
+
+project_id = "ai-tool-wars"
+
+[api]
+enabled = true
+port = 54321
+schemas = ["public"]
+extra_search_path = ["public"]
+max_rows = 1000
+
+[db]
+port = 54322
+major_version = 15
+
+[auth]
+enabled = true
+site_url = "https://hestuppfodarn.github.io/AI-Tool-Wars/claim/"
+additional_redirect_urls = ["http://localhost:4321/claim/", "http://localhost:4321/AI-Tool-Wars/claim/"]
+jwt_expiry = 3600
+enable_signup = true
+
+[auth.email]
+enable_signup = true
+double_confirm_changes = true
+enable_confirmations = false
+
+# Both functions are called from the browser with the signed-in user's JWT;
+# the gateway rejects anonymous calls before our code runs. validate-key also
+# accepts the service-role key (CI re-checks); verify-dns does not.
+[functions.validate-key]
+enabled = true
+verify_jwt = true
+entrypoint = "./functions/validate-key/index.ts"
+
+[functions.verify-dns]
+enabled = true
+verify_jwt = true
+entrypoint = "./functions/verify-dns/index.ts"

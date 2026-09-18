@@ -1,13 +1,13 @@
 {
   "version": 1,
-  "generated_at": "2026-09-18T02:43:21.931304+00:00",
+  "generated_at": "2026-09-18T04:16:28.542012+00:00",
   "source": "demo",
   "demo": true,
   "categories": [
     {
       "slug": "voice",
       "name": "AI Voice (Text to Speech)",
-      "description": "Text-to-speech APIs compared on the same 30 prompts: transcript accuracy, naturalness, instruction following, and speed.",
+      "description": "Text-to-speech APIs compared on the same public prompts: transcript accuracy, naturalness, instruction following, and speed.",
       "output_modality": "audio",
       "metrics": [
         {

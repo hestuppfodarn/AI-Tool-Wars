@@ -1,0 +1,125 @@
+---
+// A standing challenge: the vendor has no public API. We asked for one seat on a
+// date, under terms, to run the public bank and publish everything. The page
+// counts the days until they answer. Pending is stated, never spun: nothing here
+// estimates what the tool would score.
+import Base from '../../layouts/Base.astro';
+import StatusChip from '../../components/StatusChip.astro';
+import DaysScript from '../../components/DaysScript.astro';
+import PromptDoc from '../../components/PromptDoc.astro';
+import { loadSnapshot, categoryBySlug, toolsIn, promptsIn, ratingsIn, challengedTools, toolBySlug } from '../../lib/snapshot';
+import { href, absolute, daysSince, fmtScore, fmtDate, SITE_NAME } from '../../lib/site';
+
+export function getStaticPaths() {
+  return loadSnapshot().tools.filter((t) => t.status === 'challenged').map((t) => ({ params: { tool: t.slug } }));
+}
+const snap = loadSnapshot();
+const tool = toolBySlug(snap, Astro.params.tool!);
+if (tool.status !== 'challenged' || !tool.challenge) throw new Error(`${tool.slug} is not challenged`);
+const challenge = tool.challenge;
+const category = categoryBySlug(snap, tool.category);
+const prompts = promptsIn(snap, category.slug);
+const days = daysSince(challenge.asked_on);
+const asked = fmtDate(challenge.asked_on);
+const proxies = toolsIn(snap, category.slug).filter((t) => t.proxy);
+const ratings = ratingsIn(snap, category.slug).filter((r) => proxies.some((p) => p.slug === r.tool));
+const others = challengedTools(snap).filter((t) => t.slug !== tool.slug && t.category === category.slug && t.status === 'challenged');
+const pageUrl = absolute(Astro.site, `/challenge/${tool.slug}/`);
+const shareLine = `${tool.name}: challenged, day ${days}. ${prompts.length} public ${category.name} prompts, one seat asked for on ${asked}, every output to be published. ${pageUrl}`;
+const scoredProxies = ratings.length;
+const checks = prompts.reduce((n, p) => n + (p.rubric?.length ?? 0), 0);
+---
+<Base title={`${tool.name}: challenged, day ${days}`} description={`${tool.name} has no public API. ${SITE_NAME} asked for one seat on ${asked} to run the ${prompts.length}-prompt ${category.name} bank and publish every output. The counter runs until they answer.`} canonicalPath={`/challenge/${tool.slug}/`}>
+  <p class="small muted"><a href={href(`/${category.slug}/`)}>{category.name}</a> · standing challenge</p>
+  <h1>{tool.name}: challenged, <span data-asked={challenge.asked_on}>day <span data-days>{days}</span></span>.</h1>
+  <p class="lede">{tool.name} has no public API. On {asked} we asked {tool.vendor} for one seat, to run the same {prompts.length} public prompts every other tool in {category.name} runs and publish every output. No reply yet. The number below goes up by one a day until there is one.</p>
+
+  <div class="counter" data-asked={challenge.asked_on} aria-live="off">
+    <div class="n" data-days>{days}</div>
+    <div class="l">days since we asked · {asked} · <a href={tool.website} rel="nofollow noopener">{tool.website.replace(/^https?:\/\//, '')}</a></div>
+  </div>
+
+  <h2>The terms</h2>
+  <p class="terms">“{challenge.terms}.”</p>
+  <ul class="list-tight">
+    <li><strong>One seat.</strong> A single login on {tool.name}'s own product, on the vendor's account. We pay nothing and the vendor pays for its own runs, which is the same deal every claimed listing gets.</li>
+    <li><strong>Run the public bank.</strong> The {prompts.length} prompts below, exactly as published, once each, with the product's defaults. The bank is in the repository; there is nothing to prepare for except the prompt.</li>
+    <li><strong>Publish everything.</strong> Every output on this site next to every other tool's, scored by the same {category.metrics.length} deterministic checks ({category.metrics.map((m) => m.label.toLowerCase()).join(', ')}), failures included. Nothing is deleted at a vendor's request; a rerun can be asked for in public.</li>
+    <li><strong>How we asked.</strong> {challenge.contact_hint ?? 'via website form'}. A vendor who prefers a different channel can use the <a href={href('/claim/')}>claim page</a>.</li>
+    <li><strong>What a seat does not buy.</strong> A rank. Claiming a listing changes who pays for the run, not the score.</li>
+  </ul>
+
+  <h2>The {prompts.length} prompts we will run</h2>
+  <p class="muted small">Published before any run. {checks} machine-checkable rubric items across the bank; every check is a substring, a regex, a word count, a language test or a format test, so the same output gets the same score every time.</p>
+  <div class="table-wrap card" style="padding:0">
+    <table>
+      <thead><tr><th>#</th><th>Prompt</th><th>Language</th><th class="num">Checks</th></tr></thead>
+      <tbody>
+        {prompts.map((p) => (
+          <tr>
+            <td class="num">{p.rank}</td>
+            <td><strong><a href={href(`/${category.slug}/#${p.id}`)}>{p.title}</a></strong><PromptDoc prompt={p} modality={category.output_modality} compact /></td>
+            <td><span class="chip">{p.language}</span></td>
+            <td class="num">{p.rubric?.length ?? 0}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+
+  <h2>What the proxies scored</h2>
+  <p class="muted">While {tool.name} decides, {proxies.length} general-purpose models run the same prompts. They are not legal products and the site never presents them as one; they set the floor {tool.name} would have to clear.</p>
+  {scoredProxies > 0 ? (
+    <div class="table-wrap card" style="padding:0">
+      <table>
+        <thead><tr><th>#</th><th>Proxy</th>{category.metrics.map((m) => <th class="num">{m.label}</th>)}<th class="num">Composite</th><th class="num">Prompts</th></tr></thead>
+        <tbody>
+          {ratings.map((r) => { const t = toolBySlug(snap, r.tool); return (
+            <tr>
+              <td class="num">{r.rank}</td>
+              <td><a href={href(`/${category.slug}/tools/${t.slug}/`)}>{t.name}</a><div class="small muted">{t.vendor}</div></td>
+              {category.metrics.map((m) => <td class="num">{fmtScore(r.scores[m.key])}</td>)}
+              <td class="num"><strong>{fmtScore(r.composite)}</strong></td>
+              <td class="num">{r.runs}/{prompts.length}</td>
+            </tr>
+          ); })}
+        </tbody>
+      </table>
+    </div>
+  ) : (
+    <div class="pending-box">
+      <strong>No proxy has a score yet.</strong> {proxies.length} models are queued on the same {prompts.length} prompts: {proxies.map((p) => p.name).join(', ')}. Their numbers appear here when the scorer runs. Nothing on this page is estimated.
+    </div>
+  )}
+  <p class="small muted" style="margin-top:8px">{proxies.map((p, i) => <span>{i > 0 ? ' · ' : ''}<a href={href(`/${category.slug}/tools/${p.slug}/`)}>{p.name}</a> <StatusChip status={p.status} /></span>)}</p>
+
+  <div class="cta">
+    <h3>{tool.vendor}: the door is open.</h3>
+    <p>Claim the listing, supply a seat, and the counter stops the day the first output lands. Runs execute on your account, the listing gets the <em>vendor verified</em> mark and a live badge, and the score stays whatever the {prompts.length} prompts say it is.</p>
+    <p class="row"><a class="btn" href={href('/claim/')}>Claim your listing</a> <a class="btn secondary" href={href(`/${category.slug}/`)}>See the {category.name} front</a></p>
+  </div>
+
+  <h2>Share the count</h2>
+  <div class="share">
+    <textarea readonly id="share-line" aria-label="Share text">{shareLine}</textarea>
+    <div class="row">
+      <button class="btn secondary" type="button" id="share-copy">Copy</button>
+      <a class="btn secondary" href={`https://x.com/intent/post?text=${encodeURIComponent(shareLine)}`} rel="noopener">Post on X</a>
+      {others.length > 0 && <span class="small muted">Also challenged in {category.name}: {others.map((o, i) => <span>{i > 0 ? ', ' : ''}<a href={href(`/challenge/${o.slug}/`)}>{o.name}</a></span>)}.</span>}
+    </div>
+  </div>
+  <p class="muted" style="margin-top:2rem">The prompts are in the repository. The counter is a subtraction. Neither one is waiting on us.</p>
+
+  <DaysScript />
+  <script is:inline>
+    (function () {
+      var b = document.getElementById('share-copy'), t = document.getElementById('share-line');
+      if (!b || !t) return;
+      b.addEventListener('click', function () {
+        var done = function () { b.textContent = 'Copied'; setTimeout(function () { b.textContent = 'Copy'; }, 1500); };
+        if (navigator.clipboard) navigator.clipboard.writeText(t.value).then(done, function () { t.select(); });
+        else { t.select(); try { document.execCommand('copy'); done(); } catch (e) {} }
+      });
+    })();
+  </script>
+</Base>

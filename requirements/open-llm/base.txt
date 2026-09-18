@@ -1,0 +1,17 @@
+# Shared by every open-weight GGUF text model (scripts/run-open-llm.py needs only these).
+#   pip install -r requirements/open-llm/base.txt
+# A per-model file requirements/open-llm/<slug>.txt is only needed when a model needs
+# something extra (none of the five planned Q4_K_M models does).
+#
+# llama-cpp-python ships only an sdist on PyPI: pip builds llama.cpp with CMake
+# (ubuntu-latest has cmake + gcc; ~4-6 min on a 4-core runner the first time, then the
+# built wheel comes back from the pip cache). Prebuilt CPU wheels exist on
+#   --extra-index-url https://abetlen.github.io/llama-cpp-python/whl/cpu
+# for some versions; the workflow passes that index and falls back to the sdist build.
+# Build for a portable CPU baseline so a cached wheel works on any GitHub runner:
+#   CMAKE_ARGS="-DGGML_NATIVE=OFF -DGGML_AVX2=ON -DGGML_FMA=ON -DGGML_F16C=ON"
+# Tested: 0.3.16 built from the sdist on Python 3.11 / x86_64 with those flags.
+llama-cpp-python==0.3.16
+huggingface_hub>=0.25
+# Tests: python3 -m pytest scripts/tests
+pytest>=8

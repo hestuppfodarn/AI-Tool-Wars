@@ -1,14 +1,21 @@
 name: benchmark-open
 
-# Runs the open-weight voice models (catalog entries whose "adapter" starts
-# with "open:") on GitHub-hosted runners. No vendor keys, no secrets: the
-# models are downloaded from Hugging Face, synthesised on CPU, scored locally
-# (faster-whisper transcript -> WER, DNSMOS -> naturalness), compressed to
-# Opus, committed under data/runs/voice/<slug>/ and published.
+# Runs the open-weight models (catalog entries whose "adapter" starts with
+# "open:" for voice or "open-llm:" for text) on GitHub-hosted runners. No
+# vendor keys, no secrets: the models are downloaded from Hugging Face, run on
+# CPU, scored locally, committed under data/runs/<category>/<slug>/ and
+# published.
+#
+#   open:      voice. Synthesised with scripts/run-open-tts.py, scored with
+#              scripts/score-open.py (faster-whisper transcript -> WER, DNSMOS
+#              -> naturalness), audio compressed to Opus.
+#   open-llm:  text. GGUF via llama.cpp with scripts/run-open-llm.py, scored
+#              with scripts/score-text.py (deterministic rubric). No ffmpeg,
+#              no compression step.
 #
 # Job graph:  plan -> run (matrix, one job per model) -> collect -> publish
 #
-# Contract with the scripts (written separately; see docs/roadmap.md):
+# Contract with the scripts (see docs/roadmap.md):
 #   python3 scripts/run-open-tts.py --tool <slug> [--limit N] [--force]
 #       -> data/runs/voice/<slug>/{<prompt-id>.wav, runs.json}
 #       adapters:      scripts/open_tts_adapters/<slug>.py
@@ -16,18 +23,27 @@ name: benchmark-open
 #   python3 scripts/score-open.py --tool <slug>
 #       -> fills "scores" (and transcript/wer) in the same runs.json
 #       requirements:  requirements/scoring.txt
-# Both scripts must be idempotent: prompts already marked "success" (audio may
+#   python3 scripts/run-open-llm.py --category <category> --tool <slug> [--limit N] [--force]
+#       -> data/runs/<category>/<slug>/{<prompt-id>.md, runs.json}
+#       requirements:  requirements/open-llm/base.txt [+ requirements/open-llm/<slug>.txt]
+#   python3 scripts/score-text.py --category <category> --tool <slug>
+#       -> fills "scores" and "rubric_results" in the same runs.json (stdlib only)
+# All scripts must be idempotent: prompts already marked "success" (audio may
 # already be .ogg from a previous run) are skipped unless --force.
 
 on:
   workflow_dispatch:
     inputs:
       tools:
-        description: 'Comma-separated tool slugs (empty = every open model in the catalog)'
+        description: 'Comma-separated tool slugs, or category/slug (empty = every open model in the selected categories)'
+        required: false
+        default: ''
+      categories:
+        description: 'Comma-separated categories under data/catalog (empty = all)'
         required: false
         default: ''
       limit:
-        description: 'Only the first N prompts (smoke test). Empty = full bank.'
+        description: 'Only the first N prompts (smoke test). Empty = each category''s active bank.'
         required: false
         default: ''
       force:
@@ -35,8 +51,10 @@ on:
         type: boolean
         default: false
   # Push-triggered requests: commit .github/benchmark-open-request.json with
-  # {"tools": "", "limit": "3", "force": false} to start a run from a session
-  # that cannot call the dispatch API. Empty "tools" means every open model.
+  # {"tools": "", "categories": "", "limit": "3", "force": false} to start a run
+  # from a session that cannot call the dispatch API. Empty "tools" means every
+  # open model; empty "categories" means every category; empty "limit" means
+  # the full bank.
   push:
     paths: ['.github/benchmark-open-request.json']
   schedule:
@@ -57,7 +75,7 @@ defaults:
 
 jobs:
   # ---------------------------------------------------------------------------
-  # plan: resolve the request and turn the catalog into a job matrix.
+  # plan: resolve the request and turn every catalog into one job matrix.
   # ---------------------------------------------------------------------------
   plan:
     runs-on: ubuntu-latest
@@ -65,7 +83,9 @@ jobs:
       matrix: ${{ steps.matrix.outputs.matrix }}
       count: ${{ steps.matrix.outputs.count }}
       tools: ${{ steps.req.outputs.tools }}
+      categories: ${{ steps.req.outputs.categories }}
       limit: ${{ steps.req.outputs.limit }}
+      limit_default: ${{ steps.req.outputs.limit_default }}
       force: ${{ steps.req.outputs.force }}
     steps:
       - uses: actions/checkout@v4
@@ -76,18 +96,26 @@ jobs:
         id: req
         env:
           IN_TOOLS: ${{ inputs.tools }}
+          IN_CATEGORIES: ${{ inputs.categories }}
           IN_LIMIT: ${{ inputs.limit }}
           IN_FORCE: ${{ inputs.force || 'false' }}
         run: |
+          # limit: an explicit number applies to every category. When empty,
+          # limit_default says what the matrix step substitutes per category:
+          # "active" (that category's active_prompts) for dispatch/schedule,
+          # "" (the full bank) for a push request, as before.
           if [ "${{ github.event_name }}" = "push" ] && [ -f .github/benchmark-open-request.json ]; then
             echo "tools=$(jq -r '.tools // ""' .github/benchmark-open-request.json)" >> "$GITHUB_OUTPUT"
+            echo "categories=$(jq -r '.categories // ""' .github/benchmark-open-request.json)" >> "$GITHUB_OUTPUT"
             echo "limit=$(jq -r '.limit // ""' .github/benchmark-open-request.json)" >> "$GITHUB_OUTPUT"
+            echo "limit_default=" >> "$GITHUB_OUTPUT"
             echo "force=$(jq -r '.force // false' .github/benchmark-open-request.json)" >> "$GITHUB_OUTPUT"
           else
             # workflow_dispatch inputs, or the defaults (all open models, the active bank) on schedule
-            ACTIVE=$(jq -r '.active_prompts // ""' data/catalog/voice/category.json)
             echo "tools=$IN_TOOLS" >> "$GITHUB_OUTPUT"
-            echo "limit=${IN_LIMIT:-$ACTIVE}" >> "$GITHUB_OUTPUT"
+            echo "categories=$IN_CATEGORIES" >> "$GITHUB_OUTPUT"
+            echo "limit=$IN_LIMIT" >> "$GITHUB_OUTPUT"
+            echo "limit_default=active" >> "$GITHUB_OUTPUT"
             echo "force=$IN_FORCE" >> "$GITHUB_OUTPUT"
           fi
 
@@ -95,58 +123,81 @@ jobs:
         id: matrix
         env:
           TOOLS: ${{ steps.req.outputs.tools }}
+          CATEGORIES: ${{ steps.req.outputs.categories }}
+          LIMIT: ${{ steps.req.outputs.limit }}
+          LIMIT_DEFAULT: ${{ steps.req.outputs.limit_default }}
         run: |
-          # Every catalog tool with adapter "open:<slug>", optionally
-          # intersected with the requested slugs, cheapest (cpu_minutes_estimate)
-          # first so smoke results and failures show up early. Tools without an
-          # estimate sort last.
-          matrix=$(jq -c --arg req "$TOOLS" '
-            ($req | split(",") | map(gsub("^\\s+|\\s+$"; "")) | map(select(length > 0))) as $want
-            | map(select((.adapter // "") | startswith("open:")))
-            | map(select(($want | length) == 0 or (.slug as $s | $want | index($s) != null)))
-            | sort_by(.cpu_minutes_estimate // 1e9, .slug)
-            | map({
-                slug: .slug,
-                adapter: (.adapter | sub("^open:"; "")),
-                cpu_minutes: (.cpu_minutes_estimate // 0)
-              })
-            | {include: .}
-          ' data/catalog/voice/tools.json)
+          # Every tool in every data/catalog/*/tools.json whose adapter is
+          # "open:<slug>" (kind tts) or "open-llm:<slug>" (kind llm), optionally
+          # restricted to the requested categories and slugs (a slug may be
+          # written as category/slug), cheapest (cpu_minutes_estimate) first so
+          # smoke results and failures show up early. Tools without an estimate
+          # sort last. Each entry carries its own limit (see "Resolve request").
+          shopt -s nullglob
+          entries=""
+          for cat_dir in data/catalog/*/; do
+            cat="$(basename "$cat_dir")"
+            [ -f "$cat_dir/tools.json" ] || continue
+            active=""
+            [ -f "$cat_dir/category.json" ] && active=$(jq -r '.active_prompts // ""' "$cat_dir/category.json")
+            entries+=$(jq -c --arg cat "$cat" --arg req "$TOOLS" --arg cats "$CATEGORIES" \
+                          --arg limit "$LIMIT" --arg limit_default "$LIMIT_DEFAULT" --arg active "$active" '
+              ($req | split(",") | map(gsub("^\\s+|\\s+$"; "")) | map(select(length > 0))) as $want
+              | ($cats | split(",") | map(gsub("^\\s+|\\s+$"; "")) | map(select(length > 0))) as $want_cats
+              | (if $limit != "" then $limit elif $limit_default == "active" then $active else "" end) as $lim
+              | map(select((.adapter // "") | (startswith("open:") or startswith("open-llm:"))))
+              | map(select(($want_cats | length) == 0 or ($want_cats | index($cat) != null)))
+              | map(select(($want | length) == 0
+                           or (.slug as $s | $want | index($s) != null)
+                           or (.slug as $s | $want | index($cat + "/" + $s) != null)))
+              | map({
+                  category: $cat,
+                  slug: .slug,
+                  kind: (if (.adapter | startswith("open-llm:")) then "llm" else "tts" end),
+                  adapter: (.adapter | sub("^open(-llm)?:"; "")),
+                  cpu_minutes: (.cpu_minutes_estimate // 0),
+                  cpu_sort: (.cpu_minutes_estimate // 1e9),
+                  limit: $lim
+                })
+              | .[]
+            ' "$cat_dir/tools.json")$'\n'
+          done
+          matrix=$(printf '%s' "$entries" | jq -sc 'sort_by(.cpu_sort, .category, .slug) | map(del(.cpu_sort)) | {include: .}')
           count=$(echo "$matrix" | jq '.include | length')
           echo "matrix=$matrix" >> "$GITHUB_OUTPUT"
           echo "count=$count" >> "$GITHUB_OUTPUT"
           {
             echo "## Plan"
             echo ""
-            echo "- request: tools=\`${TOOLS:-<all open>}\` limit=\`${{ steps.req.outputs.limit }}\` force=\`${{ steps.req.outputs.force }}\` (${{ github.event_name }})"
+            echo "- request: tools=\`${TOOLS:-<all open>}\` categories=\`${CATEGORIES:-<all>}\` limit=\`${LIMIT:-${LIMIT_DEFAULT:-full}}\` force=\`${{ steps.req.outputs.force }}\` (${{ github.event_name }})"
             echo "- selected $count open model(s):"
-            echo "$matrix" | jq -r '.include[] | "  - `\(.slug)` (adapter `\(.adapter)`, ~\(.cpu_minutes) cpu-min)"'
+            echo "$matrix" | jq -r '.include[] | "  - `\(.category)/\(.slug)` (\(.kind), adapter `\(.adapter)`, limit `\(.limit)`, ~\(.cpu_minutes) cpu-min)"'
             if [ "$count" = "0" ]; then
               echo ""
-              echo "> Nothing to run: no catalog tool has an \`open:\` adapter matching the request."
+              echo "> Nothing to run: no catalog tool has an \`open:\` or \`open-llm:\` adapter matching the request."
             fi
           } >> "$GITHUB_STEP_SUMMARY"
           if [ "$count" = "0" ]; then
-            unknown=$(jq -r --arg req "$TOOLS" '
-              ($req | split(",") | map(gsub("^\\s+|\\s+$"; "")) | map(select(length > 0))) as $want
-              | [.[].slug] as $have
+            unknown=$(jq -sr --arg req "$TOOLS" '
+              ($req | split(",") | map(gsub("^\\s+|\\s+$"; "")) | map(select(length > 0)) | map(sub("^[^/]+/"; ""))) as $want
+              | [.[][].slug] as $have
               | $want | map(select(. as $s | $have | index($s) == null)) | join(", ")
-            ' data/catalog/voice/tools.json)
-            [ -n "$unknown" ] && echo "::warning::requested slugs not in the catalog: $unknown"
+            ' data/catalog/*/tools.json)
+            [ -n "$unknown" ] && echo "::warning::requested slugs not in any catalog: $unknown"
             echo "::notice::no open models selected; nothing to run"
           fi
 
   # ---------------------------------------------------------------------------
-  # run: one job per model. Synthesise, score, compress, upload as an artifact.
-  # Every step that can fail is continue-on-error so the summary and the
-  # artifact upload still happen; the job itself is continue-on-error so one
-  # heavy model cannot sink the rest.
+  # run: one job per model. Generate, score, (voice: compress), upload as an
+  # artifact. Every step that can fail is continue-on-error so the summary and
+  # the artifact upload still happen; the job itself is continue-on-error so
+  # one heavy model cannot sink the rest. Steps branch on matrix.kind.
   # ---------------------------------------------------------------------------
   run:
     needs: plan
     if: needs.plan.outputs.count != '0'
     runs-on: ubuntu-latest
-    name: run (${{ matrix.slug }})
+    name: run (${{ matrix.category }}/${{ matrix.slug }})
     timeout-minutes: 60
     continue-on-error: true
     strategy:
@@ -154,9 +205,11 @@ jobs:
       max-parallel: 4
       matrix: ${{ fromJson(needs.plan.outputs.matrix) }}
     env:
+      CATEGORY: ${{ matrix.category }}
       SLUG: ${{ matrix.slug }}
       ADAPTER: ${{ matrix.adapter }}
-      LIMIT: ${{ needs.plan.outputs.limit }}
+      KIND: ${{ matrix.kind }}
+      LIMIT: ${{ matrix.limit }}
       FORCE: ${{ needs.plan.outputs.force }}
       PIP_DISABLE_PIP_VERSION_CHECK: '1'
       # Safety net: prefer CPU-only torch wheels (2.x+cpu satisfies "torch==2.x"
@@ -173,7 +226,9 @@ jobs:
         with:
           ref: ${{ github.ref }}
 
+      # ----- voice (adapter open:) ------------------------------------------
       - name: Check script contract
+        if: matrix.kind == 'tts'
         run: |
           missing=0
           for f in scripts/run-open-tts.py requirements/open-tts/base.txt; do
@@ -184,6 +239,7 @@ jobs:
           exit $missing
 
       - name: Resolve per-model requirements file
+        if: matrix.kind == 'tts'
         id: reqs
         run: |
           # The catalog slug and the adapter slug ("open:<slug>") normally match;
@@ -196,6 +252,7 @@ jobs:
           echo "file=$file" >> "$GITHUB_OUTPUT"
 
       - uses: actions/setup-python@v5
+        if: matrix.kind == 'tts'
         with:
           python-version: '3.11'
           cache: pip
@@ -208,12 +265,14 @@ jobs:
             requirements/scoring.txt
 
       - name: Install system packages
+        if: matrix.kind == 'tts'
         run: |
           sudo apt-get update -qq
           sudo apt-get install -y -qq --no-install-recommends ffmpeg espeak-ng libsndfile1
           ffmpeg -version | head -1
 
       - name: Install model requirements
+        if: matrix.kind == 'tts'
         env:
           REQ_FILE: ${{ steps.reqs.outputs.file }}
         run: |
@@ -223,6 +282,7 @@ jobs:
           python -m pip list --format=freeze | grep -iE '^(torch|torchaudio|numpy|transformers|kokoro|piper|TTS|f5-tts|chatterbox)' || true
 
       - name: Cache model weights
+        if: matrix.kind == 'tts'
         uses: actions/cache@v4
         with:
           path: |
@@ -234,6 +294,7 @@ jobs:
             weights-${{ matrix.slug }}-
 
       - name: Synthesise prompts
+        if: matrix.kind == 'tts'
         id: run
         continue-on-error: true
         run: |
@@ -250,11 +311,11 @@ jobs:
       # that or ship its weights inside the repo.
       - name: Locate scoring cache
         id: scoring-cache
-        if: hashFiles('scripts/score-open.py', 'requirements/scoring.txt') != ''
+        if: matrix.kind == 'tts' && hashFiles('scripts/score-open.py', 'requirements/scoring.txt') != ''
         run: echo "dir=$HOME/.cache/ai-tool-wars-scoring" >> "$GITHUB_OUTPUT"
 
       - name: Cache scoring models
-        if: steps.scoring-cache.outputs.dir != ''
+        if: matrix.kind == 'tts' && steps.scoring-cache.outputs.dir != ''
         uses: actions/cache@v4
         with:
           path: ${{ steps.scoring-cache.outputs.dir }}
@@ -264,13 +325,13 @@ jobs:
 
       - name: Install scoring requirements
         id: scoring-install
-        if: steps.scoring-cache.outputs.dir != ''
+        if: matrix.kind == 'tts' && steps.scoring-cache.outputs.dir != ''
         continue-on-error: true
         run: python -m pip install -r requirements/scoring.txt
 
       - name: Score runs
         id: score
-        if: steps.scoring-install.outcome == 'success' && hashFiles(format('data/runs/voice/{0}/runs.json', matrix.slug)) != ''
+        if: matrix.kind == 'tts' && steps.scoring-install.outcome == 'success' && hashFiles(format('data/runs/{0}/{1}/runs.json', matrix.category, matrix.slug)) != ''
         continue-on-error: true
         env:
           XDG_CACHE_HOME: ${{ steps.scoring-cache.outputs.dir }}
@@ -283,15 +344,15 @@ jobs:
 
       - name: Compress audio to Opus
         id: compress
-        if: always() && hashFiles(format('data/runs/voice/{0}/runs.json', matrix.slug)) != ''
+        if: always() && matrix.kind == 'tts' && hashFiles(format('data/runs/{0}/{1}/runs.json', matrix.category, matrix.slug)) != ''
         continue-on-error: true
         run: |
           # Every referenced audio file that is not already .ogg becomes
           # <prompt-id>.ogg (Opus, 48 kbps, mono); runs.json is updated and the
           # source deleted so the repository stays small. Orphan .wav files are
-          # removed too.
+          # removed too. Text categories never reach this step (no audio).
           rc=0
-          python3 - "data/runs/voice/$SLUG" <<'PY' || rc=$?
+          python3 - "data/runs/$CATEGORY/$SLUG" <<'PY' || rc=$?
           import json, pathlib, subprocess, sys
           d = pathlib.Path(sys.argv[1]); f = d / "runs.json"
           runs = json.loads(f.read_text()); keep = set(); failed = 0
@@ -312,27 +373,111 @@ jobs:
           print(f"compressed {sum(1 for r in runs if str(r.get('audio', '')).endswith('.ogg'))} file(s), {failed} failure(s)")
           sys.exit(1 if failed else 0)
           PY
-          du -sh "data/runs/voice/$SLUG"
+          du -sh "data/runs/$CATEGORY/$SLUG"
           exit $rc
 
+      # ----- text (adapter open-llm:) ----------------------------------------
+      - name: Check script contract (text)
+        if: matrix.kind == 'llm'
+        run: |
+          missing=0
+          for f in scripts/run-open-llm.py requirements/open-llm/base.txt; do
+            [ -f "$f" ] || { echo "::error::$f is missing (required by benchmark-open.yml)"; missing=1; }
+          done
+          [ -f scripts/score-text.py ] || echo "::warning::scripts/score-text.py is missing; runs will be recorded but stay unscored"
+          exit $missing
+
+      - name: Resolve model file (text)
+        if: matrix.kind == 'llm'
+        id: llm
+        run: |
+          # requirements/open-llm/<slug>.txt is optional (extra deps for one model).
+          # The GGUF cache key follows the catalog's gguf_repo/gguf_file so that
+          # editing anything else in tools.json does not re-download gigabytes.
+          file=""
+          [ -f "requirements/open-llm/$SLUG.txt" ] && file="requirements/open-llm/$SLUG.txt"
+          echo "file=$file" >> "$GITHUB_OUTPUT"
+          gguf=$(jq -r --arg s "$SLUG" '.[] | select(.slug == $s) | "\(.run.gguf_repo // "")/\(.run.gguf_file // "")"' "data/catalog/$CATEGORY/tools.json")
+          echo "gguf=$gguf"
+          echo "gguf_key=$(printf '%s' "$gguf" | sha256sum | cut -c1-16)" >> "$GITHUB_OUTPUT"
+
+      - uses: actions/setup-python@v5
+        if: matrix.kind == 'llm'
+        with:
+          python-version: '3.11'
+          cache: pip
+          cache-dependency-path: |
+            requirements/open-llm/base.txt
+            requirements/open-llm/${{ matrix.slug }}.txt
+
+      - name: Install text-model requirements
+        if: matrix.kind == 'llm'
+        env:
+          REQ_FILE: ${{ steps.llm.outputs.file }}
+          # llama-cpp-python is an sdist on PyPI: built with CMake for a portable
+          # AVX2 baseline (every GitHub-hosted x86_64 runner has AVX2/FMA/F16C) so
+          # the wheel that pip caches is safe on the next runner. The extra index
+          # serves prebuilt CPU wheels for some versions and is tried first.
+          CMAKE_ARGS: '-DGGML_NATIVE=OFF -DGGML_AVX2=ON -DGGML_FMA=ON -DGGML_F16C=ON'
+          CMAKE_BUILD_PARALLEL_LEVEL: '4'
+          PIP_EXTRA_INDEX_URL: https://abetlen.github.io/llama-cpp-python/whl/cpu
+        run: |
+          python -m pip install --upgrade pip wheel
+          python -m pip install -r requirements/open-llm/base.txt
+          if [ -n "$REQ_FILE" ]; then python -m pip install -r "$REQ_FILE"; fi
+          python -m pip list --format=freeze | grep -iE '^(llama_cpp_python|llama-cpp-python|huggingface[-_]hub)' || true
+          python -c 'import llama_cpp; print("llama-cpp-python", llama_cpp.__version__)'
+
+      - name: Cache GGUF
+        if: matrix.kind == 'llm'
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/huggingface
+          key: gguf-${{ matrix.category }}-${{ matrix.slug }}-${{ steps.llm.outputs.gguf_key }}
+          restore-keys: |
+            gguf-${{ matrix.category }}-${{ matrix.slug }}-
+
+      - name: Generate completions
+        if: matrix.kind == 'llm'
+        id: run-llm
+        continue-on-error: true
+        run: |
+          args=(--category "$CATEGORY" --tool "$SLUG")
+          [ -n "${LIMIT:-}" ] && args+=(--limit "$LIMIT")
+          [ "${FORCE:-false}" = "true" ] && args+=(--force)
+          echo "::group::python3 scripts/run-open-llm.py ${args[*]}"
+          python3 scripts/run-open-llm.py "${args[@]}"
+          echo "::endgroup::"
+
+      - name: Score runs (text)
+        id: score-llm
+        if: matrix.kind == 'llm' && hashFiles(format('data/runs/{0}/{1}/runs.json', matrix.category, matrix.slug)) != '' && hashFiles('scripts/score-text.py') != ''
+        continue-on-error: true
+        run: |
+          echo "::group::python3 scripts/score-text.py --category $CATEGORY --tool $SLUG"
+          python3 scripts/score-text.py --category "$CATEGORY" --tool "$SLUG"
+          echo "::endgroup::"
+          du -sh "data/runs/$CATEGORY/$SLUG"
+
+      # ----- common ----------------------------------------------------------
       - name: Upload runs
-        if: always() && hashFiles(format('data/runs/voice/{0}/runs.json', matrix.slug)) != ''
+        if: always() && hashFiles(format('data/runs/{0}/{1}/runs.json', matrix.category, matrix.slug)) != ''
         uses: actions/upload-artifact@v4
         with:
-          name: runs-${{ matrix.slug }}
-          path: data/runs/voice/${{ matrix.slug }}
+          name: runs-${{ matrix.category }}-${{ matrix.slug }}
+          path: data/runs/${{ matrix.category }}/${{ matrix.slug }}
           if-no-files-found: ignore
           retention-days: 7
 
       - name: Summary
         if: always()
         env:
-          RUN_OUTCOME: ${{ steps.run.outcome }}
-          SCORE_OUTCOME: ${{ steps.score.outcome }}
-          COMPRESS_OUTCOME: ${{ steps.compress.outcome }}
+          RUN_OUTCOME: ${{ matrix.kind == 'llm' && steps.run-llm.outcome || steps.run.outcome }}
+          SCORE_OUTCOME: ${{ matrix.kind == 'llm' && steps.score-llm.outcome || steps.score.outcome }}
+          COMPRESS_OUTCOME: ${{ matrix.kind == 'llm' && 'n/a' || steps.compress.outcome }}
           CPU_MIN: ${{ matrix.cpu_minutes }}
         run: |
-          f="data/runs/voice/$SLUG/runs.json"
+          f="data/runs/$CATEGORY/$SLUG/runs.json"
           if [ -f "$f" ]; then
             total=$(jq 'length' "$f")
             ok=$(jq '[.[] | select(.status == "success")] | length' "$f")
@@ -343,11 +488,11 @@ jobs:
           failed=$((total - ok))
           mark() { case "$1" in success) echo "ok";; failure) echo "**failed**";; skipped) echo "skipped";; *) echo "$1";; esac; }
           {
-            echo "### $SLUG"
+            echo "### $CATEGORY/$SLUG"
             echo ""
-            echo "| model | runner | scorer | compress | ok | failed | scored | total | est. cpu-min |"
-            echo "|---|---|---|---|---:|---:|---:|---:|---:|"
-            echo "| \`$SLUG\` | $(mark "$RUN_OUTCOME") | $(mark "$SCORE_OUTCOME") | $(mark "$COMPRESS_OUTCOME") | $ok | $failed | $scored | $total | $CPU_MIN |"
+            echo "| model | kind | runner | scorer | compress | ok | failed | scored | total | est. cpu-min |"
+            echo "|---|---|---|---|---|---:|---:|---:|---:|---:|"
+            echo "| \`$SLUG\` | $KIND | $(mark "$RUN_OUTCOME") | $(mark "$SCORE_OUTCOME") | $(mark "$COMPRESS_OUTCOME") | $ok | $failed | $scored | $total | $CPU_MIN |"
             if [ -f "$f" ] && [ "$failed" -gt 0 ]; then
               echo ""
               echo "<details><summary>$failed failed prompt(s)</summary>"
@@ -358,12 +503,13 @@ jobs:
             fi
             echo ""
           } >> "$GITHUB_STEP_SUMMARY"
-          if [ "$RUN_OUTCOME" = "failure" ]; then echo "::warning::$SLUG: runner failed ($ok ok, $failed failed)"; fi
-          if [ "$SCORE_OUTCOME" = "failure" ]; then echo "::warning::$SLUG: scorer failed ($scored of $ok scored)"; fi
-          if [ "$COMPRESS_OUTCOME" = "failure" ]; then echo "::warning::$SLUG: audio compression had failures"; fi
+          if [ "$RUN_OUTCOME" = "failure" ]; then echo "::warning::$CATEGORY/$SLUG: runner failed ($ok ok, $failed failed)"; fi
+          if [ "$SCORE_OUTCOME" = "failure" ]; then echo "::warning::$CATEGORY/$SLUG: scorer failed ($scored of $ok scored)"; fi
+          if [ "$COMPRESS_OUTCOME" = "failure" ]; then echo "::warning::$CATEGORY/$SLUG: audio compression had failures"; fi
 
   # ---------------------------------------------------------------------------
-  # collect: merge every model's artifact back into data/runs/voice and commit.
+  # collect: merge every model's artifact back into data/runs/<category>/<slug>
+  # and commit.
   # ---------------------------------------------------------------------------
   collect:
     needs: [plan, run]
@@ -383,22 +529,32 @@ jobs:
         with:
           pattern: runs-*
           path: .artifacts
-          merge-multiple: false   # each artifact lands in .artifacts/runs-<slug>/, renamed below
+          merge-multiple: false   # each artifact lands in .artifacts/runs-<category>-<slug>/, split below
 
-      - name: Merge artifacts into data/runs/voice
+      - name: Merge artifacts into data/runs
         run: |
+          # Artifact names are runs-<category>-<slug>; both parts may contain
+          # hyphens, so the category is recognised against data/catalog/*
+          # (longest matching category wins) and the rest is the slug.
           shopt -s nullglob
-          mkdir -p data/runs/voice
+          mkdir -p data/runs
           n=0
           for d in .artifacts/runs-*/; do
             d="${d%/}"
-            slug="${d#.artifacts/runs-}"
+            rest="${d#.artifacts/runs-}"
+            category=""
+            for cat_dir in data/catalog/*/; do
+              cat="$(basename "$cat_dir")"
+              if [ "${rest#"$cat"-}" != "$rest" ] && [ "${#cat}" -gt "${#category}" ]; then category="$cat"; fi
+            done
+            [ -n "$category" ] || { echo "::warning::$d does not start with a known category; skipped"; continue; }
+            slug="${rest#"$category"-}"
             [ -f "$d/runs.json" ] || { echo "::warning::$d has no runs.json; skipped"; continue; }
-            rm -rf "data/runs/voice/$slug"
-            mkdir -p "data/runs/voice/$slug"
-            cp -R "$d/." "data/runs/voice/$slug/"
+            rm -rf "data/runs/$category/$slug"
+            mkdir -p "data/runs/$category/$slug"
+            cp -R "$d/." "data/runs/$category/$slug/"
             n=$((n + 1))
-            echo "merged $slug: $(ls "data/runs/voice/$slug" | wc -l) file(s)"
+            echo "merged $category/$slug: $(ls "data/runs/$category/$slug" | wc -l) file(s)"
           done
           rm -rf .artifacts
           echo "merged $n artifact(s)"
@@ -411,7 +567,7 @@ jobs:
         run: |
           git config user.name "arena-bot"
           git config user.email "arena-bot@users.noreply.github.com"
-          mkdir -p data/runs/voice
+          mkdir -p data/runs
           git add -A data/runs
           if git diff --cached --quiet; then
             echo "changed=false" >> "$GITHUB_OUTPUT"
