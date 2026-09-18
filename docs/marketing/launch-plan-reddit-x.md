@@ -21,6 +21,8 @@ fallback whenever a rule is unclear.
 | X developer app, Free tier | **human** applies | Approval can take days; apply first. |
 | Reddit account `toolwars-bot` with disclosure in bio | **human** creates | Will not be old enough to post in most subreddits until week 5; see account strategy. |
 | Owner's own Reddit account, aged, some karma | **human** | Posts the week 1 and 2 Reddit threads via the queue. |
+| Instagram Business account `@toolwars.ai`, Meta app + App Review for publishing and insights | **human** creates and submits, agent fills | Meta Business Suite scheduler is the fallback while review is pending. |
+| LinkedIn Page "Tool Wars", Community Management API access request | **human** (Page admin must be a real member) | Native Page scheduler is the fallback; token re-auth every 60 days. |
 | Vendor outreach emails for the six pending tools | agent | `docs/outreach/vendor-claim-email.md`, adapted: the tool is pending, not live. |
 | Search Console verified for `toolwars.ai` | **human** | Needed for the day-60 clicks number. |
 
@@ -223,6 +225,11 @@ added.
 | 4 | 19–25 Oct | Tue: r/Svenska Swedish prompt (R5, owner, in Swedish). Thu: r/LLMDevs automation post. | Mon: report with language cup line. | Language cup pages; embeds (badge already exists). | Any vendor reply: agent triages, human on legal. |
 | 5 | 26 Oct–1 Nov | Bot account is 30+ days old: takes over r/TextToSpeech and r/SpeechSynthesis posts. Wed: r/MachineLearning `[P]` (owner) if the jury is multi-model by then; else skip. Comment in r/startups monthly thread. | Mon: report. Thu: ear-test card post inviting shares. | Disagreement meter if votes > 2,000. | Second vendor callout month. |
 | 6 | 2–8 Nov | Thu: r/SideProject retrospective with numbers and the stop date (owner). r/ArtificialInteligence agents-and-stop-rule post if not done in week 3. | Mon: report. Fri: six-week numbers thread, same figures as the retrospective. | Nominate-a-prompt if capacity. | KPI review; early-signal check (below). |
+
+Instagram (Mon map square, Wed guess reel, Fri blooper reel, Sat carousel, daily Story) and
+LinkedIn (Tue document post, Thu buyer-prompt verdict, monthly vendor callout) run every week
+from week 1 on the cadence in `docs/marketing/launch-plan-instagram-linkedin.md`; the
+Instagram launch week uses Meta Business Suite until App Review clears.
 
 Weeks 7 to 8 (to day 60): the loop continues unchanged; nothing new is built unless a vendor
 key arrives, in which case that vendor's first run is the week's story.

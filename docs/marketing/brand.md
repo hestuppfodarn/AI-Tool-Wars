@@ -180,7 +180,9 @@ account bio.
 
 1. **Automated accounts say so.** Every social account bio: "Automated account run by Tool
    Wars. Posts are generated from published benchmark data. A person reads replies weekly."
-   The X automated-account label is switched on. Reddit posts carry a one-line footer.
+   The X automated-account label is switched on. Reddit posts carry a one-line footer. The
+   LinkedIn presence is a company Page, never a synthetic person. Instagram captions state
+   that every voice in the clip is AI-generated and posts carry Meta's AI label.
 2. **No fake humans.** No invented testimonials, no "users say", no sock-puppet accounts, no
    agent posing as an independent fan, no fabricated quotes from vendors.
 3. **No invented scores.** A number appears in copy only if it exists in the snapshot for that
