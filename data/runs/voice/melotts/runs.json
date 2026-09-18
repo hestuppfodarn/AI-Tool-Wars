@@ -1,0 +1,20 @@
+[
+  {
+    "prompt_id": "voice-001",
+    "run_at": "2026-09-18T03:29:32.600Z",
+    "status": "error",
+    "error": "RuntimeError: ",
+    "model": "myshell-ai/MeloTTS",
+    "endpoint": "local",
+    "device": "cpu"
+  },
+  {
+    "prompt_id": "voice-002",
+    "run_at": "2026-09-18T03:29:38.643Z",
+    "status": "error",
+    "error": "RuntimeError: ",
+    "model": "myshell-ai/MeloTTS",
+    "endpoint": "local",
+    "device": "cpu"
+  }
+]
