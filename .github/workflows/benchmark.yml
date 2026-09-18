@@ -26,6 +26,10 @@ on:
         description: 'Re-run prompts that already succeeded'
         type: boolean
         default: false
+      inworld_key_override:
+        description: 'One-off INWORLD_API_KEY for this run only (prefer the repository secret; rotate the key afterwards)'
+        required: false
+        default: ''
   schedule:
     - cron: '17 5 * * 1'   # weekly, Monday 05:17 UTC
 
@@ -53,9 +57,13 @@ jobs:
           cache: npm
       - run: npm ci --no-audit --no-fund
 
+      - name: Mask one-off inputs
+        if: github.event.inputs.inworld_key_override != ''
+        run: echo "::add-mask::${{ github.event.inputs.inworld_key_override }}"
+
       - name: Run tools
         env:
-          INWORLD_API_KEY: ${{ secrets.INWORLD_API_KEY }}
+          INWORLD_API_KEY: ${{ github.event.inputs.inworld_key_override || secrets.INWORLD_API_KEY }}
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           ELEVENLABS_API_KEY: ${{ secrets.ELEVENLABS_API_KEY }}
           CARTESIA_API_KEY: ${{ secrets.CARTESIA_API_KEY }}
