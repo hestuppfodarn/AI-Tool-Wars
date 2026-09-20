@@ -1,0 +1,3 @@
+- **§ 6 Uppsägningstid**: Den strider mot lagen om anställningsskydd (LAS) § 14, där det krävs en minsta uppsägningstid på två månader för heltidsarbetare. Föreslagna korrigering: "Arbetstagaren har en uppsägningstid om två (2) månader. Arbetsgivaren har en uppsägningstid om en (1) månad oavsett anställningstid."
+
+- **§ 8 Konkurrens**: Den strider mot lagen om anställningsskydd (LAS) § 20, där det förbjuds att begränsa arbetstagarens rätt till att ta anställning hos konkurrerande företag. Föreslagna korrigering: "Arbetstagaren får under anställningen och tolv (12) månader därefter inte ta anställning hos konkurrerande bryggeri i Jämtlands län utan att få ersättning."

@@ -1,0 +1,1160 @@
+[
+  {
+    "prompt_id": "legal-001",
+    "run_at": "2026-09-20T11:50:39.170Z",
+    "status": "success",
+    "output": "legal-001.md",
+    "output_chars": 768,
+    "output_words": 101,
+    "tokens_in": 657,
+    "tokens_out": 163,
+    "ttft_ms": 52525,
+    "latency_ms": 74511,
+    "tokens_per_s": 7.37,
+    "finish_reason": "stop",
+    "model": "bartowski/Qwen2.5-7B-Instruct-GGUF",
+    "model_version": "Qwen2.5-7B-Instruct-Q4_K_M.gguf (Qwen2.5 7B Instruct; llama-cpp-python 0.3.16)",
+    "device": "cpu",
+    "endpoint": "local",
+    "threads": 4,
+    "error": null,
+    "scores": {
+      "accuracy": 9.2,
+      "adherence": 10,
+      "conciseness": 9.2,
+      "velocity": null
+    },
+    "rubric_hits": [
+      {
+        "id": "clause-73",
+        "type": "must_include",
+        "metric": "accuracy",
+        "weight": 2.0,
+        "hit": true,
+        "note": "found: 7.3"
+      },
+      {
+        "id": "non-compete",
+        "type": "regex",
+        "metric": "accuracy",
+        "weight": 3.0,
+        "hit": true,
+        "note": "matched 'competing'"
+      },
+      {
+        "id": "tail-24",
+        "type": "regex",
+        "metric": "accuracy",
+        "weight": 2.0,
+        "hit": true,
+        "note": "matched '24 months'"
+      },
+      {
+        "id": "non-solicit",
+        "type": "regex",
+        "metric": "accuracy",
+        "weight": 1.0,
+        "hit": true,
+        "note": "matched 'solicit'"
+      },
+      {
+        "id": "survival-5",
+        "type": "regex",
+        "metric": "accuracy",
+        "weight": 1.0,
+        "hit": true,
+        "note": "matched 'five (5) years'"
+      },
+      {
+        "id": "territory",
+        "type": "regex",
+        "metric": "accuracy",
+        "weight": 1.0,
+        "hit": false,
+        "note": "no match"
+      },
+      {
+        "id": "no-fake-clause",
+        "type": "must_not_include",
+        "metric": "accuracy",
+        "weight": 1.0,
+        "hit": true,
+        "note": "absent"
+      },
+      {
+        "id": "len",
+        "type": "max_words",
+        "metric": "adherence",
+        "weight": 1.0,
+        "hit": true,
+        "note": "107 words, limit 350"
+      },
+      {
+        "id": "bullets",
+        "type": "regex",
+        "metric": "accuracy",
+        "weight": 1.0,
+        "hit": true,
+        "note": "matched '- *'"
+      },
+      {
+        "id": "lang",
+        "type": "language",
+        "metric": "adherence",
+        "weight": 1.0,
+        "hit": true,
+        "note": "detected en, wanted en"
+      }
+    ],
+    "words": 107,
+    "target_words": 350,
+    "scored_at": "2026-09-20T12:02:00.769Z"
+  },
+  {
+    "prompt_id": "legal-002",
+    "run_at": "2026-09-20T11:52:10.165Z",
+    "status": "success",
+    "output": "legal-002.md",
+    "output_chars": 675,
+    "output_words": 89,
+    "tokens_in": 512,
+    "tokens_out": 255,
+    "ttft_ms": 40771,
+    "latency_ms": 75244,
+    "tokens_per_s": 7.37,
+    "finish_reason": "stop",
+    "model": "bartowski/Qwen2.5-7B-Instruct-GGUF",
+    "model_version": "Qwen2.5-7B-Instruct-Q4_K_M.gguf (Qwen2.5 7B Instruct; llama-cpp-python 0.3.16)",
+    "device": "cpu",
+    "endpoint": "local",
+    "threads": 4,
+    "error": null,
+    "scores": {
+      "accuracy": 5.5,
+      "adherence": 10,
+      "conciseness": 5.5,
+      "velocity": null
+    },
+    "rubric_hits": [
+      {
+        "id": "probation-max",
+        "type": "regex",
+        "metric": "accuracy",
+        "weight": 3.0,
+        "hit": false,
+        "note": "no match"
+      },
+      {
+        "id": "las-6",
+        "type": "regex",
+        "metric": "accuracy",
+        "weight": 1.0,
+        "hit": true,
+        "note": "matched '§ 6'"
+      },
+      {
+        "id": "notice-11",
+        "type": "regex",
+        "metric": "accuracy",
+        "weight": 2.0,
+        "hit": false,
+        "note": "no match"
+      },
+      {
+        "id": "notice-scale",
+        "type": "regex",
+        "metric": "accuracy",
+        "weight": 1.0,
+        "hit": true,
+        "note": "matched 'två månader'"
+      },
+      {
+        "id": "noncompete-comp",
+        "type": "regex",
+        "metric": "accuracy",
+        "weight": 2.0,
+        "hit": true,
+        "note": "matched 'ersättning'"
+      },
+      {
+        "id": "no-fake-section",
+        "type": "must_not_include",
+        "metric": "accuracy",
+        "weight": 1.0,
+        "hit": true,
+        "note": "absent"
+      },
+      {
+        "id": "lang",
+        "type": "language",
+        "metric": "adherence",
+        "weight": 2.0,
+        "hit": true,
+        "note": "detected sv, wanted sv"
+      },
+      {
+        "id": "len",
+        "type": "max_words",
+        "metric": "adherence",
+        "weight": 1.0,
+        "hit": true,
+        "note": "95 words, limit 250"
+      },
+      {
+        "id": "bullets",
+        "type": "regex",
+        "metric": "accuracy",
+        "weight": 1.0,
+        "hit": true,
+        "note": "matched '- *'"
+      }
+    ],
+    "words": 95,
+    "target_words": 250,
+    "scored_at": "2026-09-20T12:02:00.771Z"
+  },
+  {
+    "prompt_id": "legal-003",
+    "run_at": "2026-09-20T11:53:25.423Z",
+    "status": "success",
+    "output": "legal-003.md",
+    "output_chars": 2091,
+    "output_words": 323,
+    "tokens_in": 446,
+    "tokens_out": 474,
+    "ttft_ms": 35631,
+    "latency_ms": 99634,
+    "tokens_per_s": 7.39,
+    "finish_reason": "stop",
+    "model": "bartowski/Qwen2.5-7B-Instruct-GGUF",
+    "model_version": "Qwen2.5-7B-Instruct-Q4_K_M.gguf (Qwen2.5 7B Instruct; llama-cpp-python 0.3.16)",
+    "device": "cpu",
+    "endpoint": "local",
+    "threads": 4,
+    "error": null,
+    "scores": {
+      "accuracy": 4.3,
+      "adherence": 10,
+      "conciseness": 4.3,
+      "velocity": null
+    },
+    "rubric_hits": [
+      {
+        "id": "art-28",
+        "type": "regex",
+        "metric": "accuracy",
+        "weight": 1.0,
+        "hit": true,
+        "note": "matched 'article 28'"
+      },
+      {
+        "id": "subprocessor",
+        "type": "regex",
+        "metric": "accuracy",
+        "weight": 2.0,
+        "hit": true,
+        "note": "matched 'sub-processor'"
+      },
+      {
+        "id": "subprocessor-authorisation",
+        "type": "regex",
+        "metric": "accuracy",
+        "weight": 2.0,
+        "hit": false,
+        "note": "no match"
+      },
+      {
+        "id": "deletion-return",
+        "type": "regex",
+        "metric": "accuracy",
+        "weight": 2.0,
+        "hit": false,
+        "note": "no match"
+      },
+      {
+        "id": "audit",
+        "type": "regex",
+        "metric": "accuracy",
+        "weight": 2.0,
+        "hit": false,
+        "note": "no match"
+      },
+      {
+        "id": "assistance",
+        "type": "regex",
+        "metric": "accuracy",
+        "weight": 2.0,
+        "hit": false,
+        "note": "no match"
+      },
+      {
+        "id": "dpia",
+        "type": "regex",
+        "metric": "accuracy",
+        "weight": 1.0,
+        "hit": true,
+        "note": "matched 'article 32'"
+      },
+      {
+        "id": "not-missing-confidentiality",
+        "type": "must_not_include",
+        "metric": "accuracy",
+        "weight": 1.0,
+        "hit": true,
+        "note": "absent"
+      },
+      {
+        "id": "len",
+        "type": "max_words",
+        "metric": "adherence",
+        "weight": 1.0,
+        "hit": true,
+        "note": "300 words, limit 400"
+      },
+      {
+        "id": "numbered",
+        "type": "regex",
+        "metric": "accuracy",
+        "weight": 1.0,
+        "hit": true,
+        "note": "matched '1. *'"
+      },
+      {
+        "id": "lang",
+        "type": "language",
+        "metric": "adherence",
+        "weight": 1.0,
+        "hit": true,
+        "note": "detected en, wanted en"
+      }
+    ],
+    "words": 300,
+    "target_words": 400,
+    "scored_at": "2026-09-20T12:02:00.773Z"
+  },
+  {
+    "prompt_id": "legal-004",
+    "run_at": "2026-09-20T11:55:05.073Z",
+    "status": "success",
+    "output": "legal-004.md",
+    "output_chars": 1102,
+    "output_words": 186,
+    "tokens_in": 469,
+    "tokens_out": 308,
+    "ttft_ms": 37751,
+    "latency_ms": 78959,
+    "tokens_per_s": 7.45,
+    "finish_reason": "stop",
+    "model": "bartowski/Qwen2.5-7B-Instruct-GGUF",
+    "model_version": "Qwen2.5-7B-Instruct-Q4_K_M.gguf (Qwen2.5 7B Instruct; llama-cpp-python 0.3.16)",
+    "device": "cpu",
+    "endpoint": "local",
+    "threads": 4,
+    "error": null,
+    "scores": {
+      "accuracy": 8.5,
+      "adherence": 10,
+      "conciseness": 8.5,
+      "velocity": null
+    },
+    "rubric_hits": [
+      {
+        "id": "landlord-name",
+        "type": "must_include",
+        "metric": "accuracy",
+        "weight": 2.0,
+        "hit": true,
+        "note": "found: halden estates limited"
+      },
+      {
+        "id": "landlord-address",
+        "type": "must_include",
+        "metric": "accuracy",
+        "weight": 2.0,
+        "hit": true,
+        "note": "found: 22 bishopsgate"
+      },
+      {
+        "id": "clause-121",
+        "type": "must_include",
+        "metric": "accuracy",
+        "weight": 1.0,
+        "hit": true,
+        "note": "found: 12.1"
+      },
+      {
+        "id": "break-date",
+        "type": "regex",
+        "metric": "accuracy",
+        "weight": 2.0,
+        "hit": true,
+        "note": "matched '30 june 2027'"
+      },
+      {
+        "id": "premises",
+        "type": "regex",
+        "metric": "accuracy",
+        "weight": 1.0,
+        "hit": true,
+        "note": "matched 'unit 4'"
+      },
+      {
+        "id": "tenant",
+        "type": "must_include",
+        "metric": "accuracy",
+        "weight": 1.0,
+        "hit": true,
+        "note": "found: bryggan coffee roasters"
+      },
+      {
+        "id": "vacant-possession",
+        "type": "must_include",
+        "metric": "accuracy",
+        "weight": 1.0,
+        "hit": true,
+        "note": "found: vacant possession"
+      },
+      {
+        "id": "recorded-delivery",
+        "type": "regex",
+        "metric": "accuracy",
+        "weight": 1.0,
+        "hit": true,
+        "note": "matched 'recorded delivery'"
+      },
+      {
+        "id": "last-post-date",
+        "type": "regex",
+        "metric": "accuracy",
+        "weight": 2.0,
+        "hit": false,
+        "note": "no match"
+      },
+      {
+        "id": "len",
+        "type": "max_words",
+        "metric": "adherence",
+        "weight": 1.0,
+        "hit": true,
+        "note": "186 words, limit 300"
+      },
+      {
+        "id": "lang",
+        "type": "language",
+        "metric": "adherence",
+        "weight": 1.0,
+        "hit": true,
+        "note": "detected en, wanted en"
+      }
+    ],
+    "words": 186,
+    "target_words": 300,
+    "scored_at": "2026-09-20T12:02:00.775Z"
+  },
+  {
+    "prompt_id": "legal-005",
+    "run_at": "2026-09-20T11:56:24.046Z",
+    "status": "success",
+    "output": "legal-005.md",
+    "output_chars": 621,
+    "output_words": 82,
+    "tokens_in": 396,
+    "tokens_out": 168,
+    "ttft_ms": 31654,
+    "latency_ms": 53911,
+    "tokens_per_s": 7.5,
+    "finish_reason": "stop",
+    "model": "bartowski/Qwen2.5-7B-Instruct-GGUF",
+    "model_version": "Qwen2.5-7B-Instruct-Q4_K_M.gguf (Qwen2.5 7B Instruct; llama-cpp-python 0.3.16)",
+    "device": "cpu",
+    "endpoint": "local",
+    "threads": 4,
+    "error": null,
+    "scores": {
+      "accuracy": 10,
+      "adherence": 10,
+      "conciseness": 10,
+      "velocity": null
+    },
+    "rubric_hits": [
+      {
+        "id": "post-money",
+        "type": "regex",
+        "metric": "accuracy",
+        "weight": 3.0,
+        "hit": true,
+        "note": "matched '200,000,000'"
+      },
+      {
+        "id": "stake",
+        "type": "regex",
+        "metric": "accuracy",
+        "weight": 2.0,
+        "hit": true,
+        "note": "matched '20%'"
+      },
+      {
+        "id": "pref-1x",
+        "type": "regex",
+        "metric": "accuracy",
+        "weight": 1.0,
+        "hit": true,
+        "note": "matched '1x'"
+      },
+      {
+        "id": "non-participating",
+        "type": "regex",
+        "metric": "accuracy",
+        "weight": 1.0,
+        "hit": true,
+        "note": "matched 'non-participating'"
+      },
+      {
+        "id": "anti-dilution",
+        "type": "must_include",
+        "metric": "accuracy",
+        "weight": 1.0,
+        "hit": true,
+        "note": "found: weighted average"
+      },
+      {
+        "id": "board",
+        "type": "regex",
+        "metric": "accuracy",
+        "weight": 1.0,
+        "hit": true,
+        "note": "matched '2 founders, 2 alder appointees, 1'"
+      },
+      {
+        "id": "pool",
+        "type": "regex",
+        "metric": "accuracy",
+        "weight": 1.0,
+        "hit": true,
+        "note": "matched 'option pool'"
+      },
+      {
+        "id": "wrong-post-money",
+        "type": "must_not_include",
+        "metric": "accuracy",
+        "weight": 1.0,
+        "hit": true,
+        "note": "absent"
+      },
+      {
+        "id": "len",
+        "type": "max_words",
+        "metric": "adherence",
+        "weight": 2.0,
+        "hit": true,
+        "note": "80 words, limit 150"
+      },
+      {
+        "id": "lang",
+        "type": "language",
+        "metric": "adherence",
+        "weight": 1.0,
+        "hit": true,
+        "note": "detected en, wanted en"
+      }
+    ],
+    "words": 80,
+    "target_words": 150,
+    "scored_at": "2026-09-20T12:02:00.777Z"
+  },
+  {
+    "prompt_id": "legal-006",
+    "run_at": "2026-09-20T11:57:17.971Z",
+    "status": "success",
+    "output": "legal-006.md",
+    "output_chars": 930,
+    "output_words": 149,
+    "tokens_in": 282,
+    "tokens_out": 204,
+    "ttft_ms": 22435,
+    "latency_ms": 49353,
+    "tokens_per_s": 7.54,
+    "finish_reason": "stop",
+    "model": "bartowski/Qwen2.5-7B-Instruct-GGUF",
+    "model_version": "Qwen2.5-7B-Instruct-Q4_K_M.gguf (Qwen2.5 7B Instruct; llama-cpp-python 0.3.16)",
+    "device": "cpu",
+    "endpoint": "local",
+    "threads": 4,
+    "error": null,
+    "scores": {
+      "accuracy": 9.3,
+      "adherence": 10,
+      "conciseness": 9.3,
+      "velocity": null
+    },
+    "rubric_hits": [
+      {
+        "id": "tracked-1",
+        "type": "regex",
+        "metric": "accuracy",
+        "weight": 3.0,
+        "hit": true,
+        "note": "matched '[- -]'"
+      },
+      {
+        "id": "tracked-2",
+        "type": "regex",
+        "metric": "accuracy",
+        "weight": 3.0,
+        "hit": true,
+        "note": "matched '{+ +}'"
+      },
+      {
+        "id": "cap-12",
+        "type": "regex",
+        "metric": "accuracy",
+        "weight": 2.0,
+        "hit": true,
+        "note": "matched 'twelve (12) months'"
+      },
+      {
+        "id": "excl-profit",
+        "type": "regex",
+        "metric": "accuracy",
+        "weight": 2.0,
+        "hit": true,
+        "note": "matched 'not be liable for loss of profit, loss of business or indire'"
+      },
+      {
+        "id": "carve-injury",
+        "type": "regex",
+        "metric": "accuracy",
+        "weight": 1.0,
+        "hit": true,
+        "note": "matched 'death'"
+      },
+      {
+        "id": "carve-fraud",
+        "type": "must_include",
+        "metric": "accuracy",
+        "weight": 1.0,
+        "hit": true,
+        "note": "found: fraud"
+      },
+      {
+        "id": "carve-confidentiality",
+        "type": "regex",
+        "metric": "accuracy",
+        "weight": 1.0,
+        "hit": true,
+        "note": "matched 'confidential'"
+      },
+      {
+        "id": "deleted-three",
+        "type": "regex",
+        "metric": "accuracy",
+        "weight": 1.0,
+        "hit": false,
+        "note": "no match"
+      },
+      {
+        "id": "len",
+        "type": "max_words",
+        "metric": "adherence",
+        "weight": 1.0,
+        "hit": true,
+        "note": "155 words, limit 400"
+      },
+      {
+        "id": "lang",
+        "type": "language",
+        "metric": "adherence",
+        "weight": 1.0,
+        "hit": true,
+        "note": "detected en, wanted en"
+      }
+    ],
+    "words": 155,
+    "target_words": 400,
+    "scored_at": "2026-09-20T12:02:00.779Z"
+  },
+  {
+    "prompt_id": "legal-007",
+    "run_at": "2026-09-20T11:58:07.338Z",
+    "status": "success",
+    "output": "legal-007.md",
+    "output_chars": 392,
+    "output_words": 30,
+    "tokens_in": 429,
+    "tokens_out": 150,
+    "ttft_ms": 34290,
+    "latency_ms": 54282,
+    "tokens_per_s": 7.45,
+    "finish_reason": "stop",
+    "model": "bartowski/Qwen2.5-7B-Instruct-GGUF",
+    "model_version": "Qwen2.5-7B-Instruct-Q4_K_M.gguf (Qwen2.5 7B Instruct; llama-cpp-python 0.3.16)",
+    "device": "cpu",
+    "endpoint": "local",
+    "threads": 4,
+    "error": null,
+    "scores": {
+      "accuracy": 10,
+      "adherence": 10,
+      "conciseness": 10,
+      "velocity": null
+    },
+    "rubric_hits": [
+      {
+        "id": "json",
+        "type": "format_json",
+        "metric": "adherence",
+        "weight": 3.0,
+        "hit": true,
+        "note": "keys present"
+      },
+      {
+        "id": "effective-date",
+        "type": "regex",
+        "metric": "accuracy",
+        "weight": 2.0,
+        "hit": true,
+        "note": "matched '\"effective_date\": \"2026-10-01\"'"
+      },
+      {
+        "id": "initial-term",
+        "type": "regex",
+        "metric": "accuracy",
+        "weight": 1.0,
+        "hit": true,
+        "note": "matched '\"initial_term_months\": 24'"
+      },
+      {
+        "id": "renewal-term",
+        "type": "regex",
+        "metric": "accuracy",
+        "weight": 1.0,
+        "hit": true,
+        "note": "matched '\"renewal_term_months\": 12'"
+      },
+      {
+        "id": "notice",
+        "type": "regex",
+        "metric": "accuracy",
+        "weight": 1.0,
+        "hit": true,
+        "note": "matched '\"renewal_notice_days\": 90'"
+      },
+      {
+        "id": "fee",
+        "type": "regex",
+        "metric": "accuracy",
+        "weight": 1.0,
+        "hit": true,
+        "note": "matched '\"monthly_fee\": 4800.0'"
+      },
+      {
+        "id": "currency",
+        "type": "regex",
+        "metric": "accuracy",
+        "weight": 1.0,
+        "hit": true,
+        "note": "matched '\"currency\": \"eur\"'"
+      },
+      {
+        "id": "payment-terms",
+        "type": "regex",
+        "metric": "accuracy",
+        "weight": 1.0,
+        "hit": true,
+        "note": "matched '\"payment_terms_days\": 30'"
+      },
+      {
+        "id": "interest",
+        "type": "regex",
+        "metric": "accuracy",
+        "weight": 1.0,
+        "hit": true,
+        "note": "matched '\"late_interest_percent\": 8.0'"
+      },
+      {
+        "id": "uptime",
+        "type": "regex",
+        "metric": "accuracy",
+        "weight": 1.0,
+        "hit": true,
+        "note": "matched '\"uptime_percent\": 99.5'"
+      },
+      {
+        "id": "deletion",
+        "type": "regex",
+        "metric": "accuracy",
+        "weight": 1.0,
+        "hit": true,
+        "note": "matched '\"data_deletion_days\": 60'"
+      },
+      {
+        "id": "law",
+        "type": "regex",
+        "metric": "accuracy",
+        "weight": 1.0,
+        "hit": true,
+        "note": "matched '\"governing_law\": \"ireland\"'"
+      },
+      {
+        "id": "provider",
+        "type": "regex",
+        "metric": "accuracy",
+        "weight": 1.0,
+        "hit": true,
+        "note": "matched '\"provider\": \"ashgrove software limited\"'"
+      },
+      {
+        "id": "no-fence",
+        "type": "must_not_include",
+        "metric": "accuracy",
+        "weight": 1.0,
+        "hit": true,
+        "note": "absent"
+      },
+      {
+        "id": "len",
+        "type": "max_words",
+        "metric": "adherence",
+        "weight": 1.0,
+        "hit": true,
+        "note": "33 words, limit 120"
+      }
+    ],
+    "words": 33,
+    "target_words": 120,
+    "scored_at": "2026-09-20T12:02:00.781Z"
+  },
+  {
+    "prompt_id": "legal-008",
+    "run_at": "2026-09-20T11:59:01.635Z",
+    "status": "success",
+    "output": "legal-008.md",
+    "output_chars": 2277,
+    "output_words": 355,
+    "tokens_in": 287,
+    "tokens_out": 527,
+    "ttft_ms": 22855,
+    "latency_ms": 93381,
+    "tokens_per_s": 7.46,
+    "finish_reason": "stop",
+    "model": "bartowski/Qwen2.5-7B-Instruct-GGUF",
+    "model_version": "Qwen2.5-7B-Instruct-Q4_K_M.gguf (Qwen2.5 7B Instruct; llama-cpp-python 0.3.16)",
+    "device": "cpu",
+    "endpoint": "local",
+    "threads": 4,
+    "error": null,
+    "scores": {
+      "accuracy": 6.7,
+      "adherence": 5,
+      "conciseness": 5.5,
+      "velocity": null
+    },
+    "rubric_hits": [
+      {
+        "id": "hadley",
+        "type": "must_include",
+        "metric": "accuracy",
+        "weight": 1.0,
+        "hit": true,
+        "note": "found: hadley"
+      },
+      {
+        "id": "donoghue",
+        "type": "must_include",
+        "metric": "accuracy",
+        "weight": 1.0,
+        "hit": true,
+        "note": "found: donoghue"
+      },
+      {
+        "id": "victoria-laundry",
+        "type": "must_include",
+        "metric": "accuracy",
+        "weight": 1.0,
+        "hit": true,
+        "note": "found: victoria laundry"
+      },
+      {
+        "id": "pemberton-named",
+        "type": "must_include",
+        "metric": "accuracy",
+        "weight": 1.0,
+        "hit": true,
+        "note": "found: pemberton"
+      },
+      {
+        "id": "pemberton-flagged",
+        "type": "regex",
+        "metric": "accuracy",
+        "weight": 4.0,
+        "hit": false,
+        "note": "no match"
+      },
+      {
+        "id": "pemberton-not-endorsed",
+        "type": "must_not_include",
+        "metric": "accuracy",
+        "weight": 2.0,
+        "hit": true,
+        "note": "absent"
+      },
+      {
+        "id": "remoteness",
+        "type": "regex",
+        "metric": "accuracy",
+        "weight": 1.0,
+        "hit": true,
+        "note": "matched 'reasonable contemplation'"
+      },
+      {
+        "id": "duty-of-care",
+        "type": "regex",
+        "metric": "accuracy",
+        "weight": 1.0,
+        "hit": true,
+        "note": "matched 'neighbour'"
+      },
+      {
+        "id": "len",
+        "type": "max_words",
+        "metric": "adherence",
+        "weight": 1.0,
+        "hit": false,
+        "note": "367 words, limit 300"
+      },
+      {
+        "id": "lang",
+        "type": "language",
+        "metric": "adherence",
+        "weight": 1.0,
+        "hit": true,
+        "note": "detected en, wanted en"
+      }
+    ],
+    "words": 367,
+    "target_words": 300,
+    "scored_at": "2026-09-20T12:02:00.784Z"
+  },
+  {
+    "prompt_id": "legal-009",
+    "run_at": "2026-09-20T12:00:35.031Z",
+    "status": "success",
+    "output": "legal-009.md",
+    "output_chars": 560,
+    "output_words": 107,
+    "tokens_in": 323,
+    "tokens_out": 133,
+    "ttft_ms": 25609,
+    "latency_ms": 43171,
+    "tokens_per_s": 7.52,
+    "finish_reason": "stop",
+    "model": "bartowski/Qwen2.5-7B-Instruct-GGUF",
+    "model_version": "Qwen2.5-7B-Instruct-Q4_K_M.gguf (Qwen2.5 7B Instruct; llama-cpp-python 0.3.16)",
+    "device": "cpu",
+    "endpoint": "local",
+    "threads": 4,
+    "error": null,
+    "scores": {
+      "accuracy": 10,
+      "adherence": 10,
+      "conciseness": 10,
+      "velocity": null
+    },
+    "rubric_hits": [
+      {
+        "id": "no-legalese",
+        "type": "must_not_include",
+        "metric": "accuracy",
+        "weight": 3.0,
+        "hit": true,
+        "note": "absent"
+      },
+      {
+        "id": "fourteen",
+        "type": "regex",
+        "metric": "accuracy",
+        "weight": 2.0,
+        "hit": true,
+        "note": "matched '14 days'"
+      },
+      {
+        "id": "thirty",
+        "type": "regex",
+        "metric": "accuracy",
+        "weight": 2.0,
+        "hit": true,
+        "note": "matched '30 days'"
+      },
+      {
+        "id": "refund",
+        "type": "regex",
+        "metric": "accuracy",
+        "weight": 1.0,
+        "hit": true,
+        "note": "matched 'refund'"
+      },
+      {
+        "id": "return-cost",
+        "type": "regex",
+        "metric": "accuracy",
+        "weight": 1.0,
+        "hit": true,
+        "note": "matched 'return the goods to us at your expense'"
+      },
+      {
+        "id": "used-goods",
+        "type": "regex",
+        "metric": "accuracy",
+        "weight": 1.0,
+        "hit": true,
+        "note": "matched 'used'"
+      },
+      {
+        "id": "you-we",
+        "type": "regex",
+        "metric": "accuracy",
+        "weight": 1.0,
+        "hit": true,
+        "note": "matched 'you can cancel the order within 14 days of receiving the goo'"
+      },
+      {
+        "id": "len",
+        "type": "max_words",
+        "metric": "adherence",
+        "weight": 2.0,
+        "hit": true,
+        "note": "107 words, limit 120"
+      },
+      {
+        "id": "lang",
+        "type": "language",
+        "metric": "adherence",
+        "weight": 1.0,
+        "hit": true,
+        "note": "detected en, wanted en"
+      }
+    ],
+    "words": 107,
+    "target_words": 120,
+    "scored_at": "2026-09-20T12:02:00.786Z"
+  },
+  {
+    "prompt_id": "legal-010",
+    "run_at": "2026-09-20T12:01:18.220Z",
+    "status": "success",
+    "output": "legal-010.md",
+    "output_chars": 969,
+    "output_words": 138,
+    "tokens_in": 258,
+    "tokens_out": 167,
+    "ttft_ms": 20356,
+    "latency_ms": 42264,
+    "tokens_per_s": 7.58,
+    "finish_reason": "stop",
+    "model": "bartowski/Qwen2.5-7B-Instruct-GGUF",
+    "model_version": "Qwen2.5-7B-Instruct-Q4_K_M.gguf (Qwen2.5 7B Instruct; llama-cpp-python 0.3.16)",
+    "device": "cpu",
+    "endpoint": "local",
+    "threads": 4,
+    "error": null,
+    "scores": {
+      "accuracy": 7.7,
+      "adherence": 10,
+      "conciseness": 7.7,
+      "velocity": null
+    },
+    "rubric_hits": [
+      {
+        "id": "headings",
+        "type": "regex",
+        "metric": "accuracy",
+        "weight": 2.0,
+        "hit": true,
+        "note": "matched '### i'"
+      },
+      {
+        "id": "heading-names",
+        "type": "regex",
+        "metric": "accuracy",
+        "weight": 2.0,
+        "hit": true,
+        "note": "matched \"issue mikael ek's employment status and the ownership of fir\""
+      },
+      {
+        "id": "employment-status",
+        "type": "regex",
+        "metric": "accuracy",
+        "weight": 2.0,
+        "hit": true,
+        "note": "matched 'employment'"
+      },
+      {
+        "id": "ip-gap",
+        "type": "regex",
+        "metric": "accuracy",
+        "weight": 2.0,
+        "hit": true,
+        "note": "matched 'ownership'"
+      },
+      {
+        "id": "assignment",
+        "type": "regex",
+        "metric": "accuracy",
+        "weight": 2.0,
+        "hit": false,
+        "note": "no match"
+      },
+      {
+        "id": "diligence",
+        "type": "regex",
+        "metric": "accuracy",
+        "weight": 1.0,
+        "hit": true,
+        "note": "matched 'due diligence'"
+      },
+      {
+        "id": "recommend-action",
+        "type": "regex",
+        "metric": "accuracy",
+        "weight": 1.0,
+        "hit": false,
+        "note": "no match"
+      },
+      {
+        "id": "company",
+        "type": "must_include",
+        "metric": "accuracy",
+        "weight": 1.0,
+        "hit": true,
+        "note": "found: volt"
+      },
+      {
+        "id": "len",
+        "type": "max_words",
+        "metric": "adherence",
+        "weight": 2.0,
+        "hit": true,
+        "note": "141 words, limit 200"
+      },
+      {
+        "id": "min",
+        "type": "min_words",
+        "metric": "adherence",
+        "weight": 1.0,
+        "hit": true,
+        "note": "141 words, limit 80"
+      },
+      {
+        "id": "lang",
+        "type": "language",
+        "metric": "adherence",
+        "weight": 1.0,
+        "hit": true,
+        "note": "detected en, wanted en"
+      }
+    ],
+    "words": 141,
+    "target_words": 200,
+    "scored_at": "2026-09-20T12:02:00.789Z"
+  }
+]

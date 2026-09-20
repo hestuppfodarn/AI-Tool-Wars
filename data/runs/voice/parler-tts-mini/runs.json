@@ -1,0 +1,322 @@
+[
+  {
+    "prompt_id": "voice-001",
+    "run_at": "2026-09-20T12:05:52.372Z",
+    "status": "success",
+    "audio": "voice-001.ogg",
+    "bytes": 836652,
+    "ttft_ms": 91307,
+    "latency_ms": 91307,
+    "voice": "Jon",
+    "model": "parler-tts/parler-tts-mini-v1",
+    "endpoint": "local",
+    "streaming": false,
+    "device": "cpu",
+    "model_version": "parler-tts/parler-tts-mini-v1 via parler-tts 0.2.3 / transformers 4.46.1",
+    "sample_rate": 44100,
+    "scores": {
+      "accuracy": 10,
+      "naturalness": 7,
+      "adherence": null
+    },
+    "transcript": "Meet Ledger, the invoicing tool that gets you paid in days, not weeks. Send an invoice, track it, and let automatic reminders do the chasing.",
+    "asr_model": "faster-whisper-small-int8",
+    "wer": 0,
+    "mos": {
+      "backend": "dnsmos",
+      "ovrl": 3.35,
+      "sig": 3.626,
+      "bak": 4.075,
+      "p808": 3.833
+    },
+    "scored_at": "2026-09-20T12:24:09.735Z"
+  },
+  {
+    "prompt_id": "voice-002",
+    "run_at": "2026-09-20T12:07:51.457Z",
+    "status": "success",
+    "audio": "voice-002.ogg",
+    "bytes": 825388,
+    "ttft_ms": 89890,
+    "latency_ms": 89890,
+    "voice": "Jon",
+    "model": "parler-tts/parler-tts-mini-v1",
+    "endpoint": "local",
+    "streaming": false,
+    "device": "cpu",
+    "model_version": "parler-tts/parler-tts-mini-v1 via parler-tts 0.2.3 / transformers 4.46.1",
+    "sample_rate": 44100,
+    "scores": {
+      "accuracy": 6.4,
+      "naturalness": 7,
+      "adherence": null
+    },
+    "transcript": "Thank you for calling Northgate Dental for appointments. Press Solota for billing. Press Quove for all other inquiries. Press will die or stay on the line.",
+    "asr_model": "faster-whisper-small-int8",
+    "wer": 0.2,
+    "mos": {
+      "backend": "dnsmos",
+      "ovrl": 3.314,
+      "sig": 3.54,
+      "bak": 4.137,
+      "p808": 4.07
+    },
+    "scored_at": "2026-09-20T12:24:13.258Z"
+  },
+  {
+    "prompt_id": "voice-003",
+    "run_at": "2026-09-20T12:09:21.354Z",
+    "status": "success",
+    "audio": "voice-003.ogg",
+    "bytes": 631852,
+    "ttft_ms": 68273,
+    "latency_ms": 68273,
+    "voice": "Jon",
+    "model": "parler-tts/parler-tts-mini-v1",
+    "endpoint": "local",
+    "streaming": false,
+    "device": "cpu",
+    "model_version": "parler-tts/parler-tts-mini-v1 via parler-tts 0.2.3 / transformers 4.46.1",
+    "sample_rate": 44100,
+    "scores": {
+      "accuracy": 3.1,
+      "naturalness": 7,
+      "adherence": null
+    },
+    "transcript": "you can reach our support team at Fortuna Tech Bay. That's Rukami and Optimum, Monday to Friday, 9 to 5.",
+    "asr_model": "faster-whisper-small-int8",
+    "wer": 0.381,
+    "mos": {
+      "backend": "dnsmos",
+      "ovrl": 3.337,
+      "sig": 3.582,
+      "bak": 4.125,
+      "p808": 3.727
+    },
+    "scored_at": "2026-09-20T12:24:17.709Z"
+  },
+  {
+    "prompt_id": "voice-004",
+    "run_at": "2026-09-20T12:10:29.633Z",
+    "status": "success",
+    "audio": "voice-004.ogg",
+    "bytes": 667692,
+    "ttft_ms": 71539,
+    "latency_ms": 71539,
+    "voice": "Jon",
+    "model": "parler-tts/parler-tts-mini-v1",
+    "endpoint": "local",
+    "streaming": false,
+    "device": "cpu",
+    "model_version": "parler-tts/parler-tts-mini-v1 via parler-tts 0.2.3 / transformers 4.46.1",
+    "sample_rate": 44100,
+    "scores": {
+      "accuracy": 1,
+      "naturalness": 7,
+      "adherence": null
+    },
+    "transcript": "Our office is at Billenton-Clarkinwell Road, London, as shall be the entrances on Turnwell Street.",
+    "asr_model": "faster-whisper-small-int8",
+    "wer": 0.5,
+    "mos": {
+      "backend": "dnsmos",
+      "ovrl": 3.322,
+      "sig": 3.58,
+      "bak": 4.112,
+      "p808": 4.004
+    },
+    "scored_at": "2026-09-20T12:24:22.327Z"
+  },
+  {
+    "prompt_id": "voice-005",
+    "run_at": "2026-09-20T12:11:41.179Z",
+    "status": "success",
+    "audio": "voice-005.ogg",
+    "bytes": 1339436,
+    "ttft_ms": 150393,
+    "latency_ms": 150393,
+    "voice": "Jon",
+    "model": "parler-tts/parler-tts-mini-v1",
+    "endpoint": "local",
+    "streaming": false,
+    "device": "cpu",
+    "model_version": "parler-tts/parler-tts-mini-v1 via parler-tts 0.2.3 / transformers 4.46.1",
+    "sample_rate": 44100,
+    "scores": {
+      "accuracy": 9.2,
+      "naturalness": 7,
+      "adherence": null
+    },
+    "transcript": "The house had been empty for eleven years and it showed paint curled from the port rails in long grey ribbons and the swing, still hanging by one chain, moved when there was no wind. Mara set her bag down the step and did not go in.",
+    "asr_model": "faster-whisper-small-int8",
+    "wer": 0.042,
+    "mos": {
+      "backend": "dnsmos",
+      "ovrl": 3.342,
+      "sig": 3.65,
+      "bak": 3.999,
+      "p808": 3.811
+    },
+    "scored_at": "2026-09-20T12:24:28.020Z"
+  },
+  {
+    "prompt_id": "voice-006",
+    "run_at": "2026-09-20T12:14:11.583Z",
+    "status": "success",
+    "audio": "voice-006.ogg",
+    "bytes": 726060,
+    "ttft_ms": 78409,
+    "latency_ms": 78409,
+    "voice": "Jon",
+    "model": "parler-tts/parler-tts-mini-v1",
+    "endpoint": "local",
+    "streaming": false,
+    "device": "cpu",
+    "model_version": "parler-tts/parler-tts-mini-v1 via parler-tts 0.2.3 / transformers 4.46.1",
+    "sample_rate": 44100,
+    "scores": {
+      "accuracy": 7.9,
+      "naturalness": 6.4,
+      "adherence": null
+    },
+    "transcript": "This weekend only. Everything at Summit Outdoor is 30% off. Tents, boots, bikes, all of it. Doors open Saturday at 8. Don't miss it.",
+    "asr_model": "faster-whisper-small-int8",
+    "wer": 0.115,
+    "mos": {
+      "backend": "dnsmos",
+      "ovrl": 3.119,
+      "sig": 3.373,
+      "bak": 4.078,
+      "p808": 3.827
+    },
+    "scored_at": "2026-09-20T12:24:33.392Z"
+  },
+  {
+    "prompt_id": "voice-007",
+    "run_at": "2026-09-20T12:15:30.001Z",
+    "status": "success",
+    "audio": "voice-007.ogg",
+    "bytes": 1023020,
+    "ttft_ms": 111012,
+    "latency_ms": 111012,
+    "voice": "Jon",
+    "model": "parler-tts/parler-tts-mini-v1",
+    "endpoint": "local",
+    "streaming": false,
+    "device": "cpu",
+    "model_version": "parler-tts/parler-tts-mini-v1 via parler-tts 0.2.3 / transformers 4.46.1",
+    "sample_rate": 44100,
+    "scores": {
+      "accuracy": 4.4,
+      "naturalness": 7.5,
+      "adherence": null
+    },
+    "transcript": "Offer valid for new customers only. Terms and conditions apply. Rates subject to change without notice. Seed try to check by Summit Finance. Limited.",
+    "asr_model": "faster-whisper-small-int8",
+    "wer": 0.31,
+    "mos": {
+      "backend": "dnsmos",
+      "ovrl": 3.511,
+      "sig": 3.712,
+      "bak": 4.25,
+      "p808": 3.812
+    },
+    "scored_at": "2026-09-20T12:24:37.217Z"
+  },
+  {
+    "prompt_id": "voice-008",
+    "run_at": "2026-09-20T12:17:21.022Z",
+    "status": "success",
+    "audio": "voice-008.ogg",
+    "bytes": 1630252,
+    "ttft_ms": 184540,
+    "latency_ms": 184540,
+    "voice": "Jon",
+    "model": "parler-tts/parler-tts-mini-v1",
+    "endpoint": "local",
+    "streaming": false,
+    "device": "cpu",
+    "model_version": "parler-tts/parler-tts-mini-v1 via parler-tts 0.2.3 / transformers 4.46.1",
+    "sample_rate": 44100,
+    "scores": {
+      "accuracy": 1,
+      "naturalness": 7,
+      "adherence": null
+    },
+    "transcript": "ha den b\u00e4st burlning i h\u00e5r skickats och b\u00e4ckna p\u00e5 s\u00e5dant steg du kan facka den vill du att det blir mer hos oss",
+    "asr_model": "faster-whisper-small-int8",
+    "wer": 0.846,
+    "mos": {
+      "backend": "dnsmos",
+      "ovrl": 3.338,
+      "sig": 3.578,
+      "bak": 4.14,
+      "p808": 3.704
+    },
+    "scored_at": "2026-09-20T12:24:54.006Z"
+  },
+  {
+    "prompt_id": "voice-009",
+    "run_at": "2026-09-20T12:20:25.575Z",
+    "status": "success",
+    "audio": "voice-009.ogg",
+    "bytes": 1012780,
+    "ttft_ms": 109831,
+    "latency_ms": 109831,
+    "voice": "Jon",
+    "model": "parler-tts/parler-tts-mini-v1",
+    "endpoint": "local",
+    "streaming": false,
+    "device": "cpu",
+    "model_version": "parler-tts/parler-tts-mini-v1 via parler-tts 0.2.3 / transformers 4.46.1",
+    "sample_rate": 44100,
+    "scores": {
+      "accuracy": 1,
+      "naturalness": 7.1,
+      "adherence": null
+    },
+    "transcript": "\u00a1Susita! \u00a1Un otro mero! \u00a1Muchas gracias! \u00a1Susita! \u00a1Susita! \u00a1Susita! \u00a1Susita! \u00a1Susita!",
+    "asr_model": "faster-whisper-small-int8",
+    "wer": 1,
+    "mos": {
+      "backend": "dnsmos",
+      "ovrl": 3.382,
+      "sig": 3.641,
+      "bak": 4.154,
+      "p808": 3.806
+    },
+    "scored_at": "2026-09-20T12:25:19.792Z"
+  },
+  {
+    "prompt_id": "voice-010",
+    "run_at": "2026-09-20T12:22:15.415Z",
+    "status": "success",
+    "audio": "voice-010.ogg",
+    "bytes": 773164,
+    "ttft_ms": 82912,
+    "latency_ms": 82912,
+    "voice": "Jon",
+    "model": "parler-tts/parler-tts-mini-v1",
+    "endpoint": "local",
+    "streaming": false,
+    "device": "cpu",
+    "model_version": "parler-tts/parler-tts-mini-v1 via parler-tts 0.2.3 / transformers 4.46.1",
+    "sample_rate": 44100,
+    "scores": {
+      "accuracy": 1,
+      "naturalness": 6.5,
+      "adherence": null
+    },
+    "transcript": "Mit der Bilbfailung sieht man das Hauptsternhof. Wir haben 20 Mokpenhof, 1 T\u00fcrke, 1 Dreifelung, 1 Wunder.",
+    "asr_model": "faster-whisper-small-int8",
+    "wer": 1,
+    "mos": {
+      "backend": "dnsmos",
+      "ovrl": 3.155,
+      "sig": 3.447,
+      "bak": 4.053,
+      "p808": 3.796
+    },
+    "scored_at": "2026-09-20T12:25:31.793Z"
+  }
+]

@@ -1,0 +1,299 @@
+[
+  {
+    "prompt_id": "voice-001",
+    "run_at": "2026-09-20T11:58:28.202Z",
+    "status": "success",
+    "audio": "voice-001.ogg",
+    "bytes": 644652,
+    "ttft_ms": 205713,
+    "latency_ms": 205713,
+    "voice": "basic_ref_en",
+    "model": "F5TTS_v1_Base",
+    "endpoint": "local",
+    "streaming": false,
+    "device": "cpu",
+    "model_version": "SWivid/F5-TTS F5TTS_v1_Base via f5-tts 1.1.22",
+    "sample_rate": 24000,
+    "scores": {
+      "accuracy": 10,
+      "naturalness": 7.5,
+      "adherence": null
+    },
+    "transcript": "Meet Ledger, the invoicing tool that gets you paid in days, not weeks. Send an invoice, track it, and let automatic reminders do the chasing.",
+    "asr_model": "faster-whisper-small-int8",
+    "wer": 0,
+    "mos": {
+      "backend": "dnsmos",
+      "ovrl": 3.539,
+      "sig": 3.723,
+      "bak": 4.231,
+      "p808": 4.134
+    },
+    "scored_at": "2026-09-20T12:34:51.163Z"
+  },
+  {
+    "prompt_id": "voice-002",
+    "run_at": "2026-09-20T12:02:13.556Z",
+    "status": "success",
+    "audio": "voice-002.ogg",
+    "bytes": 653868,
+    "ttft_ms": 209710,
+    "latency_ms": 209710,
+    "voice": "basic_ref_en",
+    "model": "F5TTS_v1_Base",
+    "endpoint": "local",
+    "streaming": false,
+    "device": "cpu",
+    "model_version": "SWivid/F5-TTS F5TTS_v1_Base via f5-tts 1.1.22",
+    "sample_rate": 24000,
+    "scores": {
+      "accuracy": 9.3,
+      "naturalness": 7.5,
+      "adherence": null
+    },
+    "transcript": "Thank you for calling Northgate Dental. For appointments, press 1. For billing, press 2. For all other inquiries, press 3 or stay on the line.",
+    "asr_model": "faster-whisper-small-int8",
+    "wer": 0.04,
+    "mos": {
+      "backend": "dnsmos",
+      "ovrl": 3.511,
+      "sig": 3.721,
+      "bak": 4.2,
+      "p808": 4.108
+    },
+    "scored_at": "2026-09-20T12:34:55.457Z"
+  },
+  {
+    "prompt_id": "voice-003",
+    "run_at": "2026-09-20T12:05:43.271Z",
+    "status": "success",
+    "audio": "voice-003.ogg",
+    "bytes": 466476,
+    "ttft_ms": 156938,
+    "latency_ms": 156938,
+    "voice": "basic_ref_en",
+    "model": "F5TTS_v1_Base",
+    "endpoint": "local",
+    "streaming": false,
+    "device": "cpu",
+    "model_version": "SWivid/F5-TTS F5TTS_v1_Base via f5-tts 1.1.22",
+    "sample_rate": 24000,
+    "scores": {
+      "accuracy": 8.3,
+      "naturalness": 7.3,
+      "adherence": null
+    },
+    "transcript": "You can reach our support team at 0800-555-0199, that's 0800-555-0199, Monday to Friday, 9 to 5.",
+    "asr_model": "faster-whisper-small-int8",
+    "wer": 0.095,
+    "mos": {
+      "backend": "dnsmos",
+      "ovrl": 3.464,
+      "sig": 3.672,
+      "bak": 4.167,
+      "p808": 4.125
+    },
+    "scored_at": "2026-09-20T12:34:58.704Z"
+  },
+  {
+    "prompt_id": "voice-004",
+    "run_at": "2026-09-20T12:08:20.213Z",
+    "status": "success",
+    "audio": "voice-004.ogg",
+    "bytes": 420396,
+    "ttft_ms": 146870,
+    "latency_ms": 146870,
+    "voice": "basic_ref_en",
+    "model": "F5TTS_v1_Base",
+    "endpoint": "local",
+    "streaming": false,
+    "device": "cpu",
+    "model_version": "SWivid/F5-TTS F5TTS_v1_Base via f5-tts 1.1.22",
+    "sample_rate": 24000,
+    "scores": {
+      "accuracy": 6.6,
+      "naturalness": 7.3,
+      "adherence": null
+    },
+    "transcript": "Our office is at 43A Clerkenwell Road, London, ECM 5PA. The entrance is on Turnmills Street.",
+    "asr_model": "faster-whisper-small-int8",
+    "wer": 0.188,
+    "mos": {
+      "backend": "dnsmos",
+      "ovrl": 3.456,
+      "sig": 3.686,
+      "bak": 4.155,
+      "p808": 4.397
+    },
+    "scored_at": "2026-09-20T12:35:03.556Z"
+  },
+  {
+    "prompt_id": "voice-005",
+    "run_at": "2026-09-20T12:10:47.087Z",
+    "status": "error",
+    "error": "synthesis exceeded 300s (TTS_TIMEOUT_S); worker killed",
+    "model": "F5TTS_v1_Base",
+    "endpoint": "local",
+    "device": "cpu"
+  },
+  {
+    "prompt_id": "voice-006",
+    "run_at": "2026-09-20T12:15:47.246Z",
+    "status": "success",
+    "audio": "voice-006.ogg",
+    "bytes": 672300,
+    "ttft_ms": 214425,
+    "latency_ms": 214425,
+    "voice": "basic_ref_en",
+    "model": "F5TTS_v1_Base",
+    "endpoint": "local",
+    "streaming": false,
+    "device": "cpu",
+    "model_version": "SWivid/F5-TTS F5TTS_v1_Base via f5-tts 1.1.22",
+    "sample_rate": 24000,
+    "scores": {
+      "accuracy": 7.9,
+      "naturalness": 7,
+      "adherence": null
+    },
+    "transcript": "This weekend only, everything at Summit Outdoor is 30% off. Tents, boots, bikes, all of it. Doors open Saturday at 8. Don't miss it.",
+    "asr_model": "faster-whisper-small-int8",
+    "wer": 0.115,
+    "mos": {
+      "backend": "dnsmos",
+      "ovrl": 3.35,
+      "sig": 3.573,
+      "bak": 4.147,
+      "p808": 4.161
+    },
+    "scored_at": "2026-09-20T12:35:08.179Z"
+  },
+  {
+    "prompt_id": "voice-007",
+    "run_at": "2026-09-20T12:19:31.325Z",
+    "status": "success",
+    "audio": "voice-007.ogg",
+    "bytes": 879628,
+    "ttft_ms": 282782,
+    "latency_ms": 282782,
+    "voice": "basic_ref_en",
+    "model": "F5TTS_v1_Base",
+    "endpoint": "local",
+    "streaming": false,
+    "device": "cpu",
+    "model_version": "SWivid/F5-TTS F5TTS_v1_Base via f5-tts 1.1.22",
+    "sample_rate": 24000,
+    "scores": {
+      "accuracy": 9.4,
+      "naturalness": 7.3,
+      "adherence": null
+    },
+    "transcript": "Offer valid for new customers only, terms and conditions apply, rates subject to change without notice, see website for details, lending criteria apply, credit provided by Summit Finance Ltd.",
+    "asr_model": "faster-whisper-small-int8",
+    "wer": 0.034,
+    "mos": {
+      "backend": "dnsmos",
+      "ovrl": 3.46,
+      "sig": 3.651,
+      "bak": 4.185,
+      "p808": 4.317
+    },
+    "scored_at": "2026-09-20T12:35:13.325Z"
+  },
+  {
+    "prompt_id": "voice-008",
+    "run_at": "2026-09-20T12:24:14.112Z",
+    "status": "success",
+    "audio": "voice-008.ogg",
+    "bytes": 690732,
+    "ttft_ms": 219224,
+    "latency_ms": 219224,
+    "voice": "basic_ref_en",
+    "model": "F5TTS_v1_Base",
+    "endpoint": "local",
+    "streaming": false,
+    "device": "cpu",
+    "model_version": "SWivid/F5-TTS F5TTS_v1_Base via f5-tts 1.1.22",
+    "sample_rate": 24000,
+    "scores": {
+      "accuracy": 1,
+      "naturalness": 7.2,
+      "adherence": null
+    },
+    "transcript": "Hedj, din b\u00e4sta l\u00e4nning har skickats och b\u00f6rgnas, annorlunda p-torsdag, du kan fuffa felga pektet, via eldning kan I dit medjel, tack f\u00f6r att du handlar hos oss.",
+    "asr_model": "faster-whisper-small-int8",
+    "wer": 0.5,
+    "mos": {
+      "backend": "dnsmos",
+      "ovrl": 3.403,
+      "sig": 3.626,
+      "bak": 4.143,
+      "p808": 4.404
+    },
+    "scored_at": "2026-09-20T12:35:18.615Z"
+  },
+  {
+    "prompt_id": "voice-009",
+    "run_at": "2026-09-20T12:27:53.342Z",
+    "status": "success",
+    "audio": "voice-009.ogg",
+    "bytes": 580652,
+    "ttft_ms": 187984,
+    "latency_ms": 187984,
+    "voice": "basic_ref_en",
+    "model": "F5TTS_v1_Base",
+    "endpoint": "local",
+    "streaming": false,
+    "device": "cpu",
+    "model_version": "SWivid/F5-TTS F5TTS_v1_Base via f5-tts 1.1.22",
+    "sample_rate": 24000,
+    "scores": {
+      "accuracy": 5.3,
+      "naturalness": 7.4,
+      "adherence": null
+    },
+    "transcript": "Hola, le recordamos su Cidacon la doctora Ruiz el martes 14 de mayo a las 10 y 30. Si necesita, cambiarla, lame al 91-5550123.",
+    "asr_model": "faster-whisper-small-int8",
+    "wer": 0.259,
+    "mos": {
+      "backend": "dnsmos",
+      "ovrl": 3.498,
+      "sig": 3.713,
+      "bak": 4.176,
+      "p808": 4.485
+    },
+    "scored_at": "2026-09-20T12:35:22.748Z"
+  },
+  {
+    "prompt_id": "voice-010",
+    "run_at": "2026-09-20T12:31:01.331Z",
+    "status": "success",
+    "audio": "voice-010.ogg",
+    "bytes": 622124,
+    "ttft_ms": 199961,
+    "latency_ms": 199961,
+    "voice": "basic_ref_en",
+    "model": "F5TTS_v1_Base",
+    "endpoint": "local",
+    "streaming": false,
+    "device": "cpu",
+    "model_version": "SWivid/F5-TTS F5TTS_v1_Base via f5-tts 1.1.22",
+    "sample_rate": 24000,
+    "scores": {
+      "accuracy": 1,
+      "naturalness": 7.2,
+      "adherence": null
+    },
+    "transcript": "Aktungs-Bit-Holten-C, Abstand-Z\u00fcr-Bahn-Steigente, Dur-Endred-Chesti-Zug-Nach-MU, Inchen-Hauptbahnhof-Effira-Hart-In-Dre-Minuten-Von-Glaes-7a-B,",
+    "asr_model": "faster-whisper-small-int8",
+    "wer": 0.857,
+    "mos": {
+      "backend": "dnsmos",
+      "ovrl": 3.427,
+      "sig": 3.652,
+      "bak": 4.169,
+      "p808": 4.151
+    },
+    "scored_at": "2026-09-20T12:35:28.182Z"
+  }
+]

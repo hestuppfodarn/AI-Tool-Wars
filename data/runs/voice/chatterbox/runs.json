@@ -1,0 +1,322 @@
+[
+  {
+    "prompt_id": "voice-001",
+    "run_at": "2026-09-20T12:04:27.352Z",
+    "status": "success",
+    "audio": "voice-001.ogg",
+    "bytes": 372524,
+    "ttft_ms": 58373,
+    "latency_ms": 58373,
+    "voice": "builtin",
+    "model": "ResembleAI/chatterbox",
+    "endpoint": "local",
+    "streaming": false,
+    "device": "cpu",
+    "model_version": "ResembleAI/chatterbox (multilingual) via chatterbox-tts 0.1.7",
+    "sample_rate": 24000,
+    "scores": {
+      "accuracy": 10,
+      "naturalness": 6.8,
+      "adherence": null
+    },
+    "transcript": "Meet Ledger, the invoicing tool that gets you paid in days, not weeks, send an invoice, track it, and let automatic reminders do the chasing.",
+    "asr_model": "faster-whisper-small-int8",
+    "wer": 0,
+    "mos": {
+      "backend": "dnsmos",
+      "ovrl": 3.247,
+      "sig": 3.632,
+      "bak": 3.875,
+      "p808": 3.904
+    },
+    "scored_at": "2026-09-20T12:16:21.269Z"
+  },
+  {
+    "prompt_id": "voice-002",
+    "run_at": "2026-09-20T12:06:05.252Z",
+    "status": "success",
+    "audio": "voice-002.ogg",
+    "bytes": 343724,
+    "ttft_ms": 46168,
+    "latency_ms": 46168,
+    "voice": "builtin",
+    "model": "ResembleAI/chatterbox",
+    "endpoint": "local",
+    "streaming": false,
+    "device": "cpu",
+    "model_version": "ResembleAI/chatterbox (multilingual) via chatterbox-tts 0.1.7",
+    "sample_rate": 24000,
+    "scores": {
+      "accuracy": 9.3,
+      "naturalness": 7.3,
+      "adherence": null
+    },
+    "transcript": "Thank you for calling Northgate Dental. For appointments, press 1. For billing, press 2. For all other inquiries, press 3 or stay on the line.",
+    "asr_model": "faster-whisper-small-int8",
+    "wer": 0.04,
+    "mos": {
+      "backend": "dnsmos",
+      "ovrl": 3.464,
+      "sig": 3.682,
+      "bak": 4.183,
+      "p808": 4.165
+    },
+    "scored_at": "2026-09-20T12:16:24.546Z"
+  },
+  {
+    "prompt_id": "voice-003",
+    "run_at": "2026-09-20T12:06:51.425Z",
+    "status": "success",
+    "audio": "voice-003.ogg",
+    "bytes": 422444,
+    "ttft_ms": 53550,
+    "latency_ms": 53550,
+    "voice": "builtin",
+    "model": "ResembleAI/chatterbox",
+    "endpoint": "local",
+    "streaming": false,
+    "device": "cpu",
+    "model_version": "ResembleAI/chatterbox (multilingual) via chatterbox-tts 0.1.7",
+    "sample_rate": 24000,
+    "scores": {
+      "accuracy": 1,
+      "naturalness": 7.6,
+      "adherence": null
+    },
+    "transcript": "You can reach our support team at 0-855-neuro-1t9, that's 855-neuro-1t9, Monday to Friday, 9 to 5. 9 to 4.",
+    "asr_model": "faster-whisper-small-int8",
+    "wer": 0.571,
+    "mos": {
+      "backend": "dnsmos",
+      "ovrl": 3.554,
+      "sig": 3.742,
+      "bak": 4.21,
+      "p808": 4.075
+    },
+    "scored_at": "2026-09-20T12:16:28.396Z"
+  },
+  {
+    "prompt_id": "voice-004",
+    "run_at": "2026-09-20T12:07:44.982Z",
+    "status": "success",
+    "audio": "voice-004.ogg",
+    "bytes": 289964,
+    "ttft_ms": 39124,
+    "latency_ms": 39124,
+    "voice": "builtin",
+    "model": "ResembleAI/chatterbox",
+    "endpoint": "local",
+    "streaming": false,
+    "device": "cpu",
+    "model_version": "ResembleAI/chatterbox (multilingual) via chatterbox-tts 0.1.7",
+    "sample_rate": 24000,
+    "scores": {
+      "accuracy": 5.5,
+      "naturalness": 7.3,
+      "adherence": null
+    },
+    "transcript": "Our office is at 14A Clerkenwell Road, London, Equiname 5-Paw. The entrance is on Terminal Street.",
+    "asr_model": "faster-whisper-small-int8",
+    "wer": 0.25,
+    "mos": {
+      "backend": "dnsmos",
+      "ovrl": 3.453,
+      "sig": 3.668,
+      "bak": 4.181,
+      "p808": 3.957
+    },
+    "scored_at": "2026-09-20T12:16:30.873Z"
+  },
+  {
+    "prompt_id": "voice-005",
+    "run_at": "2026-09-20T12:08:24.234Z",
+    "status": "success",
+    "audio": "voice-005.ogg",
+    "bytes": 510764,
+    "ttft_ms": 67698,
+    "latency_ms": 67698,
+    "voice": "builtin",
+    "model": "ResembleAI/chatterbox",
+    "endpoint": "local",
+    "streaming": false,
+    "device": "cpu",
+    "model_version": "ResembleAI/chatterbox (multilingual) via chatterbox-tts 0.1.7",
+    "sample_rate": 24000,
+    "scores": {
+      "accuracy": 10,
+      "naturalness": 6.9,
+      "adherence": null
+    },
+    "transcript": "The house had been empty for eleven years, and it showed, paint curled from the porch rails in long grey ribbons, and the swing still hanging by one chain moved when there was no wind. Mara set her bag down on the step and did not go in.",
+    "asr_model": "faster-whisper-small-int8",
+    "wer": 0,
+    "mos": {
+      "backend": "dnsmos",
+      "ovrl": 3.308,
+      "sig": 3.538,
+      "bak": 4.127,
+      "p808": 4.244
+    },
+    "scored_at": "2026-09-20T12:16:33.643Z"
+  },
+  {
+    "prompt_id": "voice-006",
+    "run_at": "2026-09-20T12:09:31.937Z",
+    "status": "success",
+    "audio": "voice-006.ogg",
+    "bytes": 361004,
+    "ttft_ms": 48474,
+    "latency_ms": 48474,
+    "voice": "builtin",
+    "model": "ResembleAI/chatterbox",
+    "endpoint": "local",
+    "streaming": false,
+    "device": "cpu",
+    "model_version": "ResembleAI/chatterbox (multilingual) via chatterbox-tts 0.1.7",
+    "sample_rate": 24000,
+    "scores": {
+      "accuracy": 7.9,
+      "naturalness": 6.9,
+      "adherence": null
+    },
+    "transcript": "This weekend only, everything at Summit Outdoor is 30% off. Tens, boots, bikes, all of it. Doors open Saturday at eight. Don't miss it.",
+    "asr_model": "faster-whisper-small-int8",
+    "wer": 0.115,
+    "mos": {
+      "backend": "dnsmos",
+      "ovrl": 3.297,
+      "sig": 3.528,
+      "bak": 4.136,
+      "p808": 4.06
+    },
+    "scored_at": "2026-09-20T12:16:37.171Z"
+  },
+  {
+    "prompt_id": "voice-007",
+    "run_at": "2026-09-20T12:10:20.420Z",
+    "status": "success",
+    "audio": "voice-007.ogg",
+    "bytes": 472364,
+    "ttft_ms": 60561,
+    "latency_ms": 60561,
+    "voice": "builtin",
+    "model": "ResembleAI/chatterbox",
+    "endpoint": "local",
+    "streaming": false,
+    "device": "cpu",
+    "model_version": "ResembleAI/chatterbox (multilingual) via chatterbox-tts 0.1.7",
+    "sample_rate": 24000,
+    "scores": {
+      "accuracy": 10,
+      "naturalness": 7.3,
+      "adherence": null
+    },
+    "transcript": "Offer valid for new customers only. Terms and conditions apply. Rates subject to change without notice. See website for details. Lending criteria apply. Credit provided by Summit Finance Limited.",
+    "asr_model": "faster-whisper-small-int8",
+    "wer": 0,
+    "mos": {
+      "backend": "dnsmos",
+      "ovrl": 3.442,
+      "sig": 3.674,
+      "bak": 4.184,
+      "p808": 4.244
+    },
+    "scored_at": "2026-09-20T12:16:39.722Z"
+  },
+  {
+    "prompt_id": "voice-008",
+    "run_at": "2026-09-20T12:11:20.989Z",
+    "status": "success",
+    "audio": "voice-008.ogg",
+    "bytes": 1317164,
+    "ttft_ms": 171916,
+    "latency_ms": 171916,
+    "voice": "builtin",
+    "model": "ResembleAI/chatterbox",
+    "endpoint": "local",
+    "streaming": false,
+    "device": "cpu",
+    "model_version": "ResembleAI/chatterbox (multilingual) via chatterbox-tts 0.1.7",
+    "sample_rate": 24000,
+    "scores": {
+      "accuracy": 1,
+      "naturalness": 5.7,
+      "adherence": null
+    },
+    "transcript": "Hej, din best\u00e4llning har skickats och ber\u00e4knas anl\u00e4nda p\u00e5 torsdag. Du kan f\u00f6lja paketet via l\u00e4nken i ditt mail. Tack f\u00f6r att du handlar hos oss. Du \u00e4r bak ett \u00e5r som delas inte f\u00f6rl\u00e4tt att handetas udp\u00e5ket att dammarna namntans \u00e4cktelan tusen \u00e5r. Inte n\u00e4r jag skrev i b\u00e4ttet och skolet.",
+    "asr_model": "faster-whisper-small-int8",
+    "wer": 1.038,
+    "mos": {
+      "backend": "dnsmos",
+      "ovrl": 2.842,
+      "sig": 3.122,
+      "bak": 3.723,
+      "p808": 3.401
+    },
+    "scored_at": "2026-09-20T12:16:45.235Z"
+  },
+  {
+    "prompt_id": "voice-009",
+    "run_at": "2026-09-20T12:14:12.934Z",
+    "status": "success",
+    "audio": "voice-009.ogg",
+    "bytes": 481964,
+    "ttft_ms": 62357,
+    "latency_ms": 62357,
+    "voice": "builtin",
+    "model": "ResembleAI/chatterbox",
+    "endpoint": "local",
+    "streaming": false,
+    "device": "cpu",
+    "model_version": "ResembleAI/chatterbox (multilingual) via chatterbox-tts 0.1.7",
+    "sample_rate": 24000,
+    "scores": {
+      "accuracy": 2,
+      "naturalness": 6.8,
+      "adherence": null
+    },
+    "transcript": "Hola, le recordamos su cita con la doctora Ruiz el martes 14 de mayo a las yet 4 de mayo, a las yet para hinta. Si necesita cambiarla, llame a 91-555-555-233.",
+    "asr_model": "faster-whisper-small-int8",
+    "wer": 0.444,
+    "mos": {
+      "backend": "dnsmos",
+      "ovrl": 3.244,
+      "sig": 3.474,
+      "bak": 4.102,
+      "p808": 3.704
+    },
+    "scored_at": "2026-09-20T12:16:47.937Z"
+  },
+  {
+    "prompt_id": "voice-010",
+    "run_at": "2026-09-20T12:15:15.316Z",
+    "status": "success",
+    "audio": "voice-010.ogg",
+    "bytes": 328364,
+    "ttft_ms": 45635,
+    "latency_ms": 45635,
+    "voice": "builtin",
+    "model": "ResembleAI/chatterbox",
+    "endpoint": "local",
+    "streaming": false,
+    "device": "cpu",
+    "model_version": "ResembleAI/chatterbox (multilingual) via chatterbox-tts 0.1.7",
+    "sample_rate": 24000,
+    "scores": {
+      "accuracy": 8.3,
+      "naturalness": 7.1,
+      "adherence": null
+    },
+    "transcript": "Achtung, bitte halten Sie Abstand zur Bahnsteigkante, der n\u00e4chste Zug nach M\u00fcnchen Hauptbahnhof f\u00e4hrt in drei Minuten von gleich sieben ab.",
+    "asr_model": "faster-whisper-small-int8",
+    "wer": 0.095,
+    "mos": {
+      "backend": "dnsmos",
+      "ovrl": 3.353,
+      "sig": 3.571,
+      "bak": 4.164,
+      "p808": 3.847
+    },
+    "scored_at": "2026-09-20T12:16:50.850Z"
+  }
+]

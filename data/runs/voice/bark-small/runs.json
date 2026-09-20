@@ -1,0 +1,322 @@
+[
+  {
+    "prompt_id": "voice-001",
+    "run_at": "2026-09-20T11:53:01.417Z",
+    "status": "success",
+    "audio": "voice-001.ogg",
+    "bytes": 622764,
+    "ttft_ms": 155242,
+    "latency_ms": 155242,
+    "voice": "v2/en_speaker_6",
+    "model": "suno/bark-small",
+    "endpoint": "local",
+    "streaming": false,
+    "device": "cpu",
+    "model_version": "suno/bark-small via transformers 5.17.0",
+    "sample_rate": 24000,
+    "scores": {
+      "accuracy": 10,
+      "naturalness": 7.2,
+      "adherence": null
+    },
+    "transcript": "Meet Ledger, the invoicing tool that gets you paid in days, not weeks, send an invoice, track it, and let automatic reminders do the chasing.",
+    "asr_model": "faster-whisper-small-int8",
+    "wer": 0,
+    "mos": {
+      "backend": "dnsmos",
+      "ovrl": 3.422,
+      "sig": 3.629,
+      "bak": 4.21,
+      "p808": 3.897
+    },
+    "scored_at": "2026-09-20T12:20:51.548Z"
+  },
+  {
+    "prompt_id": "voice-002",
+    "run_at": "2026-09-20T11:55:54.482Z",
+    "status": "success",
+    "audio": "voice-002.ogg",
+    "bytes": 688684,
+    "ttft_ms": 174287,
+    "latency_ms": 174287,
+    "voice": "v2/en_speaker_6",
+    "model": "suno/bark-small",
+    "endpoint": "local",
+    "streaming": false,
+    "device": "cpu",
+    "model_version": "suno/bark-small via transformers 5.17.0",
+    "sample_rate": 24000,
+    "scores": {
+      "accuracy": 5.7,
+      "naturalness": 6.5,
+      "adherence": null
+    },
+    "transcript": "Thank you for calling Northgate Dental, four appointments, press one, four billing, press two, for all other inquiries, press three, or stay on the line.",
+    "asr_model": "faster-whisper-small-int8",
+    "wer": 0.24,
+    "mos": {
+      "backend": "dnsmos",
+      "ovrl": 3.132,
+      "sig": 3.434,
+      "bak": 4.027,
+      "p808": 3.92
+    },
+    "scored_at": "2026-09-20T12:20:56.169Z"
+  },
+  {
+    "prompt_id": "voice-003",
+    "run_at": "2026-09-20T11:58:48.777Z",
+    "status": "success",
+    "audio": "voice-003.ogg",
+    "bytes": 545964,
+    "ttft_ms": 134857,
+    "latency_ms": 134857,
+    "voice": "v2/en_speaker_6",
+    "model": "suno/bark-small",
+    "endpoint": "local",
+    "streaming": false,
+    "device": "cpu",
+    "model_version": "suno/bark-small via transformers 5.17.0",
+    "sample_rate": 24000,
+    "scores": {
+      "accuracy": 4.9,
+      "naturalness": 6.8,
+      "adherence": null
+    },
+    "transcript": "You can reach our support team at 1-800-555-0199, that's 1-800-555-0199, Monday to Friday, 9 to 5.",
+    "asr_model": "faster-whisper-small-int8",
+    "wer": 0.286,
+    "mos": {
+      "backend": "dnsmos",
+      "ovrl": 3.268,
+      "sig": 3.558,
+      "bak": 4.077,
+      "p808": 3.865
+    },
+    "scored_at": "2026-09-20T12:20:59.799Z"
+  },
+  {
+    "prompt_id": "voice-004",
+    "run_at": "2026-09-20T12:01:03.641Z",
+    "status": "success",
+    "audio": "voice-004.ogg",
+    "bytes": 591404,
+    "ttft_ms": 143552,
+    "latency_ms": 143552,
+    "voice": "v2/en_speaker_6",
+    "model": "suno/bark-small",
+    "endpoint": "local",
+    "streaming": false,
+    "device": "cpu",
+    "model_version": "suno/bark-small via transformers 5.17.0",
+    "sample_rate": 24000,
+    "scores": {
+      "accuracy": 6.6,
+      "naturalness": 6.6,
+      "adherence": null
+    },
+    "transcript": "Our office is at 14A, Kirkhamwell Road, London, EC1M, 5PA. The entrance is on Turn Mill Street.",
+    "asr_model": "faster-whisper-small-int8",
+    "wer": 0.188,
+    "mos": {
+      "backend": "dnsmos",
+      "ovrl": 3.172,
+      "sig": 3.432,
+      "bak": 4.117,
+      "p808": 3.824
+    },
+    "scored_at": "2026-09-20T12:21:03.454Z"
+  },
+  {
+    "prompt_id": "voice-005",
+    "run_at": "2026-09-20T12:03:27.199Z",
+    "status": "success",
+    "audio": "voice-005.ogg",
+    "bytes": 1035564,
+    "ttft_ms": 256677,
+    "latency_ms": 256677,
+    "voice": "v2/en_speaker_6",
+    "model": "suno/bark-small",
+    "endpoint": "local",
+    "streaming": false,
+    "device": "cpu",
+    "model_version": "suno/bark-small via transformers 5.17.0",
+    "sample_rate": 24000,
+    "scores": {
+      "accuracy": 7.8,
+      "naturalness": 7.2,
+      "adherence": null
+    },
+    "transcript": "um the house had been empty for 11 years and it showed. Pink curled from the portrayals in long great ribbons and the swing still hanging by one chain moved when there was no wind. Mara set her bag down on the step and did not go in.",
+    "asr_model": "faster-whisper-small-int8",
+    "wer": 0.125,
+    "mos": {
+      "backend": "dnsmos",
+      "ovrl": 3.415,
+      "sig": 3.641,
+      "bak": 4.172,
+      "p808": 3.995
+    },
+    "scored_at": "2026-09-20T12:21:09.368Z"
+  },
+  {
+    "prompt_id": "voice-006",
+    "run_at": "2026-09-20T12:07:43.887Z",
+    "status": "success",
+    "audio": "voice-006.ogg",
+    "bytes": 545964,
+    "ttft_ms": 133382,
+    "latency_ms": 133382,
+    "voice": "v2/en_speaker_6",
+    "model": "suno/bark-small",
+    "endpoint": "local",
+    "streaming": false,
+    "device": "cpu",
+    "model_version": "suno/bark-small via transformers 5.17.0",
+    "sample_rate": 24000,
+    "scores": {
+      "accuracy": 5.2,
+      "naturalness": 6.4,
+      "adherence": null
+    },
+    "transcript": "This weekend only everything at some and outdoors 30% off tense boots bikes all of it Doors open Saturday at 8 don't miss it",
+    "asr_model": "faster-whisper-small-int8",
+    "wer": 0.269,
+    "mos": {
+      "backend": "dnsmos",
+      "ovrl": 3.082,
+      "sig": 3.462,
+      "bak": 3.909,
+      "p808": 3.961
+    },
+    "scored_at": "2026-09-20T12:21:12.718Z"
+  },
+  {
+    "prompt_id": "voice-007",
+    "run_at": "2026-09-20T12:09:57.275Z",
+    "status": "success",
+    "audio": "voice-007.ogg",
+    "bytes": 639404,
+    "ttft_ms": 154030,
+    "latency_ms": 154030,
+    "voice": "v2/en_speaker_6",
+    "model": "suno/bark-small",
+    "endpoint": "local",
+    "streaming": false,
+    "device": "cpu",
+    "model_version": "suno/bark-small via transformers 5.17.0",
+    "sample_rate": 24000,
+    "scores": {
+      "accuracy": 10,
+      "naturalness": 7.1,
+      "adherence": null
+    },
+    "transcript": "Offer valid for new customers only terms and conditions apply rates subject to change without notice see website for details Lending criteria apply credit provided by summit finance limited",
+    "asr_model": "faster-whisper-small-int8",
+    "wer": 0,
+    "mos": {
+      "backend": "dnsmos",
+      "ovrl": 3.372,
+      "sig": 3.65,
+      "bak": 4.095,
+      "p808": 4.01
+    },
+    "scored_at": "2026-09-20T12:21:16.786Z"
+  },
+  {
+    "prompt_id": "voice-008",
+    "run_at": "2026-09-20T12:12:31.311Z",
+    "status": "success",
+    "audio": "voice-008.ogg",
+    "bytes": 670124,
+    "ttft_ms": 159253,
+    "latency_ms": 159253,
+    "voice": "v2/en_speaker_6",
+    "model": "suno/bark-small",
+    "endpoint": "local",
+    "streaming": false,
+    "device": "cpu",
+    "model_version": "suno/bark-small via transformers 5.17.0",
+    "sample_rate": 24000,
+    "scores": {
+      "accuracy": 1,
+      "naturalness": 7.1,
+      "adherence": null
+    },
+    "transcript": "Haish, Dean Bostanium Harskikot, spoke between the program on Linda Poa Torstock. Du kan f\u00e5 i a pocketed via l\u00e4nken using tact for unlawtoil hosts OSS.",
+    "asr_model": "faster-whisper-small-int8",
+    "wer": 0.962,
+    "mos": {
+      "backend": "dnsmos",
+      "ovrl": 3.384,
+      "sig": 3.632,
+      "bak": 4.147,
+      "p808": 3.94
+    },
+    "scored_at": "2026-09-20T12:21:21.518Z"
+  },
+  {
+    "prompt_id": "voice-009",
+    "run_at": "2026-09-20T12:15:10.572Z",
+    "status": "success",
+    "audio": "voice-009.ogg",
+    "bytes": 670124,
+    "ttft_ms": 161499,
+    "latency_ms": 161499,
+    "voice": "v2/es_speaker_3",
+    "model": "suno/bark-small",
+    "endpoint": "local",
+    "streaming": false,
+    "device": "cpu",
+    "model_version": "suno/bark-small via transformers 5.17.0",
+    "sample_rate": 24000,
+    "scores": {
+      "accuracy": 1,
+      "naturalness": 5.6,
+      "adherence": null
+    },
+    "transcript": "Hola, me recordamos su cita apunado por Arruiz, el martes 14 de mayo a las 10.30. Si necesita cambiada, llame al me 15, 555 pa 5, har\u00e1 de la pones el en ti.",
+    "asr_model": "faster-whisper-small-int8",
+    "wer": 0.63,
+    "mos": {
+      "backend": "dnsmos",
+      "ovrl": 2.771,
+      "sig": 3.619,
+      "bak": 3.025,
+      "p808": 3.305
+    },
+    "scored_at": "2026-09-20T12:21:26.361Z"
+  },
+  {
+    "prompt_id": "voice-010",
+    "run_at": "2026-09-20T12:17:52.079Z",
+    "status": "success",
+    "audio": "voice-010.ogg",
+    "bytes": 545964,
+    "ttft_ms": 136484,
+    "latency_ms": 136484,
+    "voice": "v2/de_speaker_3",
+    "model": "suno/bark-small",
+    "endpoint": "local",
+    "streaming": false,
+    "device": "cpu",
+    "model_version": "suno/bark-small via transformers 5.17.0",
+    "sample_rate": 24000,
+    "scores": {
+      "accuracy": 5.7,
+      "naturalness": 6.6,
+      "adherence": null
+    },
+    "transcript": "Achtung, bitte halten Sie Abstand zur Bernsteigkante. Der n\u00e4chste Zug macht M\u00fcnchen Hauptbahnwurf, f\u00e4hrt in drei Minuten von Gleis-Siedmar.",
+    "asr_model": "faster-whisper-small-int8",
+    "wer": 0.238,
+    "mos": {
+      "backend": "dnsmos",
+      "ovrl": 3.171,
+      "sig": 3.411,
+      "bak": 4.122,
+      "p808": 3.822
+    },
+    "scored_at": "2026-09-20T12:21:30.061Z"
+  }
+]
