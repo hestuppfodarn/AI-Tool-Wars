@@ -129,12 +129,35 @@
   },
   {
     "prompt_id": "voice-005",
-    "run_at": "2026-09-20T12:10:47.087Z",
-    "status": "error",
-    "error": "synthesis exceeded 300s (TTS_TIMEOUT_S); worker killed",
+    "run_at": "2026-09-27T12:29:51.474Z",
+    "status": "success",
+    "audio": "voice-005.ogg",
+    "bytes": 1081356,
+    "ttft_ms": 220239,
+    "latency_ms": 220239,
+    "voice": "basic_ref_en",
     "model": "F5TTS_v1_Base",
     "endpoint": "local",
-    "device": "cpu"
+    "streaming": false,
+    "device": "cpu",
+    "model_version": "SWivid/F5-TTS F5TTS_v1_Base via f5-tts 1.1.22",
+    "sample_rate": 24000,
+    "scores": {
+      "accuracy": 9.6,
+      "naturalness": 7.2,
+      "adherence": null
+    },
+    "transcript": "The house had been empty for eleven years, and it showed. Paint curled from the porch rails in long gray ribbons, and the swing, still hanging by one chain, moved when there was no wind. Mara set her bag down on the step and did not go in.",
+    "asr_model": "faster-whisper-small-int8",
+    "wer": 0.021,
+    "mos": {
+      "backend": "dnsmos",
+      "ovrl": 3.407,
+      "sig": 3.631,
+      "bak": 4.156,
+      "p808": 4.194
+    },
+    "scored_at": "2026-09-27T12:34:13.451Z"
   },
   {
     "prompt_id": "voice-006",
